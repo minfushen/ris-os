@@ -1,0 +1,233 @@
+/**
+ * 应用壳层样式
+ * 统一布局、间距、背景等
+ */
+
+/* ========== CSS 变量定义 ========== */
+:root {
+  /* 品牌色（与 Tailwind @theme 一致） */
+  --color-primary: #6f8f95;
+  --color-primary-light: #a8c0c3;
+  --color-primary-dark: #4f6970;
+
+  /* 背景色 */
+  --color-bg-layout: #f6f8fb;
+  --color-bg-container: rgba(255, 255, 255, 0.88);
+  --color-bg-elevated: rgba(255, 255, 255, 0.94);
+
+  /* 边框色 */
+  --color-border: rgba(130, 150, 160, 0.22);
+  --color-border-light: rgba(130, 150, 160, 0.12);
+
+  /* 文字色 */
+  --color-text-primary: #1f2a30;
+  --color-text-secondary: #44525a;
+  --color-text-disabled: #95a2a9;
+
+  /* 间距 */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 12px;
+  --spacing-lg: 16px;
+  --spacing-xl: 24px;
+
+  /* 圆角 */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+
+  /* 阴影 */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.03);
+  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.08);
+
+  /* 布局尺寸 */
+  --header-height: 48px;
+  --sider-width: 200px;
+  --sider-collapsed-width: 64px;
+  --content-max-width: 1440px;
+}
+
+/* ========== 布局容器 ========== */
+.app-layout {
+  min-height: 100vh;
+  background: var(--color-bg-layout);
+}
+
+.app-body {
+  min-height: calc(100vh - var(--header-height));
+}
+
+/* ========== 内容区 ========== */
+.app-content {
+  background: var(--color-bg-layout);
+  overflow: auto;
+  transition: margin-left 0.2s ease;
+}
+
+/* ========== 页面壳层 ========== */
+.page-shell {
+  min-height: 100%;
+  padding: var(--spacing-lg);
+}
+
+.page-content {
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+}
+
+/* ========== 模块页壳层 ========== */
+.module-page {
+  min-height: 100%;
+}
+
+.module-header {
+  background: var(--color-bg-container);
+  border-bottom: 1px solid var(--color-border);
+  padding: var(--spacing-lg) var(--spacing-xl);
+  margin-bottom: var(--spacing-lg);
+}
+
+.module-header-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.module-header-subtitle {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  margin: var(--spacing-xs) 0 0;
+}
+
+.module-body {
+  padding: 0 var(--spacing-lg) var(--spacing-lg);
+}
+
+/* ========== 区块卡片 ========== */
+.module-section {
+  background: var(--color-bg-container);
+  border: 1px solid var(--color-border);
+  margin-bottom: var(--spacing-lg);
+}
+
+.module-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-bottom: 1px solid var(--color-border-light);
+  background: var(--color-bg-elevated);
+}
+
+.module-section-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.module-section-body {
+  padding: var(--spacing-lg);
+}
+
+/* ========== 响应式 ========== */
+@media (max-width: 1200px) {
+  .page-content {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .page-shell {
+    padding: var(--spacing-md);
+  }
+
+  .module-header {
+    padding: var(--spacing-md);
+  }
+
+  .module-body {
+    padding: 0 var(--spacing-md) var(--spacing-md);
+  }
+}
+
+/* ========== 侧边栏 ========== */
+.app-sider {
+  background: var(--color-bg-container) !important;
+  border-right: 1px solid var(--color-border);
+  overflow: auto;
+}
+
+.sider-logo {
+  height: var(--header-height);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+.sider-logo-text {
+  font-size: 15px;
+  color: var(--color-primary);
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.sider-trigger {
+  font-size: 14px;
+}
+
+.sider-menu {
+  border-right: 0 !important;
+  font-size: 13px;
+}
+
+.sider-menu .ant-menu-item,
+.sider-menu .ant-menu-submenu-title {
+  height: 40px !important;
+  line-height: 40px !important;
+  margin: 0 !important;
+}
+
+.sider-menu .ant-menu-item-selected {
+  background: rgba(111, 143, 149, 0.14) !important;
+}
+
+/* ========== 顶部栏 ========== */
+.app-header {
+  height: var(--header-height);
+  background: var(--color-bg-container);
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--spacing-lg);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.app-header-left {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.app-header-title {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+.app-header-subtitle {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.app-header-right {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}

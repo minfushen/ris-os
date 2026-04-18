@@ -1,0 +1,120 @@
+/**
+ * Ant Design 组件与 Tailwind @theme「玻璃台」视觉对齐的补充层。
+ * 在 ConfigProvider token 无法覆盖的细节上使用（模糊、细边框、表头字重等）。
+ */
+
+/* —— 遮罩：玻璃感 —— */
+.ant-modal-mask,
+.ant-drawer-mask,
+.ant-image-preview-mask {
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.ant-modal-content,
+.ant-drawer-content-wrapper .ant-drawer-content {
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  box-shadow:
+    0 8px 32px rgba(12, 22, 32, 0.08),
+    0 1px 0 rgba(255, 255, 255, 0.65) inset;
+}
+
+/* —— 卡片 —— */
+.ant-card {
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  background-color: rgba(255, 255, 255, 0.62);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+}
+
+.ant-card-bordered {
+  border-color: rgba(130, 150, 160, 0.18);
+}
+
+/* —— 表格 —— */
+.ant-table {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.ant-table-thead > tr > th {
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.ant-table-cell-scrollbar {
+  box-shadow: none;
+}
+
+/* —— 默认按钮：玻璃次按钮 —— */
+.ant-btn-default {
+  background-color: rgba(255, 255, 255, 0.55);
+  border-color: rgba(130, 150, 160, 0.22);
+}
+
+.ant-btn-default:not(:disabled):hover {
+  background-color: rgba(255, 255, 255, 0.78);
+  border-color: rgba(111, 143, 149, 0.28);
+  color: var(--color-text-primary, #1f2a30);
+}
+
+.ant-btn-primary:disabled {
+  opacity: 0.55;
+}
+
+/* —— 输入类 —— */
+.ant-input,
+.ant-input-affix-wrapper,
+.ant-select-selector,
+.ant-picker {
+  background-color: rgba(255, 255, 255, 0.65) !important;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.ant-input-affix-wrapper-focused,
+.ant-input:focus,
+.ant-input-focused,
+.ant-select-focused .ant-select-selector,
+.ant-picker-focused {
+  box-shadow: 0 0 0 2px rgba(111, 143, 149, 0.18);
+}
+
+/* —— 下拉 / 气泡 —— */
+.ant-dropdown .ant-dropdown-menu,
+.ant-select-dropdown,
+.ant-picker-dropdown,
+.ant-popover .ant-popover-inner {
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  box-shadow: 0 8px 28px rgba(12, 22, 32, 0.08);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+/* —— 分页 —— */
+.ant-pagination .ant-pagination-item-active {
+  border-color: rgba(111, 143, 149, 0.45);
+}
+
+/* —— Tabs 下划线区域 —— */
+.ant-tabs-nav::before {
+  border-color: rgba(130, 150, 160, 0.14) !important;
+}
+
+/* —— Alert —— */
+.ant-alert {
+  border-width: 1px;
+  border-style: solid;
+}
+
+/* —— Skeleton 占位 —— */
+.ant-skeleton .ant-skeleton-content .ant-skeleton-title,
+.ant-skeleton .ant-skeleton-content .ant-skeleton-paragraph > li {
+  background: linear-gradient(
+    90deg,
+    rgba(130, 150, 160, 0.08) 25%,
+    rgba(130, 150, 160, 0.16) 37%,
+    rgba(130, 150, 160, 0.08) 63%
+  );
+}

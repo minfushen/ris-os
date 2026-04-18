@@ -1,0 +1,110 @@
+/**
+ * 设计令牌 (Design Tokens)
+ * 统一的颜色、间距、字体、阴影等基础变量
+ * 所有页面和组件应使用这些变量，而非硬编码值
+ */
+
+:root {
+  /* ========== 品牌色（与 tailwind.css @theme 玻璃台一致）========== */
+  --color-primary: #6f8f95;
+  --color-primary-light: #a8c0c3;
+  --color-primary-dark: #4f6970;
+  --color-primary-bg: rgba(111, 143, 149, 0.1);
+
+  /* ========== 功能色 ========== */
+  --color-success: #5f9b7a;
+  --color-success-bg: rgba(95, 155, 122, 0.1);
+  --color-warning: #d7a85f;
+  --color-warning-bg: rgba(215, 168, 95, 0.1);
+  --color-error: #c77b78;
+  --color-error-bg: rgba(199, 123, 120, 0.1);
+  --color-info: #6f8f95;
+  --color-info-bg: rgba(111, 143, 149, 0.08);
+
+  /* ========== 中性色 ========== */
+  --color-bg-layout: #f6f8fb;
+  --color-bg-container: rgba(255, 255, 255, 0.88);
+  --color-bg-elevated: rgba(255, 255, 255, 0.94);
+  --color-bg-mask: rgba(12, 22, 32, 0.45);
+
+  --color-border: rgba(130, 150, 160, 0.22);
+  --color-border-light: rgba(130, 150, 160, 0.12);
+  --color-border-dark: rgba(130, 150, 160, 0.32);
+
+  --color-text-primary: #1f2a30;
+  --color-text-secondary: #44525a;
+  --color-text-tertiary: #6e7c84;
+  --color-text-disabled: #95a2a9;
+  --color-text-inverse: #ffffff;
+
+  /* ========== 间距系统 ========== */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 12px;
+  --spacing-lg: 16px;
+  --spacing-xl: 24px;
+  --spacing-xxl: 32px;
+
+  /* ========== 字体 ========== */
+  --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-size-xs: 10px;
+  --font-size-sm: 11px;
+  --font-size-base: 12px;
+  --font-size-md: 13px;
+  --font-size-lg: 14px;
+  --font-size-xl: 16px;
+  --font-size-xxl: 18px;
+  --font-size-title: 20px;
+  --font-size-hero: 24px;
+
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  --line-height-tight: 1.25;
+  --line-height-base: 1.5;
+  --line-height-loose: 1.75;
+
+  /* ========== 圆角 ========== */
+  --radius-none: 0;
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+  --radius-full: 9999px;
+
+  /* ========== 阴影 ========== */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.03);
+  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.08);
+  --shadow-xl: 0 8px 24px rgba(0, 0, 0, 0.12);
+
+  /* ========== 布局尺寸 ========== */
+  --header-height: 48px;
+  --sider-width: 200px;
+  --sider-collapsed-width: 64px;
+  --content-max-width: 1440px;
+  --page-padding: 16px;
+
+  /* ========== 动画 ========== */
+  --transition-fast: 0.15s ease;
+  --transition-base: 0.2s ease;
+  --transition-slow: 0.3s ease;
+
+  /* ========== Z-index 层级 ========== */
+  --z-dropdown: 1000;
+  --z-sticky: 1020;
+  --z-fixed: 1030;
+  --z-modal-backdrop: 1040;
+  --z-modal: 1050;
+  --z-popover: 1060;
+  --z-tooltip: 1070;
+}
+
+/* ========== 暗色主题支持 (预留) ========== */
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* 可在此扩展暗色主题变量 */
+  }
+}

@@ -1,0 +1,455 @@
+@import "tailwindcss";
+@import "./antd-tailwind.css";
+
+/* ========== 设计令牌 ========== */
+@theme {
+  /* 配色体系 - 浅色金融玻璃台 */
+  --color-app-bg: #f6f8fb;
+  --color-app-bg-start: #eef4f3;
+  --color-app-bg-end: #f8fafc;
+
+  /* 主品牌色 - 冷青灰 */
+  --color-primary: #6f8f95;
+  --color-primary-deep: #4f6970;
+  --color-primary-light: #a8c0c3;
+
+  /* 功能强调色 */
+  --color-accent-success: #5f9b7a;
+  --color-accent-warning: #d7a85f;
+  --color-accent-danger: #c77b78;
+
+  /* 文本颜色 */
+  --color-text-primary: #1f2a30;
+  --color-text-secondary: #44525a;
+  --color-text-muted: #6e7c84;
+  --color-text-weak: #95a2a9;
+
+  /* 边框色 */
+  --color-border-soft: rgba(130, 150, 160, 0.18);
+  --color-border-glass: rgba(255, 255, 255, 0.55);
+
+  /* 玻璃背景 */
+  --color-glass: rgba(255, 255, 255, 0.62);
+  --color-glass-strong: rgba(255, 255, 255, 0.74);
+  --color-glass-hover: rgba(255, 255, 255, 0.82);
+
+  /* 阴影 */
+  --shadow-glass: 0 4px 24px rgba(0, 0, 0, 0.06);
+  --shadow-glass-sm: 0 2px 12px rgba(0, 0, 0, 0.04);
+  --shadow-glass-lg: 0 8px 32px rgba(0, 0, 0, 0.08);
+  --shadow-glow: 0 0 0 3px rgba(111, 143, 149, 0.15);
+
+  /* 圆角 */
+  --radius-glass: 12px;
+  --radius-pill: 9999px;
+
+  /* 模糊 */
+  --blur-glass: 12px;
+  --blur-glass-strong: 20px;
+}
+
+/* ========== 基础样式 ========== */
+html {
+  background-color: var(--color-app-bg);
+  background: linear-gradient(135deg, var(--color-app-bg-start) 0%, var(--color-app-bg-end) 100%);
+  min-height: 100vh;
+}
+
+body {
+  color: var(--color-text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 滚动条美化 */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(111, 143, 149, 0.2);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(111, 143, 149, 0.3);
+}
+
+/* ========== 玻璃材质组件 ========== */
+
+/* 玻璃面板 - 通用 */
+.glass-panel {
+  background-color: var(--color-glass);
+  backdrop-filter: blur(var(--blur-glass));
+  border: 1px solid var(--color-border-glass);
+  border-radius: var(--radius-glass);
+  box-shadow: var(--shadow-glass);
+}
+
+/* 玻璃面板 - 强调 */
+.glass-panel-strong {
+  background-color: var(--color-glass-strong);
+  backdrop-filter: blur(var(--blur-glass-strong));
+  border: 1px solid var(--color-border-glass);
+  border-radius: var(--radius-glass);
+  box-shadow: var(--shadow-glass);
+}
+
+/* 玻璃卡片 */
+.glass-card {
+  background-color: var(--color-glass);
+  backdrop-filter: blur(var(--blur-glass));
+  border: 1px solid var(--color-border-glass);
+  border-radius: var(--radius-glass);
+  box-shadow: var(--shadow-glass);
+  padding: 1rem;
+  transition: all 0.2s ease;
+}
+
+.glass-card:hover {
+  background-color: var(--color-glass-hover);
+  box-shadow: var(--shadow-glass-lg);
+}
+
+/* 玻璃工具栏 */
+.glass-toolbar {
+  background-color: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(var(--blur-glass));
+  border-bottom: 1px solid var(--color-border-soft);
+  padding: 0.75rem 1rem;
+}
+
+/* 玻璃胶囊（导航选中态） */
+.glass-pill {
+  background-color: rgba(111, 143, 149, 0.1);
+  color: var(--color-primary-deep);
+  padding: 0.375rem 0.75rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.glass-pill-active {
+  background-color: rgba(111, 143, 149, 0.15);
+  color: var(--color-primary-deep);
+  padding: 0.375rem 0.75rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-left: 2px solid var(--color-primary);
+}
+
+/* 玻璃输入框 */
+.glass-input {
+  background-color: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(4px);
+  border: 1px solid var(--color-border-soft);
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+  color: var(--color-text-primary);
+  transition: all 0.2s ease;
+}
+
+.glass-input::placeholder {
+  color: var(--color-text-weak);
+}
+
+.glass-input:focus {
+  outline: none;
+  border-color: rgba(111, 143, 149, 0.4);
+  box-shadow: var(--shadow-glow);
+}
+
+/* 玻璃按钮 - 主按钮 */
+.glass-btn-primary {
+  background-color: var(--color-primary);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.glass-btn-primary:hover {
+  background-color: var(--color-primary-deep);
+  box-shadow: var(--shadow-glass-sm);
+}
+
+/* 玻璃按钮 - 次按钮 */
+.glass-btn-secondary {
+  background-color: var(--color-glass);
+  backdrop-filter: blur(4px);
+  border: 1px solid var(--color-border-soft);
+  color: var(--color-text-primary);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.glass-btn-secondary:hover {
+  background-color: var(--color-glass-hover);
+  border-color: rgba(111, 143, 149, 0.2);
+}
+
+/* 玻璃按钮 - 文字按钮 */
+.glass-btn-text {
+  color: var(--color-primary);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  transition: all 0.15s ease;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.glass-btn-text:hover {
+  color: var(--color-primary-deep);
+  background-color: rgba(111, 143, 149, 0.05);
+}
+
+/* 玻璃标签 */
+.glass-tag {
+  background-color: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(4px);
+  border: 1px solid var(--color-border-soft);
+  padding: 0.125rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+}
+
+.glass-tag-success {
+  background-color: rgba(95, 155, 122, 0.1);
+  color: var(--color-accent-success);
+  border-color: rgba(95, 155, 122, 0.2);
+}
+
+.glass-tag-warning {
+  background-color: rgba(215, 168, 95, 0.1);
+  color: var(--color-accent-warning);
+  border-color: rgba(215, 168, 95, 0.2);
+}
+
+.glass-tag-danger {
+  background-color: rgba(199, 123, 120, 0.1);
+  color: var(--color-accent-danger);
+  border-color: rgba(199, 123, 120, 0.2);
+}
+
+/* ========== 页面结构组件 ========== */
+
+/* Hero 区域 */
+.hero-section {
+  background: linear-gradient(135deg, rgba(255,255,255,0.74) 0%, rgba(255,255,255,0.62) 100%);
+  backdrop-filter: blur(var(--blur-glass-strong));
+  border: 1px solid var(--color-border-glass);
+  border-radius: var(--radius-glass);
+  box-shadow: var(--shadow-glass);
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+/* 指标卡片 */
+.metric-card {
+  background-color: var(--color-glass);
+  backdrop-filter: blur(var(--blur-glass));
+  border: 1px solid var(--color-border-glass);
+  border-radius: var(--radius-glass);
+  box-shadow: var(--shadow-glass);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.metric-card:hover {
+  background-color: var(--color-glass-hover);
+  box-shadow: var(--shadow-glass-lg);
+}
+
+/* 快捷入口卡片 */
+.quick-entry-card {
+  background-color: var(--color-glass);
+  backdrop-filter: blur(var(--blur-glass));
+  border: 1px solid var(--color-border-glass);
+  border-radius: var(--radius-glass);
+  box-shadow: var(--shadow-glass);
+  padding: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.quick-entry-card:hover {
+  background-color: var(--color-glass-hover);
+  box-shadow: var(--shadow-glass-lg);
+  border-color: rgba(111, 143, 149, 0.3);
+}
+
+.quick-entry-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  transition: all 0.2s ease;
+}
+
+.quick-entry-card:hover .quick-entry-icon {
+  transform: scale(1.05);
+}
+
+/* 探照灯卡片 */
+.searchlight-card {
+  background-color: var(--color-glass);
+  backdrop-filter: blur(var(--blur-glass));
+  border: 1px solid var(--color-border-glass);
+  border-left-width: 3px;
+  border-radius: var(--radius-glass);
+  box-shadow: var(--shadow-glass);
+  padding: 1rem;
+  transition: all 0.2s ease;
+}
+
+.searchlight-card:hover {
+  background-color: var(--color-glass-hover);
+  box-shadow: var(--shadow-glass-lg);
+}
+
+.searchlight-card-critical {
+  border-left-color: var(--color-accent-danger);
+}
+
+.searchlight-card-warning {
+  border-left-color: var(--color-accent-warning);
+}
+
+/* 侧边栏导航 */
+.sider-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  color: var(--color-text-secondary);
+  border-radius: 8px;
+  margin: 0 0.5rem;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.sider-nav-item:hover {
+  background-color: rgba(255, 255, 255, 0.6);
+  color: var(--color-text-primary);
+}
+
+.sider-nav-item-active {
+  background-color: rgba(111, 143, 149, 0.1);
+  color: var(--color-primary-deep);
+  font-weight: 500;
+}
+
+/* 顶部栏 */
+.topbar {
+  background-color: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(var(--blur-glass));
+  border-bottom: 1px solid var(--color-border-soft);
+  padding: 0.75rem 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+/* 模块页头部 */
+.module-header {
+  background: linear-gradient(135deg, rgba(255,255,255,0.74) 0%, rgba(255,255,255,0.62) 100%);
+  backdrop-filter: blur(var(--blur-glass-strong));
+  border: 1px solid var(--color-border-glass);
+  border-radius: var(--radius-glass);
+  box-shadow: var(--shadow-glass);
+  padding: 1rem 1.5rem;
+  margin-bottom: 1rem;
+}
+
+/* 区块容器 */
+.section-shell {
+  background-color: var(--color-glass);
+  backdrop-filter: blur(var(--blur-glass));
+  border: 1px solid var(--color-border-glass);
+  border-radius: var(--radius-glass);
+  box-shadow: var(--shadow-glass);
+  margin-bottom: 1rem;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--color-border-soft);
+  background-color: rgba(250, 250, 250, 0.5);
+}
+
+.section-title {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+.section-subtitle {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  margin-left: 0.5rem;
+}
+
+.section-body {
+  padding: 1rem;
+}
+
+/* ========== 工具类 ========== */
+
+/* 文字颜色 */
+.text-primary { color: var(--color-primary); }
+.text-primary-deep { color: var(--color-primary-deep); }
+.text-primary-light { color: var(--color-primary-light); }
+.text-accent-success { color: var(--color-accent-success); }
+.text-accent-warning { color: var(--color-accent-warning); }
+.text-accent-danger { color: var(--color-accent-danger); }
+.text-text-primary { color: var(--color-text-primary); }
+.text-text-secondary { color: var(--color-text-secondary); }
+.text-text-muted { color: var(--color-text-muted); }
+.text-text-weak { color: var(--color-text-weak); }
+
+/* 边框颜色 */
+.border-l-accent-success { border-left-color: var(--color-accent-success); }
+.border-l-accent-warning { border-left-color: var(--color-accent-warning); }
+.border-l-accent-danger { border-left-color: var(--color-accent-danger); }
+.border-l-primary { border-left-color: var(--color-primary); }
+.border-border-soft { border-color: var(--color-border-soft); }
+
+/* 背景颜色 */
+.bg-primary { background-color: var(--color-primary); }
+.bg-primary\/10 { background-color: rgba(111, 143, 149, 0.1); }
+.bg-primary\/15 { background-color: rgba(111, 143, 149, 0.15); }
+.bg-glass { background-color: var(--color-glass); }
+.bg-glass\/40 { background-color: rgba(255, 255, 255, 0.4); }
+.bg-glass\/60 { background-color: rgba(255, 255, 255, 0.6); }
+.bg-glass\/80 { background-color: rgba(255, 255, 255, 0.8); }
+.bg-accent-success\/10 { background-color: rgba(95, 155, 122, 0.1); }
+.bg-accent-warning\/10 { background-color: rgba(215, 168, 95, 0.1); }
+.bg-accent-danger\/10 { background-color: rgba(199, 123, 120, 0.1); }

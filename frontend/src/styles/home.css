@@ -1,0 +1,292 @@
+/* 风控管理 OS 首页样式 */
+
+/* CSS 变量 */
+:root {
+  /* 主色调（与 Tailwind 玻璃台一致） */
+  --primary-color: #6f8f95;
+  --primary-light: #a8c0c3;
+  --primary-dark: #4f6970;
+
+  /* 状态色 */
+  --status-success: #5f9b7a;
+  --status-warning: #d7a85f;
+  --status-error: #c77b78;
+  --status-processing: #6f8f95;
+
+  /* 背景色 */
+  --bg-page: #f6f8fb;
+  --bg-card: rgba(255, 255, 255, 0.88);
+  --bg-hover: rgba(245, 248, 250, 0.95);
+
+  /* 边框 */
+  --border-color: rgba(130, 150, 160, 0.22);
+}
+
+/* 页面容器 */
+.home-page {
+  min-height: 100%;
+}
+
+.home-page-financial {
+  padding: 12px;
+  background: var(--bg-page);
+  min-height: calc(100vh - 64px);
+}
+
+/* ========== Hero 区 ========== */
+.home-hero {
+  background: linear-gradient(135deg, #6f8f95 0%, #a8c0c3 100%);
+  border-radius: 0;
+  margin-bottom: 16px;
+  padding: 24px 32px;
+}
+
+.home-hero-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.home-hero-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.home-hero-title {
+  color: #fff !important;
+  margin: 0 !important;
+  font-size: 24px !important;
+}
+
+.home-hero-subtitle {
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 14px;
+}
+
+.home-hero-actions {
+  margin-top: 8px;
+}
+
+.home-hero-meta {
+  margin-top: 8px;
+}
+
+/* ========== 快捷入口卡片 ========== */
+.quick-entry-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: #fff;
+  border: 1px solid var(--border-color);
+  border-left-width: 3px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.quick-entry-card:hover {
+  background: #fafafa;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.quick-entry-icon {
+  font-size: 24px;
+}
+
+.quick-entry-content {
+  flex: 1;
+}
+
+/* ========== 总览指标 ========== */
+.overview-metric {
+  text-align: center;
+}
+
+/* 紧凑卡片 */
+.home-page-financial .ant-card,
+.home-page .ant-card {
+  border-radius: 0;
+  box-shadow: none;
+  border: 1px solid var(--border-color);
+}
+
+.home-page-financial .ant-card-head,
+.home-page .ant-card-head {
+  padding: 8px 12px;
+  min-height: auto;
+  background: #fafafa;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.home-page-financial .ant-card-body,
+.home-page .ant-card-body {
+  padding: 12px;
+}
+
+/* 紧凑表格 */
+.home-page-financial .ant-table,
+.home-page .ant-table {
+  font-size: 12px;
+}
+
+.home-page-financial .ant-table-thead > tr > th,
+.home-page .ant-table-thead > tr > th {
+  padding: 6px 8px;
+  background: #fafafa;
+  font-weight: 600;
+  font-size: 12px;
+  color: #262626;
+}
+
+.home-page-financial .ant-table-tbody > tr > td,
+.home-page .ant-table-tbody > tr > td {
+  padding: 6px 8px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.home-page-financial .ant-table-tbody > tr:hover > td,
+.home-page .ant-table-tbody > tr:hover > td {
+  background: #f5f7fa;
+}
+
+/* 紧凑表单 */
+.home-page-financial .ant-form-item,
+.home-page .ant-form-item {
+  margin-bottom: 12px;
+}
+
+.home-page-financial .ant-form-item-label > label,
+.home-page .ant-form-item-label > label {
+  font-size: 12px;
+  color: #595959;
+}
+
+.home-page-financial .ant-input,
+.home-page-financial .ant-select-selector,
+.home-page-financial .ant-picker,
+.home-page .ant-input,
+.home-page .ant-select-selector,
+.home-page .ant-picker {
+  font-size: 12px;
+}
+
+/* 紧凑按钮 */
+.home-page-financial .ant-btn-sm,
+.home-page .ant-btn-sm {
+  font-size: 11px;
+  padding: 0 8px;
+  height: 24px;
+}
+
+/* 标签紧凑 */
+.home-page-financial .ant-tag,
+.home-page .ant-tag {
+  font-size: 11px;
+  padding: 0 4px;
+  line-height: 18px;
+  margin: 0;
+}
+
+/* 分页紧凑 */
+.home-page-financial .ant-pagination,
+.home-page .ant-pagination {
+  font-size: 11px;
+}
+
+.home-page-financial .ant-pagination-item,
+.home-page .ant-pagination-item {
+  min-width: 24px;
+  height: 24px;
+  line-height: 22px;
+  font-size: 11px;
+}
+
+/* 抽屉样式 */
+.home-page-financial .ant-drawer-header,
+.home-page .ant-drawer-header {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.home-page-financial .ant-drawer-title,
+.home-page .ant-drawer-title {
+  font-size: 14px;
+}
+
+/* 数字等宽 */
+.numeric {
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+/* 状态徽章 */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 6px;
+  border-radius: 2px;
+  font-size: 11px;
+}
+
+.status-badge-success {
+  background: #f6ffed;
+  color: var(--status-success);
+}
+
+.status-badge-warning {
+  background: #fffbe6;
+  color: var(--status-warning);
+}
+
+.status-badge-error {
+  background: #fff2f0;
+  color: var(--status-error);
+}
+
+.status-badge-processing {
+  background: #e6f7ff;
+  color: var(--status-processing);
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+  .home-page-financial,
+  .home-page {
+    padding: 8px;
+  }
+
+  .home-page-financial .ant-table,
+  .home-page .ant-table {
+    font-size: 11px;
+  }
+
+  .home-page-financial .ant-table-thead > tr > th,
+  .home-page-financial .ant-table-tbody > tr > td,
+  .home-page .ant-table-thead > tr > th,
+  .home-page .ant-table-tbody > tr > td {
+    padding: 4px 6px;
+  }
+
+  .home-hero {
+    padding: 16px;
+  }
+
+  .quick-entry-card {
+    padding: 8px 12px;
+  }
+}
+
+/* 打印样式 */
+@media print {
+  .home-page-financial,
+  .home-page {
+    background: white;
+  }
+
+  .home-page-financial .ant-btn,
+  .home-page .ant-btn {
+    display: none;
+  }
+}
