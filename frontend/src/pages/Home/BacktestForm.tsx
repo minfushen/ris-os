@@ -56,7 +56,7 @@ export default function BacktestForm({ onSubmit }: BacktestFormProps) {
       <Text strong style={{ fontSize: 13 }}>
         回测配置
       </Text>
-      <Divider style={{ margin: "8px 0" }} />
+      <Divider rootClassName="layout-divider-y-sm" />
 
       <Form.Item
         name="backtestName"

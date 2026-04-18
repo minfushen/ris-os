@@ -13,19 +13,16 @@
 
 .ant-modal-content,
 .ant-drawer-content-wrapper .ant-drawer-content {
-  border: 1px solid rgba(255, 255, 255, 0.55);
-  box-shadow:
-    0 8px 32px rgba(12, 22, 32, 0.08),
-    0 1px 0 rgba(255, 255, 255, 0.65) inset;
+  border: 1px solid var(--color-border, rgba(130, 150, 160, 0.22));
+  background-color: #ffffff;
+  box-shadow: var(--shadow-lg, 0 4px 16px rgba(0, 0, 0, 0.08));
 }
 
 /* —— 卡片 —— */
 .ant-card {
-  border: 1px solid rgba(255, 255, 255, 0.55);
-  background-color: rgba(255, 255, 255, 0.62);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(130, 150, 160, 0.18);
+  background-color: #ffffff;
+  box-shadow: var(--shadow-surface);
 }
 
 .ant-card-bordered {
@@ -34,7 +31,7 @@
 
 /* —— 表格 —— */
 .ant-table {
-  border-radius: 12px;
+  border-radius: var(--radius-card, 8px);
   overflow: hidden;
 }
 
@@ -49,12 +46,12 @@
 
 /* —— 默认按钮：玻璃次按钮 —— */
 .ant-btn-default {
-  background-color: rgba(255, 255, 255, 0.55);
+  background-color: #ffffff;
   border-color: rgba(130, 150, 160, 0.22);
 }
 
 .ant-btn-default:not(:disabled):hover {
-  background-color: rgba(255, 255, 255, 0.78);
+  background-color: var(--color-bg-layout, #f6f8fb);
   border-color: rgba(111, 143, 149, 0.28);
   color: var(--color-text-primary, #1f2a30);
 }
@@ -68,9 +65,7 @@
 .ant-input-affix-wrapper,
 .ant-select-selector,
 .ant-picker {
-  background-color: rgba(255, 255, 255, 0.65) !important;
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+  background-color: #ffffff !important;
 }
 
 .ant-input-affix-wrapper-focused,
@@ -86,10 +81,9 @@
 .ant-select-dropdown,
 .ant-picker-dropdown,
 .ant-popover .ant-popover-inner {
-  border: 1px solid rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(130, 150, 160, 0.18);
+  background-color: #ffffff;
   box-shadow: 0 8px 28px rgba(12, 22, 32, 0.08);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
 }
 
 /* —— 分页 —— */

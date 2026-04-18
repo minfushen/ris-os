@@ -47,10 +47,11 @@ export const theme: ThemeConfig = {
     fontSize: 14,
     lineHeight: 1.5714,
 
-    borderRadius: 10,
+    /* 圆角阶梯：控件 6 / 默认 8 / 大壳 12（对齐 tokens.css） */
+    borderRadius: 8,
     borderRadiusLG: 12,
-    borderRadiusSM: 8,
-    borderRadiusXS: 6,
+    borderRadiusSM: 6,
+    borderRadiusXS: 4,
 
     wireframe: false,
 
@@ -68,33 +69,33 @@ export const theme: ThemeConfig = {
   components: {
     Layout: {
       headerBg: "rgba(248, 250, 252, 0.82)",
-      headerHeight: 56,
-      headerPadding: "0 20px",
+      headerHeight: 44,
+      headerPadding: "0 16px",
       bodyBg: "transparent",
       siderBg: "transparent",
       triggerBg: "rgba(255, 255, 255, 0.55)",
     },
     Button: {
-      borderRadius: 10,
+      borderRadius: 6,
       controlHeight: 36,
       primaryShadow: "none",
       defaultShadow: "none",
       dangerShadow: "none",
     },
     Input: {
-      borderRadius: 10,
+      borderRadius: 6,
       activeShadow: "0 0 0 2px rgba(111, 143, 149, 0.18)",
     },
     InputNumber: {
-      borderRadius: 10,
+      borderRadius: 6,
       activeShadow: "0 0 0 2px rgba(111, 143, 149, 0.18)",
     },
     Select: {
-      borderRadius: 10,
+      borderRadius: 6,
       optionSelectedBg: "rgba(111, 143, 149, 0.1)",
     },
     DatePicker: {
-      borderRadius: 10,
+      borderRadius: 6,
     },
     Table: {
       headerBg: "rgba(245, 248, 250, 0.92)",
@@ -114,7 +115,7 @@ export const theme: ThemeConfig = {
       titleFontSize: 14,
     },
     Card: {
-      borderRadiusLG: 12,
+      borderRadiusLG: 8,
       paddingLG: 20,
       headerBg: "transparent",
     },
@@ -130,7 +131,7 @@ export const theme: ThemeConfig = {
       horizontalItemSelectedBg: "rgba(111, 143, 149, 0.12)",
     },
     Modal: {
-      borderRadiusLG: 14,
+      borderRadiusLG: 12,
       contentBg: "rgba(255, 255, 255, 0.96)",
       headerBg: "transparent",
       footerBg: "transparent",
@@ -144,7 +145,7 @@ export const theme: ThemeConfig = {
       borderRadius: 8,
     },
     Tag: {
-      borderRadiusSM: 8,
+      borderRadiusSM: 4,
     },
     Alert: {
       borderRadiusLG: 12,

@@ -1,27 +1,68 @@
 import { useState } from "react";
 import { Typography, Button, Space, Steps, App } from "antd";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import ModulePageShell, { ModuleSectionCard } from "@/components/ModulePageShell";
 import StrategyDiff from "./StrategyDiff";
 import SafeGuardConfig from "./SafeGuardConfig";
+import PublishWorkflowPanel from "./PublishWorkflowPanel";
 
 const { Text } = Typography;
 
+function buildChangeId(): string {
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = `${d.getMonth() + 1}`.padStart(2, "0");
+  const day = `${d.getDate()}`.padStart(2, "0");
+  const r = Math.floor(100 + Math.random() * 900);
+  return `CHG-${y}${m}${day}-${r}`;
+}
+
 export default function PublishPage() {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const trackId = searchParams.get("track");
+
   const { message } = App.useApp();
   const [currentStep, setCurrentStep] = useState(0);
   const [safeGuardConfig, setSafeGuardConfig] = useState<Record<string, unknown>>({});
 
   const handleSubmit = () => {
-    void message.success("策略发布申请已提交，等待审批");
-    navigate("/strategy/list");
+    const id = buildChangeId();
+    void message.success("策略发布申请已提交，已进入流程跟踪（演示）");
+    setSearchParams({ track: id });
   };
+
+  if (trackId) {
+    return (
+      <ModulePageShell
+        title="策略发布进度与灰度闭环"
+        subtitle="流程可视、灰度指标对比、全量/回滚决策与审计留痕（演示）"
+        breadcrumb={["策略管控", "策略发布"]}
+        actions={
+          <Space>
+            <Button
+              onClick={() => {
+                setSearchParams({});
+                setCurrentStep(0);
+              }}
+            >
+              新建变更
+            </Button>
+            <Button type="primary" onClick={() => navigate("/strategy/list")}>
+              策略列表
+            </Button>
+          </Space>
+        }
+      >
+        <PublishWorkflowPanel changeId={trackId} />
+      </ModulePageShell>
+    );
+  }
 
   return (
     <ModulePageShell
       title="策略变更发布申请"
-      subtitle="提交策略变更申请，配置上线护盾"
+      subtitle="Diff → 护盾 → 提交；提交后进入流程与灰度跟踪"
       breadcrumb={["策略管控", "策略发布"]}
       actions={
         <Space>
@@ -38,7 +79,6 @@ export default function PublishPage() {
         </Space>
       }
     >
-      {/* 步骤指示器 */}
       <ModuleSectionCard>
         <Steps
           current={currentStep}
@@ -51,11 +91,10 @@ export default function PublishPage() {
         />
       </ModuleSectionCard>
 
-      {/* Step 1: Diff 对比 */}
       {currentStep === 0 && (
         <ModuleSectionCard>
           <StrategyDiff />
-          <div style={{ marginTop: 16, textAlign: "right" }}>
+          <div className="layout-mt-lg text-right">
             <Button disabled={currentStep === 0} onClick={() => setCurrentStep(currentStep - 1)}>
               上一步
             </Button>
@@ -63,11 +102,10 @@ export default function PublishPage() {
         </ModuleSectionCard>
       )}
 
-      {/* Step 2: 护盾配置 */}
       {currentStep === 1 && (
         <ModuleSectionCard>
           <SafeGuardConfig onChange={setSafeGuardConfig} />
-          <div style={{ marginTop: 16, textAlign: "right" }}>
+          <div className="layout-mt-lg text-right">
             <Space>
               <Button onClick={() => setCurrentStep(currentStep - 1)}>
                 上一步
@@ -80,10 +118,9 @@ export default function PublishPage() {
         </ModuleSectionCard>
       )}
 
-      {/* Step 3: 确认提交 */}
       {currentStep === 2 && (
         <ModuleSectionCard title="确认提交">
-          <div style={{ background: "#fafafa", padding: 12, marginBottom: 12 }}>
+          <div className="bg-[#fafafa] layout-p-md layout-mb-md">
             <Space direction="vertical" size={4}>
               <Text style={{ fontSize: 12 }}>
                 • 策略版本: V3.1 → V3.2
@@ -102,7 +139,7 @@ export default function PublishPage() {
               </Text>
             </Space>
           </div>
-          <div style={{ textAlign: "right" }}>
+          <div className="text-right">
             <Space>
               <Button onClick={() => setCurrentStep(currentStep - 1)}>
                 上一步

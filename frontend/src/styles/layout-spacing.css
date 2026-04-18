@@ -1,0 +1,173 @@
+/**
+ * Token-backed 布局间距工具类 — 替代 margin/padding 数字内联
+ * 与 tokens.css --spacing-* 阶梯一致
+ */
+
+.layout-flex {
+  display: flex;
+}
+.layout-flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.layout-flex-center {
+  display: flex;
+  align-items: center;
+}
+.layout-flex-1 {
+  flex: 1;
+  min-width: 0;
+}
+
+.layout-gap-xs {
+  gap: var(--spacing-xs);
+}
+.layout-gap-sm {
+  gap: var(--spacing-sm);
+}
+.layout-gap-md {
+  gap: var(--spacing-md);
+}
+.layout-gap-lg {
+  gap: var(--spacing-lg);
+}
+.layout-gap-xl {
+  gap: var(--spacing-xl);
+}
+.layout-gap-px {
+  gap: 1px;
+}
+
+.layout-pr-sm {
+  padding-right: var(--spacing-sm);
+}
+
+/* 策略 Diff 等双栏头/体 */
+.layout-diff-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: #fafafa;
+  border-bottom: 1px solid rgba(130, 150, 160, 0.22);
+}
+.layout-diff-body {
+  padding: var(--spacing-sm);
+  min-height: 200px;
+}
+
+.layout-mb-0 {
+  margin-bottom: 0;
+}
+.layout-mb-xs {
+  margin-bottom: var(--spacing-xs);
+}
+.layout-mb-sm {
+  margin-bottom: var(--spacing-sm);
+}
+.layout-mb-md {
+  margin-bottom: var(--spacing-md);
+}
+.layout-mb-lg {
+  margin-bottom: var(--spacing-lg);
+}
+.layout-mb-xl {
+  margin-bottom: var(--spacing-xl);
+}
+
+.layout-mt-0 {
+  margin-top: 0;
+}
+.layout-mt-xs {
+  margin-top: var(--spacing-xs);
+}
+.layout-mt-sm {
+  margin-top: var(--spacing-sm);
+}
+.layout-mt-md {
+  margin-top: var(--spacing-md);
+}
+.layout-mt-lg {
+  margin-top: var(--spacing-lg);
+}
+.layout-mt-xl {
+  margin-top: var(--spacing-xl);
+}
+
+.layout-ml-xs {
+  margin-left: var(--spacing-xs);
+}
+.layout-ml-sm {
+  margin-left: var(--spacing-sm);
+}
+.layout-ml-md {
+  margin-left: var(--spacing-md);
+}
+.layout-ml-lg {
+  margin-left: var(--spacing-lg);
+}
+.layout-ml-xl {
+  margin-left: var(--spacing-xl);
+}
+
+.layout-p-0 {
+  padding: 0;
+}
+.layout-p-xs {
+  padding: var(--spacing-xs);
+}
+.layout-p-sm {
+  padding: var(--spacing-sm);
+}
+.layout-p-md {
+  padding: var(--spacing-md);
+}
+.layout-p-lg {
+  padding: var(--spacing-lg);
+}
+.layout-p-xl {
+  padding: var(--spacing-xl);
+}
+
+.layout-px-lg {
+  padding-left: var(--spacing-lg);
+  padding-right: var(--spacing-lg);
+}
+.layout-px-xs {
+  padding-left: var(--spacing-xs);
+  padding-right: var(--spacing-xs);
+}
+
+.layout-pl-compact {
+  padding-left: var(--spacing-compact);
+}
+.layout-pl-md {
+  padding-left: var(--spacing-md);
+}
+
+/* 表格工具条 / 筛选条：sm 纵向 + md 横向 */
+.layout-bar-tight {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: #fafafa;
+  border-bottom: 1px solid var(--color-border, rgba(130, 150, 160, 0.22));
+}
+
+/* 大留白空状态：24+16=40px */
+.layout-p-empty {
+  padding: calc(var(--spacing-xl) + var(--spacing-lg));
+}
+
+/* Ant Design Divider：配合 rootClassName */
+.layout-divider-y-sm {
+  margin-block: var(--spacing-sm) !important;
+}
+.layout-divider-y-md {
+  margin-block: var(--spacing-md) !important;
+}
+.layout-divider-y-lg {
+  margin-block: var(--spacing-lg) !important;
+}

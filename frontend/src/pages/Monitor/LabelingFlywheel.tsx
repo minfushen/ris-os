@@ -115,14 +115,16 @@ export default function LabelingFlywheel({ onLabel }: LabelingFlywheelProps) {
       dataIndex: "id",
       key: "id",
       width: 70,
-      render: (text: string) => <Text code style={{ fontSize: 11 }}>{text}</Text>,
+      render: (text: string) => <Text code style={{ fontSize: 13 }}>{text}</Text>,
     },
     {
       title: "场景",
       dataIndex: "scenario",
       key: "scenario",
       width: 60,
-      render: (text: string) => <Tag style={{ margin: 0, fontSize: 10 }}>{text}</Tag>,
+      render: (text: string) => (
+        <Tag className="!m-0 text-[12px]">{text}</Tag>
+      ),
     },
     {
       title: "线上/线下",
@@ -130,11 +132,11 @@ export default function LabelingFlywheel({ onLabel }: LabelingFlywheelProps) {
       width: 100,
       render: (_: unknown, record: LabelingCase) => (
         <Space size={2}>
-          <Tag color={record.onlineResult === "pass" ? "green" : "red"} style={{ margin: 0, fontSize: 10 }}>
+          <Tag color={record.onlineResult === "pass" ? "green" : "red"} className="!m-0 text-[12px]">
             {record.onlineResult === "pass" ? "过" : "拒"}
           </Tag>
-          <Text type="secondary" style={{ fontSize: 10 }}>/</Text>
-          <Tag color={record.offlineResult === "pass" ? "green" : "red"} style={{ margin: 0, fontSize: 10 }}>
+          <Text type="secondary" className="text-[13px]">/</Text>
+          <Tag color={record.offlineResult === "pass" ? "green" : "red"} className="!m-0 text-[12px]">
             {record.offlineResult === "pass" ? "过" : "拒"}
           </Tag>
         </Space>
@@ -146,7 +148,7 @@ export default function LabelingFlywheel({ onLabel }: LabelingFlywheelProps) {
       key: "deviationType",
       width: 70,
       render: (text: string) => (
-        <Text style={{ fontSize: 11, color: text === "误杀" ? "#faad14" : "#ff4d4f" }}>
+        <Text style={{ fontSize: 13, color: text === "误杀" ? "#faad14" : "#ff4d4f" }}>
           {text}
         </Text>
       ),
@@ -163,7 +165,7 @@ export default function LabelingFlywheel({ onLabel }: LabelingFlywheelProps) {
           feedback: { color: "green", text: "已回流" },
         };
         return (
-          <Tag color={config[status].color} style={{ margin: 0, fontSize: 10 }}>
+          <Tag color={config[status].color} className="!m-0 text-[12px]">
             {config[status].text}
           </Tag>
         );
@@ -191,9 +193,9 @@ export default function LabelingFlywheel({ onLabel }: LabelingFlywheelProps) {
       <ModuleSectionCard>
         <Row gutter={12}>
           <Col span={6}>
-            <Card size="small" style={{ borderRadius: 0 }}>
+            <Card size="small" className="rounded-none">
               <Statistic
-                title={<Text style={{ fontSize: 11 }}>待标注</Text>}
+                title={<Text className="text-[13px]">待标注</Text>}
                 value={pendingCount}
                 prefix={<WarningOutlined style={{ color: "#faad14" }} />}
                 valueStyle={{ fontSize: 20, color: "#faad14" }}
@@ -201,9 +203,9 @@ export default function LabelingFlywheel({ onLabel }: LabelingFlywheelProps) {
             </Card>
           </Col>
           <Col span={6}>
-            <Card size="small" style={{ borderRadius: 0 }}>
+            <Card size="small" className="rounded-none">
               <Statistic
-                title={<Text style={{ fontSize: 11 }}>已标注</Text>}
+                title={<Text className="text-[13px]">已标注</Text>}
                 value={labeledCount}
                 prefix={<CheckCircleOutlined style={{ color: "#1890ff" }} />}
                 valueStyle={{ fontSize: 20, color: "#1890ff" }}
@@ -211,9 +213,9 @@ export default function LabelingFlywheel({ onLabel }: LabelingFlywheelProps) {
             </Card>
           </Col>
           <Col span={6}>
-            <Card size="small" style={{ borderRadius: 0 }}>
+            <Card size="small" className="rounded-none">
               <Statistic
-                title={<Text style={{ fontSize: 11 }}>已回流</Text>}
+                title={<Text className="text-[13px]">已回流</Text>}
                 value={feedbackCount}
                 prefix={<SyncOutlined style={{ color: "#52c41a" }} />}
                 valueStyle={{ fontSize: 20, color: "#52c41a" }}
@@ -221,9 +223,9 @@ export default function LabelingFlywheel({ onLabel }: LabelingFlywheelProps) {
             </Card>
           </Col>
           <Col span={6}>
-            <Card size="small" style={{ borderRadius: 0 }}>
+            <Card size="small" className="rounded-none">
               <Statistic
-                title={<Text style={{ fontSize: 11 }}>样本增量</Text>}
+                title={<Text className="text-[13px]">样本增量</Text>}
                 value={mlopsStatus.currentLabels}
                 suffix={`/ ${mlopsStatus.threshold}`}
                 prefix={<RobotOutlined style={{ color: "#722ed1" }} />}
@@ -238,17 +240,17 @@ export default function LabelingFlywheel({ onLabel }: LabelingFlywheelProps) {
       <ModuleSectionCard noPadding>
         <Tabs
           defaultActiveKey="labeling"
-          style={{ padding: "0 16px" }}
+          className="layout-px-lg"
           items={[
             {
               key: "labeling",
               label: <Text style={{ fontSize: 12 }}>案件标注</Text>,
               children: (
-                <div style={{ display: "flex", gap: 12 }}>
+                <div className="layout-flex layout-gap-md">
                   {/* 左侧：案件列表 */}
-                  <div style={{ flex: 1 }}>
-                    <div style={{ marginBottom: 8 }}>
-                      <Text strong style={{ fontSize: 12 }}>
+                  <div className="layout-flex-1">
+                    <div className="layout-mb-sm">
+                      <Text strong className="text-[12px]">
                         导致偏差的典型案件
                       </Text>
                     </div>
@@ -274,33 +276,29 @@ export default function LabelingFlywheel({ onLabel }: LabelingFlywheelProps) {
 
                   {/* 右侧：标注面板 */}
                   <div
-                    style={{
-                      width: 280,
-                      border: "1px solid #d9d9d9",
-                      background: "#fafafa",
-                      padding: 12,
-                    }}
+                    className="layout-p-md border border-[#d9d9d9] bg-[#fafafa] shrink-0"
+                    style={{ width: 280 }}
                   >
-                    <Text strong style={{ fontSize: 12, display: "block", marginBottom: 8 }}>
+                    <Text strong className="text-[12px] block layout-mb-sm">
                       标注面板
                     </Text>
                     {selectedCase ? (
                       <>
-                        <div style={{ marginBottom: 12 }}>
-                          <Text type="secondary" style={{ fontSize: 11 }}>
+                        <div className="layout-mb-md">
+                          <Text type="secondary" className="text-[13px]">
                             案件ID: <Text code>{selectedCase.id}</Text>
                           </Text>
                           <br />
-                          <Text type="secondary" style={{ fontSize: 11 }}>
+                          <Text type="secondary" className="text-[13px]">
                             申请人: {selectedCase.applicant} | 金额: ¥{selectedCase.amount.toLocaleString()}
                           </Text>
                         </div>
 
-                        <Divider style={{ margin: "8px 0" }} />
+                        <Divider rootClassName="layout-divider-y-sm" />
 
                         {/* 人工定性 */}
-                        <div style={{ marginBottom: 16 }}>
-                          <Text style={{ fontSize: 11, display: "block", marginBottom: 8 }}>
+                        <div className="layout-mb-lg">
+                          <Text className="text-[13px] block layout-mb-sm">
                             1. 人工定性:
                           </Text>
                           <Radio.Group
@@ -309,19 +307,19 @@ export default function LabelingFlywheel({ onLabel }: LabelingFlywheelProps) {
                             style={{ width: "100%" }}
                           >
                             <Space direction="vertical" style={{ width: "100%" }}>
-                              <Radio value="线上正确" style={{ fontSize: 11 }}>线上正确</Radio>
-                              <Radio value="线下结论对" style={{ fontSize: 11 }}>线下结论对</Radio>
-                              <Radio value="灰黑产" style={{ fontSize: 11 }}>灰黑产</Radio>
-                              <Radio value="边界case" style={{ fontSize: 11 }}>边界case (需讨论)</Radio>
+                              <Radio value="线上正确" style={{ fontSize: 13 }}>线上正确</Radio>
+                              <Radio value="线下结论对" style={{ fontSize: 13 }}>线下结论对</Radio>
+                              <Radio value="灰黑产" style={{ fontSize: 13 }}>灰黑产</Radio>
+                              <Radio value="边界case" style={{ fontSize: 13 }}>边界case (需讨论)</Radio>
                             </Space>
                           </Radio.Group>
                         </div>
 
-                        <Divider style={{ margin: "8px 0" }} />
+                        <Divider rootClassName="layout-divider-y-sm" />
 
                         {/* 知识回流 */}
-                        <div style={{ marginBottom: 16 }}>
-                          <Text style={{ fontSize: 11, display: "block", marginBottom: 8 }}>
+                        <div className="layout-mb-lg">
+                          <Text className="text-[13px] block layout-mb-sm">
                             2. 知识回流:
                           </Text>
                           <Checkbox.Group
@@ -330,18 +328,18 @@ export default function LabelingFlywheel({ onLabel }: LabelingFlywheelProps) {
                             style={{ width: "100%" }}
                           >
                             <Space direction="vertical" style={{ width: "100%" }}>
-                              <Checkbox value="blacklist" style={{ fontSize: 11 }}>打入黑样本池</Checkbox>
-                              <Checkbox value="feature" style={{ fontSize: 11 }}>更新特征库</Checkbox>
-                              <Checkbox value="rule" style={{ fontSize: 11 }}>触发规则优化建议</Checkbox>
+                              <Checkbox value="blacklist" style={{ fontSize: 13 }}>打入黑样本池</Checkbox>
+                              <Checkbox value="feature" style={{ fontSize: 13 }}>更新特征库</Checkbox>
+                              <Checkbox value="rule" style={{ fontSize: 13 }}>触发规则优化建议</Checkbox>
                             </Space>
                           </Checkbox.Group>
                         </div>
 
-                        <Divider style={{ margin: "8px 0" }} />
+                        <Divider rootClassName="layout-divider-y-sm" />
 
                         {/* 备注 */}
-                        <div style={{ marginBottom: 16 }}>
-                          <Text style={{ fontSize: 11, display: "block", marginBottom: 8 }}>
+                        <div className="layout-mb-lg">
+                          <Text className="text-[13px] block layout-mb-sm">
                             备注:
                           </Text>
                           <TextArea
@@ -349,7 +347,7 @@ export default function LabelingFlywheel({ onLabel }: LabelingFlywheelProps) {
                             onChange={(e) => setNotes(e.target.value)}
                             placeholder="输入标注备注..."
                             rows={2}
-                            style={{ fontSize: 11 }}
+                            style={{ fontSize: 13 }}
                           />
                         </div>
 
@@ -363,11 +361,7 @@ export default function LabelingFlywheel({ onLabel }: LabelingFlywheelProps) {
                         </Button>
                       </>
                     ) : (
-                      <Alert
-                        type="info"
-                        message="请从左侧选择案件进行标注"
-                        style={{ borderRadius: 0 }}
-                      />
+                      <Alert type="info" message="请从左侧选择案件进行标注" className="rounded-none" />
                     )}
                   </div>
                 </div>

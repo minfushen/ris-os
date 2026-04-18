@@ -21,13 +21,13 @@ export default function WorkbenchSection({
   return (
     <Card
       className="module-section"
-      styles={{ body: { padding: 0 } }}
+      styles={{ body: { padding: "var(--spacing-none)" } }}
     >
       <div className="module-section-header">
         <div>
           <Text className="module-section-title">{title}</Text>
           {subtitle && (
-            <Text type="secondary" style={{ fontSize: 12, marginLeft: 8 }}>
+            <Text type="secondary" className="text-[12px] layout-ml-sm">
               {subtitle}
             </Text>
           )}
@@ -35,8 +35,7 @@ export default function WorkbenchSection({
         {extra && <div>{extra}</div>}
       </div>
       <div
-        className="module-section-body"
-        style={{ padding: noPadding ? 0 : 16 }}
+        className={`module-section-body ${noPadding ? "layout-p-0" : "layout-p-lg"}`}
       >
         {children}
       </div>

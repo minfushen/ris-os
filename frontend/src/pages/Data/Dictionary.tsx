@@ -21,26 +21,26 @@ const DATA_SOURCES = [
 
 export default function Dictionary() {
   const variableColumns = [
-    { title: "变量ID", dataIndex: "id", width: 80, render: (v: string) => <Text style={{ fontSize: 11 }}>{v}</Text> },
-    { title: "变量名", dataIndex: "name", width: 150, render: (v: string) => <Text code style={{ fontSize: 11 }}>{v}</Text> },
-    { title: "中文名", dataIndex: "cnName", width: 180, render: (v: string) => <Text style={{ fontSize: 12 }}>{v}</Text> },
+    { title: "变量ID", dataIndex: "id", width: 80, render: (v: string) => <Text style={{ fontSize: 13 }}>{v}</Text> },
+    { title: "变量名", dataIndex: "name", width: 150, render: (v: string) => <Text code style={{ fontSize: 13 }}>{v}</Text> },
+    { title: "中文名", dataIndex: "cnName", width: 180, render: (v: string) => <Text style={{ fontSize: 13 }}>{v}</Text> },
     {
       title: "类型",
       dataIndex: "type",
       width: 80,
       render: (v: string) => (
-        <Tag color={v === "raw" ? "blue" : v === "derived" ? "orange" : "purple"} style={{ fontSize: 10 }}>
+        <Tag color={v === "raw" ? "blue" : v === "derived" ? "orange" : "purple"} style={{ fontSize: 12 }}>
           {v === "raw" ? "原始" : v === "derived" ? "衍生" : "模型"}
         </Tag>
       ),
     },
-    { title: "数据来源", dataIndex: "source", width: 100, render: (v: string) => <Text style={{ fontSize: 11 }}>{v}</Text> },
+    { title: "数据来源", dataIndex: "source", width: 100, render: (v: string) => <Text style={{ fontSize: 13 }}>{v}</Text> },
     {
       title: "状态",
       dataIndex: "status",
       width: 80,
       render: (v: string) => (
-        <Tag color={v === "active" ? "green" : "default"} style={{ fontSize: 10 }}>
+        <Tag color={v === "active" ? "green" : "default"} style={{ fontSize: 12 }}>
           {v === "active" ? "生效" : "草稿"}
         </Tag>
       ),
@@ -49,33 +49,33 @@ export default function Dictionary() {
       title: "操作",
       key: "actions",
       width: 80,
-      render: () => <Button type="link" size="small" icon={<EditOutlined />} style={{ fontSize: 11 }}>编辑</Button>,
+      render: () => <Button type="link" size="small" icon={<EditOutlined />} style={{ fontSize: 13 }}>编辑</Button>,
     },
   ];
 
   const sourceColumns = [
-    { title: "数据源ID", dataIndex: "id", width: 80, render: (v: string) => <Text style={{ fontSize: 11 }}>{v}</Text> },
-    { title: "名称", dataIndex: "name", width: 150, render: (v: string) => <Text strong style={{ fontSize: 12 }}>{v}</Text> },
-    { title: "类型", dataIndex: "type", width: 100, render: (v: string) => <Text style={{ fontSize: 11 }}>{v}</Text> },
+    { title: "数据源ID", dataIndex: "id", width: 80, render: (v: string) => <Text style={{ fontSize: 13 }}>{v}</Text> },
+    { title: "名称", dataIndex: "name", width: 150, render: (v: string) => <Text strong style={{ fontSize: 13 }}>{v}</Text> },
+    { title: "类型", dataIndex: "type", width: 100, render: (v: string) => <Text style={{ fontSize: 13 }}>{v}</Text> },
     {
       title: "状态",
       dataIndex: "status",
       width: 100,
       render: (v: string) => (
-        <Tag color={v === "connected" ? "green" : "red"} style={{ fontSize: 10 }}>
+        <Tag color={v === "connected" ? "green" : "red"} style={{ fontSize: 12 }}>
           {v === "connected" ? "已连接" : "异常"}
         </Tag>
       ),
     },
-    { title: "最后同步", dataIndex: "lastSync", width: 150, render: (v: string) => <Text style={{ fontSize: 11 }}>{v}</Text> },
+    { title: "最后同步", dataIndex: "lastSync", width: 150, render: (v: string) => <Text style={{ fontSize: 13 }}>{v}</Text> },
     {
       title: "操作",
       key: "actions",
       width: 100,
       render: () => (
         <Space>
-          <Button type="link" size="small" style={{ fontSize: 11 }}>配置</Button>
-          <Button type="link" size="small" style={{ fontSize: 11 }}>测试</Button>
+          <Button type="link" size="small" style={{ fontSize: 13 }}>配置</Button>
+          <Button type="link" size="small" style={{ fontSize: 13 }}>测试</Button>
         </Space>
       ),
     },
@@ -87,7 +87,7 @@ export default function Dictionary() {
       label: <Text style={{ fontSize: 12 }}>变量字典</Text>,
       children: (
         <div>
-          <Space style={{ marginBottom: 16 }}>
+          <Space className="layout-mb-lg">
             <Input placeholder="变量名/中文名" style={{ width: 150 }} size="small" />
             <Select
               placeholder="类型"
@@ -134,7 +134,7 @@ export default function Dictionary() {
       breadcrumb={["数据资产", "数据字典"]}
     >
       <ModuleSectionCard noPadding>
-        <Tabs items={items} style={{ padding: "0 16px" }} />
+        <Tabs items={items} className="layout-px-lg" />
       </ModuleSectionCard>
     </ModulePageShell>
   );

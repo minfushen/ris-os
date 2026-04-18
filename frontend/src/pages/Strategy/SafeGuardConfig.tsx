@@ -40,22 +40,20 @@ export default function SafeGuardConfig({
 
   return (
     <div>
-      {/* 标题 */}
-      <Text strong style={{ fontSize: 13, display: "block", marginBottom: 12 }}>
+      <Text strong className="text-[13px] block layout-mb-md">
         2. 上线护盾配置 (Safe-guard)
       </Text>
 
       <Card
         size="small"
-        style={{ border: "1px solid #d9d9d9", borderRadius: 0 }}
-        styles={{ body: { padding: 16 } }}
+        className="rounded-none border border-[#d9d9d9]"
+        styles={{ body: { padding: "var(--spacing-lg)" } }}
       >
-        {/* 自动熔断 */}
-        <div style={{ marginBottom: 20 }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+        <div className="layout-mb-xl">
+          <div className="layout-flex-between layout-mb-sm">
             <Space>
               <SafetyOutlined style={{ color: "#6f8f95" }} />
-              <Text strong style={{ fontSize: 12 }}>
+              <Text strong className="text-[12px]">
                 开启自动熔断
               </Text>
             </Space>
@@ -66,12 +64,12 @@ export default function SafeGuardConfig({
           </div>
 
           {config.enableCircuitBreaker && (
-            <div style={{ marginLeft: 24, marginTop: 12 }}>
-              <div style={{ marginBottom: 16 }}>
-                <Text type="secondary" style={{ fontSize: 11, display: "block", marginBottom: 4 }}>
+            <div className="layout-ml-xl layout-mt-md">
+              <div className="layout-mb-lg">
+                <Text type="secondary" className="text-[13px] block layout-mb-xs">
                   通过率波动阈值 (%)
                 </Text>
-                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                <div className="layout-flex-center layout-gap-md">
                   <Slider
                     style={{ flex: 1 }}
                     min={1}
@@ -87,17 +85,17 @@ export default function SafeGuardConfig({
                     style={{ width: 60 }}
                     size="small"
                   />
-                  <Text type="secondary" style={{ fontSize: 11 }}>
+                  <Text type="secondary" className="text-[13px]">
                     %
                   </Text>
                 </div>
               </div>
 
-              <div style={{ marginBottom: 16 }}>
-                <Text type="secondary" style={{ fontSize: 11, display: "block", marginBottom: 4 }}>
+              <div className="layout-mb-lg">
+                <Text type="secondary" className="text-[13px] block layout-mb-xs">
                   O2O 偏差阈值 (%)
                 </Text>
-                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                <div className="layout-flex-center layout-gap-md">
                   <Slider
                     style={{ flex: 1 }}
                     min={1}
@@ -113,7 +111,7 @@ export default function SafeGuardConfig({
                     style={{ width: 60 }}
                     size="small"
                   />
-                  <Text type="secondary" style={{ fontSize: 11 }}>
+                  <Text type="secondary" className="text-[13px]">
                     %
                   </Text>
                 </div>
@@ -123,33 +121,32 @@ export default function SafeGuardConfig({
                 type="warning"
                 showIcon
                 icon={<WarningOutlined />}
+                className="layout-mt-sm rounded-none"
                 message={
-                  <Text style={{ fontSize: 11 }}>
+                  <Text className="text-[13px]">
                     当 通过率波动 &gt; {config.passRateThreshold}% 或 O2O偏差 &gt; {config.o2oDeviationThreshold}% 时自动回滚
                   </Text>
                 }
-                style={{ marginTop: 8, borderRadius: 0 }}
               />
             </div>
           )}
         </div>
 
-        <Divider style={{ margin: "16px 0" }} />
+        <Divider rootClassName="layout-divider-y-lg" />
 
-        {/* 灰度流量配置 */}
         <div>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+          <div className="layout-flex-between layout-mb-sm">
             <Space>
               <ExperimentOutlined style={{ color: "#6f8f95" }} />
-              <Text strong style={{ fontSize: 12 }}>
+              <Text strong className="text-[12px]">
                 灰度流量分配
               </Text>
             </Space>
             <Tag color="blue">{config.canaryPercentage}%</Tag>
           </div>
 
-          <div style={{ marginLeft: 24, marginTop: 12 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <div className="layout-ml-xl layout-mt-md">
+            <div className="layout-flex-center layout-gap-md">
               <Slider
                 style={{ flex: 1 }}
                 min={1}
@@ -165,7 +162,7 @@ export default function SafeGuardConfig({
               />
             </div>
 
-            <div style={{ marginTop: 12, display: "flex", gap: 8 }}>
+            <div className="layout-mt-md layout-flex layout-gap-sm">
               <Tag style={{ cursor: "pointer" }} onClick={() => updateConfig("canaryPercentage", 5)}>
                 5%
               </Tag>
@@ -183,24 +180,23 @@ export default function SafeGuardConfig({
             <Alert
               type="info"
               showIcon
+              className="layout-mt-md rounded-none"
               message={
-                <Text style={{ fontSize: 11 }}>
+                <Text className="text-[13px]">
                   新版本将分配 {config.canaryPercentage ?? 10}% 流量，剩余 {100 - (config.canaryPercentage ?? 10)}% 流量走线上版本
                 </Text>
               }
-              style={{ marginTop: 12, borderRadius: 0 }}
             />
           </div>
         </div>
 
-        <Divider style={{ margin: "16px 0" }} />
+        <Divider rootClassName="layout-divider-y-lg" />
 
-        {/* 回滚策略 */}
         <div>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <div className="layout-flex-between">
             <Space>
               <ThunderboltOutlined style={{ color: "#6f8f95" }} />
-              <Text strong style={{ fontSize: 12 }}>
+              <Text strong className="text-[12px]">
                 回滚策略
               </Text>
             </Space>

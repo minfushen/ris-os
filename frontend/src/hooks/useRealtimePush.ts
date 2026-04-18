@@ -8,6 +8,31 @@ export interface RealtimeAlert {
   description: string;
   timestamp: string;
   metadata?: Record<string, unknown>;
+  /** 列表第二行摘要（设计稿口径） */
+  subtitle?: string;
+  /** 一句话结论（卡片第二行）；缺省用 subtitle */
+  conclusionLine?: string;
+  /** 影响范围，如「API-04 渠道 · 授信进件」 */
+  impactScope?: string;
+  /** 首次触发时间展示文案（可与当前告警窗 timestamp 区分） */
+  firstTriggeredDisplay?: string;
+  /** 展开区键值对，最多 6 条（3×2 栅格） */
+  detailPairs?: { label: string; value: string }[];
+  /** 影响量化：金额（万）+ 笔数，用于排优先级 */
+  impact?: {
+    amountWan?: number | string;
+    applications?: number;
+    /** 如「近 2h 环比 +18%」 */
+    momentum?: string;
+  };
+  /** 展开区顶部：简要数据佐证（非纯文案） */
+  evidenceRows?: { label: string; value: string; hint?: string }[];
+  /** 同类复发与历史闭环，用于判断是否系统性问题 */
+  recurrence?: {
+    timesIn30d: number;
+    lastOccurredAt?: string;
+    lastResolutionSummary?: string;
+  };
 }
 
 export interface WebSocketStatus {

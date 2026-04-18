@@ -8,6 +8,10 @@ export interface HomeTaskRow {
   scenario_node: string;
   created_at: string;
   updated_at: string;
+  priority?: "P0" | "P1" | "P2";
+  current_handler?: string | null;
+  sla_due_at?: string | null;
+  progress_pct?: number | null;
   initiator?: string;
   trigger?: string;
 }

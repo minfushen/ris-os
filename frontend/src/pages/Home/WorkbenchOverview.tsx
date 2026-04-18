@@ -95,7 +95,7 @@ export default function WorkbenchOverview({
     <section className="section-shell">
       <div className="section-header flex flex-wrap items-center justify-between gap-2">
         <div>
-          <Text className="section-title">工作台总览</Text>
+          <Text className="section-title">核心指标与队列</Text>
           <Text className="section-subtitle ml-2">队列来自当前列表；风险项为演示口径</Text>
         </div>
         <Tag className="text-xs m-0">点击卡片下钻工作项</Tag>

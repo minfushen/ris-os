@@ -129,7 +129,7 @@ export default function AppSider() {
       className={`glass-panel-strong flex flex-col transition-all duration-300 ${
         collapsed ? "w-16" : "w-52"
       }`}
-      style={{ minHeight: "calc(100vh - 48px)" }}
+      style={{ minHeight: "calc(100vh - var(--header-height, 44px))" }}
     >
       {/* Logo */}
       <div className="flex items-center justify-center h-12 border-b border-border-soft">
@@ -205,7 +205,7 @@ export default function AppSider() {
 
       {/* 折叠按钮 */}
       <div
-        className="flex items-center justify-center h-10 border-t border-border-soft cursor-pointer hover:bg-glass/60 transition-colors"
+        className="flex items-center justify-center h-10 border-t border-border-soft cursor-pointer hover:bg-[var(--color-bg-interactive-hover)] transition-colors"
         onClick={() => setCollapsed(!collapsed)}
       >
         {collapsed ? (

@@ -59,7 +59,7 @@ export default function StrategyForm({ onSubmit }: StrategyFormProps) {
       <Text strong style={{ fontSize: 13 }}>
         变更信息
       </Text>
-      <Divider style={{ margin: "8px 0" }} />
+      <Divider rootClassName="layout-divider-y-sm" />
 
       <Form.Item
         name="changeType"

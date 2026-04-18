@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Select, Input, Button, Space, Typography } from "antd";
+import { Select, Input, Button, Typography } from "antd";
 import { SearchOutlined, ReloadOutlined } from "@ant-design/icons";
 import type { TaskType, TaskStatus, ScenarioNode } from "@/types";
 
@@ -26,6 +26,7 @@ const SCENARIO_OPTIONS = [
   { value: "credit", label: "授信" },
   { value: "draw", label: "支用" },
   { value: "post_loan", label: "贷后" },
+  { value: "general", label: "综合/其他" },
 ];
 
 const STATUS_OPTIONS = [
@@ -88,17 +89,8 @@ export default function FilterBar({
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        gap: 8,
-        padding: "8px 12px",
-        background: "#fafafa",
-        borderBottom: "1px solid #d9d9d9",
-      }}
-    >
-      <Text style={{ fontSize: 12, color: "#8c8c8c" }}>筛选</Text>
+    <div className="layout-bar-tight">
+      <Text className="text-[12px] text-text-muted">筛选</Text>
 
       <Select
         placeholder="场景"
@@ -139,7 +131,7 @@ export default function FilterBar({
         allowClear
       />
 
-      <Space size={4}>
+      <div className="layout-flex-center layout-gap-xs">
         <Button size="small" icon={<ReloadOutlined />} onClick={handleReset}>
           重置
         </Button>
@@ -151,7 +143,7 @@ export default function FilterBar({
         >
           查询
         </Button>
-      </Space>
+      </div>
     </div>
   );
 }

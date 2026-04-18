@@ -19,7 +19,7 @@ export type TaskStatus =
   | "rejected"    // 已驳回
   | "failed";     // 已失败
 
-export type ScenarioNode = "credit" | "draw" | "post_loan";
+export type ScenarioNode = "credit" | "draw" | "post_loan" | "general";
 
 // API 响应类型
 export interface TaskResponse {
@@ -37,6 +37,14 @@ export interface TaskListItem {
   created_at: string;
   updated_at: string;
   summary?: string | null;
+  /** 业务优先级（缺失时前端可按类型/状态推断演示） */
+  priority?: "P0" | "P1" | "P2";
+  /** 当前处理人（协作视角） */
+  current_handler?: string | null;
+  /** SLA 截止时间 ISO8601 */
+  sla_due_at?: string | null;
+  /** 进度 0–100（缺失时由状态推断占位） */
+  progress_pct?: number | null;
 }
 
 export type TaskBrief = TaskListItem;

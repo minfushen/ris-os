@@ -9,41 +9,31 @@ import {
   Empty,
   Tabs,
   Tag,
-  Dropdown,
-  App,
+  Progress,
 } from "antd";
-import type { MenuProps } from "antd";
 import {
   CheckCircleOutlined,
   ClockCircleOutlined,
   CloseCircleOutlined,
   LoadingOutlined,
   AuditOutlined,
-  DownOutlined,
+  LineChartOutlined,
+  ExperimentOutlined,
+  ControlOutlined,
+  SecurityScanOutlined,
+  FileSearchOutlined,
 } from "@ant-design/icons";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import type { TaskStatus, TaskType, ScenarioNode } from "@/types";
-import { isBacklogStatus } from "@/utils/workbenchStats";
+import { isBacklogStatus, type HomeTaskRow } from "@/utils/workbenchStats";
 import { writeWorkbenchReturnQs } from "@/utils/workbenchUrl";
 import FilterBar, { type FilterState } from "./FilterBar";
 import CreateTaskMenu from "./CreateTaskMenu";
 
 const { Text } = Typography;
 
-type TaskRow = {
-  task_id: string;
-  task_type: TaskType;
-  status: TaskStatus;
-  title: string;
-  scenario_node: string;
-  created_at: string;
-  updated_at: string;
-  initiator?: string;
-  trigger?: string;
-};
-
 interface TaskDataGridProps {
-  tasks: TaskRow[];
+  tasks: HomeTaskRow[];
   loading?: boolean;
   onRefresh: () => void;
   onCreateTask: (type: TaskType) => void;
@@ -53,7 +43,7 @@ interface TaskDataGridProps {
   highlightTaskId?: string | null;
   onHighlightConsumed?: () => void;
   /** 行内「处理」：进入处置抽屉/详情（由首页注入） */
-  onProcessTask?: (row: TaskRow) => void;
+  onProcessTask?: (row: HomeTaskRow) => void;
 }
 
 const STATUS_CONFIG: Record<TaskStatus, { color: string; icon: React.ReactNode; text: string }> = {
@@ -111,6 +101,83 @@ const MODULE_ENTRY: Record<
   },
 };
 
+const SCENARIO_LABEL: Record<string, string> = {
+  credit: "授信",
+  draw: "支用",
+  post_loan: "贷后",
+  general: "综合/其他",
+};
+
+const TASK_TYPE_ICON: Record<TaskType, React.ReactNode> = {
+  analysis: <LineChartOutlined className="text-primary text-base" />,
+  backtest: <ExperimentOutlined className="text-primary text-base" />,
+  strategy: <ControlOutlined className="text-primary text-base" />,
+  inspection: <AuditOutlined className="text-primary text-base" />,
+  fraud: <SecurityScanOutlined className="text-primary text-base" />,
+  review: <FileSearchOutlined className="text-primary text-base" />,
+};
+
+const TASK_TYPE_LABEL: Record<TaskType, string> = {
+  analysis: "归因分析",
+  backtest: "仿真回测",
+  strategy: "策略发布",
+  inspection: "专家抽检",
+  fraud: "欺诈排查",
+  review: "信审任务",
+};
+
+const PRIORITY_TAG: Record<"P0" | "P1" | "P2", { color: string; text: string }> = {
+  P0: { color: "magenta", text: "P0" },
+  P1: { color: "orange", text: "P1" },
+  P2: { color: "geekblue", text: "P2" },
+};
+
+function inferPriority(row: HomeTaskRow): "P0" | "P1" | "P2" {
+  if (row.priority) return row.priority;
+  if (row.task_type === "analysis" && row.status !== "completed" && row.status !== "rejected") return "P0";
+  if (row.task_type === "strategy" || row.task_type === "fraud") return "P1";
+  return "P2";
+}
+
+function inferProgressPct(row: HomeTaskRow): number {
+  if (row.progress_pct != null && Number.isFinite(row.progress_pct)) {
+    return Math.min(100, Math.max(0, row.progress_pct));
+  }
+  const byStatus: Partial<Record<TaskStatus, number>> = {
+    completed: 100,
+    rejected: 100,
+    failed: 100,
+    reviewing: 82,
+    processing: 52,
+    pending: 18,
+    created: 8,
+    accepted: 12,
+    running: 40,
+    waiting_user: 65,
+  };
+  return byStatus[row.status] ?? 25;
+}
+
+/** 无 sla_due_at 时：未完成态用创建时间 +48h 作为演示 SLA 截止 */
+function effectiveSlaDueIso(row: HomeTaskRow): string | null {
+  if (row.sla_due_at) return row.sla_due_at;
+  if (row.status === "completed" || row.status === "rejected" || row.status === "failed") return null;
+  const t = new Date(row.created_at).getTime() + 48 * 3600_000;
+  return new Date(t).toISOString();
+}
+
+function formatSlaRemaining(dueIso: string | null, nowMs: number): { text: string; tone: "ok" | "warn" | "over" } {
+  if (!dueIso) return { text: "—", tone: "ok" };
+  const ms = new Date(dueIso).getTime() - nowMs;
+  if (ms <= 0) return { text: "已逾期", tone: "over" };
+  const h = Math.floor(ms / 3600_000);
+  const m = Math.floor((ms % 3600_000) / 60_000);
+  if (h >= 72) return { text: `${Math.floor(h / 24)}天+`, tone: "ok" };
+  if (h >= 24) return { text: `${Math.floor(h / 24)}天${h % 24}时`, tone: h < 36 ? "warn" : "ok" };
+  if (h > 0) return { text: `${h}时${m}分`, tone: h < 4 ? "warn" : "ok" };
+  return { text: `${m}分`, tone: m < 30 ? "warn" : "ok" };
+}
+
 function isSameLocalDay(iso: string, now = new Date()): boolean {
   const d = new Date(iso);
   return (
@@ -151,7 +218,6 @@ export default function TaskDataGrid({
   onHighlightConsumed,
   onProcessTask,
 }: TaskDataGridProps) {
-  const { message } = App.useApp();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const [tab, setTab] = useState<"mine" | "all">("mine");
@@ -161,6 +227,7 @@ export default function TaskDataGrid({
   const [remoteSeedVersion, setRemoteSeedVersion] = useState(0);
   const [completedTodayOnly, setCompletedTodayOnly] = useState(false);
   const [wqShortcut, setWqShortcut] = useState<string | null>(null);
+  const [slaTick, setSlaTick] = useState(0);
   const lastFiltersRef = useRef<FilterState | null>(null);
 
   const pageSize = 15;
@@ -170,7 +237,12 @@ export default function TaskDataGrid({
     [tasks, tab]
   );
 
-  function applyClientFilters(source: TaskRow[], filters: FilterState, todayOnly: boolean) {
+  useEffect(() => {
+    const id = window.setInterval(() => setSlaTick((n) => n + 1), 60_000);
+    return () => window.clearInterval(id);
+  }, []);
+
+  function applyClientFilters(source: HomeTaskRow[], filters: FilterState, todayOnly: boolean) {
     let filtered = [...source];
     if (filters.scenario) filtered = filtered.filter((t) => t.scenario_node === filters.scenario);
     if (filters.status) filtered = filtered.filter((t) => t.status === filters.status);
@@ -178,7 +250,11 @@ export default function TaskDataGrid({
     if (filters.keyword) {
       const kw = filters.keyword.toLowerCase();
       filtered = filtered.filter(
-        (t) => t.title.toLowerCase().includes(kw) || t.task_id.toLowerCase().includes(kw)
+        (t) =>
+          t.title.toLowerCase().includes(kw) ||
+          t.task_id.toLowerCase().includes(kw) ||
+          (t.initiator && t.initiator.toLowerCase().includes(kw)) ||
+          (t.current_handler && t.current_handler.toLowerCase().includes(kw))
       );
     }
     if (todayOnly) {
@@ -320,65 +396,121 @@ export default function TaskDataGrid({
 
   const paginatedTasks = orderedTasks.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
+  const nowMs = useMemo(() => Date.now(), [slaTick]);
+
   const columns = [
     {
-      title: "任务ID",
-      dataIndex: "task_id",
-      key: "task_id",
-      width: 88,
+      title: "优先级",
+      key: "priority",
+      width: 64,
       fixed: "left" as const,
-      render: (id: string) => (
-        <Text code style={{ fontSize: 11, cursor: "pointer" }}>
-          {id}
-        </Text>
+      render: (_: unknown, record: HomeTaskRow) => {
+        const p = inferPriority(record);
+        const cfg = PRIORITY_TAG[p];
+        return <Tag color={cfg.color} className="!m-0 text-xs font-medium">{cfg.text}</Tag>;
+      },
+    },
+    {
+      title: "类型",
+      key: "task_type",
+      width: 48,
+      fixed: "left" as const,
+      align: "center" as const,
+      render: (_: unknown, record: HomeTaskRow) => (
+        <Tooltip title={TASK_TYPE_LABEL[record.task_type] ?? record.task_type}>
+          {TASK_TYPE_ICON[record.task_type] ?? TASK_TYPE_ICON.analysis}
+        </Tooltip>
       ),
     },
     {
       title: "标题",
       dataIndex: "title",
       key: "title",
-      width: 200,
+      width: 220,
       ellipsis: true,
-      render: (title: string) => (
-        <Tooltip title={title}>
-          <Text style={{ fontSize: 12 }}>{title}</Text>
+      render: (title: string, record: HomeTaskRow) => (
+        <Tooltip
+          title={
+            <div>
+              <div>{title}</div>
+              <Text type="secondary" className="text-xs">ID {record.task_id}</Text>
+            </div>
+          }
+        >
+          <Space direction="vertical" size={0} className="max-w-full">
+            <Text style={{ fontSize: 13 }} className="block truncate">
+              {title}
+            </Text>
+            <Text type="secondary" className="text-[11px] font-mono truncate block">
+              {record.task_id}
+            </Text>
+          </Space>
         </Tooltip>
       ),
     },
     {
-      title: "状态",
-      dataIndex: "status",
-      key: "status",
+      title: "场景节点",
+      dataIndex: "scenario_node",
+      key: "scenario_node",
       width: 88,
-      render: (status: TaskStatus) => {
-        const config = STATUS_CONFIG[status] || STATUS_CONFIG.pending;
+      render: (node: string) => (
+        <Tag className="!m-0 text-xs">{SCENARIO_LABEL[node] ?? node}</Tag>
+      ),
+    },
+    {
+      title: "状态 / 进度",
+      key: "status_progress",
+      width: 148,
+      render: (_: unknown, record: HomeTaskRow) => {
+        const config = STATUS_CONFIG[record.status] || STATUS_CONFIG.pending;
+        const pct = inferProgressPct(record);
         return (
-          <Space size={4}>
-            <span style={{ color: config.color, fontSize: 12 }}>{config.icon}</span>
-            <Text style={{ fontSize: 11, color: config.color }}>{config.text}</Text>
+          <Space direction="vertical" size={4} className="w-full max-w-[140px]">
+            <Space size={4} wrap={false}>
+              <span style={{ color: config.color, fontSize: 12 }}>{config.icon}</span>
+              <Text style={{ fontSize: 12, color: config.color }} className="truncate">{config.text}</Text>
+            </Space>
+            <Progress percent={pct} size="small" showInfo={false} strokeColor={config.color} trailColor="#f0f0f0" />
           </Space>
         );
       },
     },
     {
-      title: "触发/发起人",
-      key: "initiator",
+      title: "SLA 剩余",
+      key: "sla",
       width: 100,
-      render: (_: unknown, record: TaskRow) => (
-        <Tooltip title={record.trigger || "手动发起"}>
-          <Text style={{ fontSize: 11 }}>{record.initiator || "-"}</Text>
-        </Tooltip>
+      render: (_: unknown, record: HomeTaskRow) => {
+        const due = effectiveSlaDueIso(record);
+        const { text, tone } = formatSlaRemaining(due, nowMs);
+        const color = tone === "over" ? "#cf1322" : tone === "warn" ? "#d48806" : undefined;
+        return (
+          <Tooltip title={due ? `截止 ${new Date(due).toLocaleString("zh-CN")}` : "无 SLA / 已闭环"}>
+            <Text style={{ fontSize: 13, color }} strong={tone === "over"}>
+              {text}
+            </Text>
+          </Tooltip>
+        );
+      },
+    },
+    {
+      title: "当前处理人",
+      dataIndex: "current_handler",
+      key: "current_handler",
+      width: 108,
+      ellipsis: true,
+      render: (h: string | undefined) => (
+        <Text style={{ fontSize: 13 }}>{h && h !== "" ? h : "—"}</Text>
       ),
     },
     {
-      title: "更新时间",
-      dataIndex: "updated_at",
-      key: "updated_at",
-      width: 100,
+      title: "创建时间",
+      dataIndex: "created_at",
+      key: "created_at",
+      width: 108,
       render: (time: string) => {
         const d = new Date(time);
         return (
-          <Text type="secondary" style={{ fontSize: 11 }}>
+          <Text type="secondary" style={{ fontSize: 13 }}>
             {`${d.getMonth() + 1}`.padStart(2, "0")}-{d.getDate().toString().padStart(2, "0")}{" "}
             {d.getHours().toString().padStart(2, "0")}:{d.getMinutes().toString().padStart(2, "0")}
           </Text>
@@ -388,53 +520,32 @@ export default function TaskDataGrid({
     {
       title: "操作",
       key: "actions",
-      width: 120,
+      width: 132,
       fixed: "right" as const,
-      render: (_: unknown, record: TaskRow) => {
+      render: (_: unknown, record: HomeTaskRow) => {
         const moduleEntry = MODULE_ENTRY[record.task_type] ?? MODULE_ENTRY.analysis;
-        const actionText =
-          record.status === "completed"
-            ? moduleEntry.actionLabel
-            : record.status === "processing"
-              ? moduleEntry.processingLabel
-              : moduleEntry.pendingLabel;
-
-        const moreItems: MenuProps["items"] = [
-          {
-            key: "module",
-            label: actionText,
-            onClick: () => navigate(`${moduleEntry.path}?focusTask=${encodeURIComponent(record.task_id)}`),
-          },
-          {
-            key: "copy",
-            label: "复制任务 ID",
-            onClick: () => {
-              void navigator.clipboard.writeText(record.task_id).then(() => {
-                void message.success("已复制");
-              });
-            },
-          },
-        ];
-
+        const goModule = () =>
+          navigate(`${moduleEntry.path}?focusTask=${encodeURIComponent(record.task_id)}`);
         return (
-          <Space size={4}>
+          <Space size={0} wrap={false} className="whitespace-nowrap">
             <Button
               type="link"
               size="small"
-              style={{ padding: "0 4px", fontSize: 11 }}
-              onClick={() =>
-                onProcessTask
-                  ? onProcessTask(record)
-                  : navigate(`${moduleEntry.path}?focusTask=${encodeURIComponent(record.task_id)}`)
-              }
+              className="!px-1 text-[13px] h-auto leading-normal"
+              onClick={() => (onProcessTask ? onProcessTask(record) : goModule())}
             >
               处理
             </Button>
-            <Dropdown menu={{ items: moreItems }} trigger={["click"]}>
-              <Button type="link" size="small" style={{ padding: "0 4px", fontSize: 11 }}>
-                更多 <DownOutlined />
+            <Tooltip title="跳转对应业务模块（携带 focusTask）">
+              <Button
+                type="link"
+                size="small"
+                className="!px-1 text-[13px] h-auto leading-normal"
+                onClick={goModule}
+              >
+                进中心
               </Button>
-            </Dropdown>
+            </Tooltip>
           </Space>
         );
       },
@@ -454,7 +565,7 @@ export default function TaskDataGrid({
     <section id="work-queue" className="section-shell">
       <div className="section-header flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-2 flex-wrap">
-          <Text className="section-title">工作项中心</Text>
+          <Text className="section-title">风险工单池</Text>
           {isDemoData ? (
             <Tag color="warning" className="m-0 text-xs">
               演示数据
@@ -496,15 +607,15 @@ export default function TaskDataGrid({
           <CreateTaskMenu onSelect={onCreateTask} />
         </div>
 
-        <Table<TaskRow>
+        <Table<HomeTaskRow>
           dataSource={paginatedTasks}
           columns={columns}
           rowKey="task_id"
           loading={loading}
           size="small"
           pagination={false}
-          scroll={{ x: 760 }}
-          style={{ fontSize: 12 }}
+          scroll={{ x: 1120 }}
+          style={{ fontSize: 13 }}
           rowClassName={(record) =>
             record.task_id === highlightTaskId ? "bg-primary/10 ring-1 ring-inset ring-primary/25" : ""
           }
@@ -515,8 +626,8 @@ export default function TaskDataGrid({
           }}
         />
 
-        <div className="flex justify-between items-center px-3 py-2 border-t border-border-soft bg-glass/40">
-          <Text type="secondary" style={{ fontSize: 11 }}>
+        <div className="flex justify-between items-center px-3 py-2 border-t border-border-soft bg-[#fafbfc]">
+          <Text type="secondary" style={{ fontSize: 12 }}>
             共 {filteredTasks.length} 条
             {completedTodayOnly ? "（仅今日已完成）" : ""}
             {wqShortcut ? ` · 总览快捷：${wqShortcut}` : ""}

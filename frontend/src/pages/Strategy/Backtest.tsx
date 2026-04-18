@@ -12,30 +12,30 @@ const BACKTEST_TASKS = [
 
 export default function Backtest() {
   const columns = [
-    { title: "任务ID", dataIndex: "id", width: 80, render: (v: string) => <Text style={{ fontSize: 12 }}>{v}</Text> },
-    { title: "回测名称", dataIndex: "name", width: 180, render: (v: string) => <Text strong style={{ fontSize: 12 }}>{v}</Text> },
-    { title: "策略集", dataIndex: "strategy", width: 180, render: (v: string) => <Text style={{ fontSize: 11 }}>{v}</Text> },
+    { title: "任务ID", dataIndex: "id", width: 80, render: (v: string) => <Text style={{ fontSize: 13 }}>{v}</Text> },
+    { title: "回测名称", dataIndex: "name", width: 180, render: (v: string) => <Text strong style={{ fontSize: 13 }}>{v}</Text> },
+    { title: "策略集", dataIndex: "strategy", width: 180, render: (v: string) => <Text style={{ fontSize: 13 }}>{v}</Text> },
     {
       title: "状态",
       dataIndex: "status",
       width: 120,
       render: (v: string, record: typeof BACKTEST_TASKS[0]) => (
         <Space direction="vertical" size={0}>
-          <Tag color={v === "completed" ? "green" : v === "running" ? "blue" : "default"} style={{ fontSize: 10 }}>
+          <Tag color={v === "completed" ? "green" : v === "running" ? "blue" : "default"} style={{ fontSize: 12 }}>
             {v === "completed" ? "已完成" : v === "running" ? "运行中" : "待执行"}
           </Tag>
           {v === "running" && <Progress percent={record.progress} size="small" />}
         </Space>
       ),
     },
-    { title: "KS值", dataIndex: "ks", width: 80, render: (v: number | null) => <Text style={{ fontSize: 11 }}>{v ? v.toFixed(2) : "-"}</Text> },
-    { title: "AUC值", dataIndex: "auc", width: 80, render: (v: number | null) => <Text style={{ fontSize: 11 }}>{v ? v.toFixed(2) : "-"}</Text> },
-    { title: "创建时间", dataIndex: "createTime", width: 120, render: (v: string) => <Text style={{ fontSize: 11 }}>{v}</Text> },
+    { title: "KS值", dataIndex: "ks", width: 80, render: (v: number | null) => <Text style={{ fontSize: 13 }}>{v ? v.toFixed(2) : "-"}</Text> },
+    { title: "AUC值", dataIndex: "auc", width: 80, render: (v: number | null) => <Text style={{ fontSize: 13 }}>{v ? v.toFixed(2) : "-"}</Text> },
+    { title: "创建时间", dataIndex: "createTime", width: 120, render: (v: string) => <Text style={{ fontSize: 13 }}>{v}</Text> },
     {
       title: "操作",
       key: "actions",
       width: 80,
-      render: () => <Button type="link" size="small" icon={<EyeOutlined />} style={{ fontSize: 11 }}>查看</Button>,
+      render: () => <Button type="link" size="small" icon={<EyeOutlined />} style={{ fontSize: 13 }}>查看</Button>,
     },
   ];
 

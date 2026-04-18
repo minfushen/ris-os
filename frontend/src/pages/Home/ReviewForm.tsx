@@ -63,10 +63,10 @@ export default function ReviewForm({ onSubmit }: ReviewFormProps) {
       }}
       size="small"
     >
-      <Text strong style={{ fontSize: 13 }}>
+      <Text strong className="text-[13px]">
         申请信息
       </Text>
-      <Divider style={{ margin: "8px 0" }} />
+      <Divider rootClassName="layout-divider-y-sm" />
 
       <Form.Item
         name="applicationNo"
@@ -116,6 +116,7 @@ export default function ReviewForm({ onSubmit }: ReviewFormProps) {
             { value: "credit", label: "授信" },
             { value: "draw", label: "支用" },
             { value: "post_loan", label: "贷后" },
+            { value: "general", label: "综合/其他" },
           ]}
         />
       </Form.Item>
@@ -124,10 +125,10 @@ export default function ReviewForm({ onSubmit }: ReviewFormProps) {
         <Select options={PRIORITY_OPTIONS} />
       </Form.Item>
 
-      <Text strong style={{ fontSize: 13 }}>
+      <Text strong className="text-[13px]">
         材料上传
       </Text>
-      <Divider style={{ margin: "8px 0" }} />
+      <Divider rootClassName="layout-divider-y-sm" />
 
       <Form.Item label="申请材料">
         <Upload
@@ -139,7 +140,7 @@ export default function ReviewForm({ onSubmit }: ReviewFormProps) {
           <Button icon={<UploadOutlined />} size="small">
             上传文件
           </Button>
-          <Text type="secondary" style={{ fontSize: 11, marginLeft: 8 }}>
+          <Text type="secondary" className="text-[13px] layout-ml-sm">
             支持 PDF、图片、Excel
           </Text>
         </Upload>

@@ -24,20 +24,20 @@ const ALERTS = [
 
 export default function Dashboard() {
   const columns = [
-    { title: "告警类型", dataIndex: "type", width: 150, render: (v: string) => <Text style={{ fontSize: 12 }}>{v}</Text> },
-    { title: "关联模型", dataIndex: "model", width: 150, render: (v: string) => <Text style={{ fontSize: 12 }}>{v}</Text> },
+    { title: "告警类型", dataIndex: "type", width: 150, render: (v: string) => <Text style={{ fontSize: 13 }}>{v}</Text> },
+    { title: "关联模型", dataIndex: "model", width: 150, render: (v: string) => <Text style={{ fontSize: 13 }}>{v}</Text> },
     {
       title: "级别",
       dataIndex: "level",
       width: 80,
       render: (v: string) => (
-        <Tag color={v === "high" ? "red" : v === "medium" ? "orange" : "blue"} style={{ fontSize: 10 }}>
+        <Tag color={v === "high" ? "red" : v === "medium" ? "orange" : "blue"} style={{ fontSize: 12 }}>
           {v === "high" ? "高" : v === "medium" ? "中" : "低"}
         </Tag>
       ),
     },
-    { title: "时间", dataIndex: "time", width: 80, render: (v: string) => <Text style={{ fontSize: 11 }}>{v}</Text> },
-    { title: "操作", key: "action", render: () => <a style={{ fontSize: 11 }}>查看</a> },
+    { title: "时间", dataIndex: "time", width: 80, render: (v: string) => <Text style={{ fontSize: 13 }}>{v}</Text> },
+    { title: "操作", key: "action", render: () => <a style={{ fontSize: 13 }}>查看</a> },
   ];
 
   return (
@@ -61,7 +61,7 @@ export default function Dashboard() {
                   suffix={m.suffix}
                   valueStyle={{ fontSize: 28, fontWeight: 600, color: "#6f8f95" }}
                 />
-                <Text style={{ fontSize: 11, color: m.up ? "#5f9b7a" : "#c77b78" }}>
+                <Text style={{ fontSize: 13, color: m.up ? "#5f9b7a" : "#c77b78" }}>
                   {m.up ? <ArrowUpOutlined /> : <ArrowDownOutlined />} {Math.abs(m.trend)}%
                 </Text>
               </div>

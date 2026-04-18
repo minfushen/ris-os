@@ -21,19 +21,19 @@ export default function FeatureStudio() {
       title: "特征名称",
       dataIndex: "name",
       key: "name",
-      render: (text: string) => <Text strong style={{ fontSize: 12 }}>{text}</Text>,
+      render: (text: string) => <Text strong style={{ fontSize: 13 }}>{text}</Text>,
     },
     {
       title: "类型",
       dataIndex: "type",
       key: "type",
-      render: (text: string) => <Tag style={{ fontSize: 10 }}>{text}</Tag>,
+      render: (text: string) => <Tag style={{ fontSize: 12 }}>{text}</Tag>,
     },
     {
       title: "数据源",
       dataIndex: "source",
       key: "source",
-      render: (text: string) => <Text style={{ fontSize: 11 }}>{text}</Text>,
+      render: (text: string) => <Text style={{ fontSize: 13 }}>{text}</Text>,
     },
     {
       title: "PSI",
@@ -42,7 +42,7 @@ export default function FeatureStudio() {
       render: (value: number) => (
         <Text
           style={{
-            fontSize: 11,
+            fontSize: 13,
             color: value > 0.25 ? "#faad14" : "#52c41a",
           }}
         >
@@ -55,7 +55,7 @@ export default function FeatureStudio() {
       dataIndex: "status",
       key: "status",
       render: (status: string) => (
-        <Tag color={status === "normal" ? "green" : "orange"} style={{ fontSize: 10 }}>
+        <Tag color={status === "normal" ? "green" : "orange"} style={{ fontSize: 12 }}>
           {status === "normal" ? "正常" : "漂移"}
         </Tag>
       ),
@@ -80,24 +80,24 @@ export default function FeatureStudio() {
         subtitle="共 156 个特征"
         extra={<Button size="small" icon={<LineChartOutlined />}>查看分布</Button>}
       >
-        <div style={{ display: "flex", gap: 24, marginBottom: 16 }}>
+        <div className="layout-flex layout-gap-xl layout-mb-lg">
           <div>
-            <Text type="secondary" style={{ fontSize: 11 }}>数值型</Text>
+            <Text type="secondary" style={{ fontSize: 13 }}>数值型</Text>
             <br />
             <Text strong style={{ fontSize: 20 }}>98</Text>
           </div>
           <div>
-            <Text type="secondary" style={{ fontSize: 11 }}>分类型</Text>
+            <Text type="secondary" style={{ fontSize: 13 }}>分类型</Text>
             <br />
             <Text strong style={{ fontSize: 20 }}>42</Text>
           </div>
           <div>
-            <Text type="secondary" style={{ fontSize: 11 }}>文本型</Text>
+            <Text type="secondary" style={{ fontSize: 13 }}>文本型</Text>
             <br />
             <Text strong style={{ fontSize: 20 }}>16</Text>
           </div>
           <div>
-            <Text type="secondary" style={{ fontSize: 11 }}>漂移告警</Text>
+            <Text type="secondary" style={{ fontSize: 13 }}>漂移告警</Text>
             <br />
             <Text strong style={{ fontSize: 20, color: "#faad14" }}>3</Text>
           </div>

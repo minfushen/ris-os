@@ -75,8 +75,8 @@ export default function ModulePageShell({
 
 // 模块区块卡片
 interface ModuleSectionCardProps {
-  title?: string;
-  subtitle?: string;
+  title?: ReactNode;
+  subtitle?: ReactNode;
   extra?: ReactNode;
   children: ReactNode;
   noPadding?: boolean;
@@ -94,8 +94,8 @@ export function ModuleSectionCard({
       {title && (
         <div className="section-header">
           <div className="flex items-center gap-2">
-            <Text className="section-title">{title}</Text>
-            {subtitle && (
+            <Text className="section-title !m-0">{title}</Text>
+            {subtitle != null && subtitle !== "" && (
               <Text className="section-subtitle">{subtitle}</Text>
             )}
           </div>

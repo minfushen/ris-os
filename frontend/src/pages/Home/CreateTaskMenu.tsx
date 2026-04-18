@@ -53,7 +53,7 @@ export default function CreateTaskMenu({ onSelect }: CreateTaskMenuProps) {
     label: (
       <div>
         <div style={{ fontWeight: 500, fontSize: 13 }}>{item.label}</div>
-        <div style={{ fontSize: 11, color: "#8c8c8c" }}>{item.description}</div>
+        <div style={{ fontSize: 13, color: "#8c8c8c" }}>{item.description}</div>
       </div>
     ),
   }));

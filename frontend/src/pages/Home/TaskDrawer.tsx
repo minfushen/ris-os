@@ -76,7 +76,7 @@ export default function TaskDrawer({
         return <InspectionForm key={`inspection-${formKey}`} onSubmit={handleSubmit} onCancel={handleClose} />;
       case "fraud":
         return (
-          <div style={{ padding: 24, textAlign: "center" }}>
+          <div className="layout-p-xl text-center">
             <Text type="secondary">欺诈排查功能开发中...</Text>
           </div>
         );
@@ -116,8 +116,11 @@ export default function TaskDrawer({
         </Space>
       }
       styles={{
-        body: { padding: 16 },
-        footer: { padding: "12px 16px", borderTop: "1px solid #f0f0f0" },
+        body: { padding: "var(--spacing-lg)" },
+        footer: {
+          padding: "var(--spacing-md) var(--spacing-lg)",
+          borderTop: "1px solid var(--color-border-light, rgba(130, 150, 160, 0.12))",
+        },
       }}
     >
       <Alert

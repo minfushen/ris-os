@@ -12,19 +12,19 @@ const INSPECTION_TASKS = [
 
 export default function Inspection() {
   const columns = [
-    { title: "任务ID", dataIndex: "id", width: 80, render: (v: string) => <Text code style={{ fontSize: 11 }}>{v}</Text> },
-    { title: "抽检名称", dataIndex: "name", width: 200, render: (v: string) => <Text strong style={{ fontSize: 12 }}>{v}</Text> },
+    { title: "任务ID", dataIndex: "id", width: 80, render: (v: string) => <Text code style={{ fontSize: 13 }}>{v}</Text> },
+    { title: "抽检名称", dataIndex: "name", width: 200, render: (v: string) => <Text strong style={{ fontSize: 13 }}>{v}</Text> },
     {
       title: "状态",
       dataIndex: "status",
       width: 150,
       render: (v: string, record: typeof INSPECTION_TASKS[0]) => (
         <Space direction="vertical" size={0}>
-          <Tag color={v === "completed" ? "green" : "blue"} style={{ fontSize: 10 }}>
+          <Tag color={v === "completed" ? "green" : "blue"} style={{ fontSize: 12 }}>
             {v === "completed" ? "已完成" : "处理中"}
           </Tag>
           {v !== "completed" && (
-            <Text style={{ fontSize: 11 }}>
+            <Text style={{ fontSize: 13 }}>
               {record.completed}/{record.total}
             </Text>
           )}
@@ -39,13 +39,13 @@ export default function Inspection() {
         <Progress percent={Math.round((record.completed / record.total) * 100)} size="small" />
       ),
     },
-    { title: "质检人", dataIndex: "inspector", width: 80, render: (v: string) => <Text style={{ fontSize: 11 }}>{v}</Text> },
-    { title: "创建时间", dataIndex: "createTime", width: 120, render: (v: string) => <Text style={{ fontSize: 11 }}>{v}</Text> },
+    { title: "质检人", dataIndex: "inspector", width: 80, render: (v: string) => <Text style={{ fontSize: 13 }}>{v}</Text> },
+    { title: "创建时间", dataIndex: "createTime", width: 120, render: (v: string) => <Text style={{ fontSize: 13 }}>{v}</Text> },
     {
       title: "操作",
       key: "actions",
       width: 100,
-      render: () => <Button type="link" size="small" style={{ fontSize: 11 }}>查看</Button>,
+      render: () => <Button type="link" size="small" style={{ fontSize: 13 }}>查看</Button>,
     },
   ];
 

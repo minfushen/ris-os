@@ -44,19 +44,19 @@ export default function Rules() {
       breadcrumb={["策略管控", "规则引擎"]}
     >
       <ModuleSectionCard>
-        <div style={{ display: "flex", gap: 16 }}>
+        <div className="layout-flex layout-gap-lg">
           {/* 左侧：规则树 */}
           <div
-            style={{
-              width: 300,
-              border: "1px solid #d9d9d9",
-              background: "#fafafa",
-              padding: 12,
-            }}
+            className="layout-p-md border border-border-soft bg-[#fafafa] shrink-0"
+            style={{ width: 300 }}
           >
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
-              <Text strong style={{ fontSize: 12 }}>规则目录</Text>
-              <Button type="link" size="small" icon={<PlusOutlined />} style={{ fontSize: 11 }}>新建</Button>
+            <div className="layout-flex-between layout-mb-sm">
+              <Text strong className="text-[13px]">
+                规则目录
+              </Text>
+              <Button type="link" size="small" icon={<PlusOutlined />} className="text-[13px]">
+                新建
+              </Button>
             </div>
             <Tree
               treeData={RULE_TREE}
@@ -66,8 +66,10 @@ export default function Rules() {
           </div>
 
           {/* 右侧：规则详情 */}
-          <div style={{ flex: 1, border: "1px solid #d9d9d9", padding: 12 }}>
-            <Text strong style={{ fontSize: 12, display: "block", marginBottom: 12 }}>规则详情</Text>
+          <div className="layout-flex-1 layout-p-md border border-border-soft">
+            <Text strong className="text-[13px] block layout-mb-md">
+              规则详情
+            </Text>
             {selectedRule ? (
               <div>
                 <Form layout="vertical" size="small">
@@ -75,7 +77,13 @@ export default function Rules() {
                     <Input defaultValue="年龄准入规则" />
                   </Form.Item>
                   <Form.Item label="规则类型">
-                    <Select defaultValue="range" options={[{ value: "range", label: "区间校验" }, { value: "list", label: "列表校验" }]} />
+                    <Select
+                      defaultValue="range"
+                      options={[
+                        { value: "range", label: "区间校验" },
+                        { value: "list", label: "列表校验" },
+                      ]}
+                    />
                   </Form.Item>
                   <Form.Item label="参数配置">
                     <Space>
@@ -88,13 +96,17 @@ export default function Rules() {
                   </Form.Item>
                 </Form>
                 <Space>
-                  <Button type="primary" size="small">保存</Button>
+                  <Button type="primary" size="small">
+                    保存
+                  </Button>
                   <Button size="small">取消</Button>
                 </Space>
               </div>
             ) : (
-              <div style={{ padding: 40, textAlign: "center" }}>
-                <Text type="secondary" style={{ fontSize: 11 }}>请从左侧选择规则</Text>
+              <div className="layout-p-empty text-center">
+                <Text type="secondary" className="text-[13px]">
+                  请从左侧选择规则
+                </Text>
               </div>
             )}
           </div>

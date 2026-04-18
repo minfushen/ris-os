@@ -54,7 +54,7 @@ export default function InspectionForm({ onSubmit }: InspectionFormProps) {
       <Text strong style={{ fontSize: 13 }}>
         抽检配置
       </Text>
-      <Divider style={{ margin: "8px 0" }} />
+      <Divider rootClassName="layout-divider-y-sm" />
 
       <Form.Item
         name="inspectionType"

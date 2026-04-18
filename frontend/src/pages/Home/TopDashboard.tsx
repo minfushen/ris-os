@@ -1,52 +1,94 @@
-import { Row, Col } from "antd";
-import MetricCard from "./MetricCard";
+import { Row, Col, message } from "antd";
+import AnalystIndicatorCard from "./AnalystIndicatorCard";
 
-// 模拟数据
+/** 演示数据：与线框图一致强调「基准 + 口径」，避免各团队对分子分母理解不一致 */
 const METRICS_DATA = [
   {
-    title: "今日进件",
-    value: "1,247",
-    unit: "件",
-    trend: "up" as const,
-    trendValue: "+12.5%",
-    sparkline: [45, 52, 48, 61, 55, 58, 63, 67, 72, 68, 75, 80],
-  },
-  {
-    title: "自动审批率",
-    value: "87.3",
+    title: "授信通过率",
+    value: "67.3",
     unit: "%",
-    trend: "up" as const,
-    trendValue: "+2.1%",
-    sparkline: [82, 83, 84, 83, 85, 86, 85, 87, 86, 88, 87, 87],
+    trendText: "-2.1%",
+    trendSemantic: "bad" as const,
+    trendDirection: "down" as const,
+    baselineText: "基准: 69.4%（上周同期）",
+    caliberFootnote: "口径：授信审批通过笔数 ÷ 授信申请笔数 · 按申请日 T+1 日结 · 不含撤单",
+    trendBars: [0.72, 0.7, 0.68, 0.66, 0.64, 0.65, 0.63],
+    status: "alert" as const,
+    footerMessage: "低于阈值，需关注",
+    showTimeTabs: true,
+    showSceneTabs: true,
   },
   {
-    title: "风险预警",
-    value: "23",
-    unit: "件",
-    trend: "up" as const,
-    trendValue: "较昨日+5",
-    alert: true,
-    alertText: "需关注",
-    sparkline: [12, 15, 14, 18, 16, 20, 19, 22, 21, 23, 22, 23],
+    title: "支用通过率",
+    value: "58.1",
+    unit: "%",
+    trendText: "-2.1%",
+    trendSemantic: "bad" as const,
+    trendDirection: "down" as const,
+    baselineText: "基准: 60.2%（上周同期）",
+    caliberFootnote: "口径：支用放款成功笔数 ÷ 支用申请笔数 · 按放款日 T+1",
+    trendBars: [0.62, 0.6, 0.59, 0.58, 0.57, 0.56, 0.55],
+    status: "attention" as const,
+    footerMessage: "低于关注线，建议排查渠道与客群",
+    showTimeTabs: true,
+    showSceneTabs: true,
   },
   {
-    title: "积压待办",
+    title: "今日进件量",
+    value: "12,475",
+    unit: "",
+    trendText: "+5.5%",
+    trendSemantic: "good" as const,
+    trendDirection: "up" as const,
+    baselineText: "对比：昨日同期 11,820",
+    caliberFootnote: "口径：全渠道进件「创建申请」次数 · 自然日 0–24h 实时累计（非漏斗完件）",
+    trendBars: [0.45, 0.48, 0.5, 0.52, 0.58, 0.62, 0.68],
+    status: "normal" as const,
+    footerMessage: "处于正常波动区间",
+    showTimeTabs: true,
+    showSceneTabs: false,
+  },
+  {
+    title: "待处理工单",
     value: "156",
-    unit: "件",
-    trend: "down" as const,
-    trendValue: "-8.2%",
-    alert: true,
-    alertText: "超阈值",
-    sparkline: [180, 175, 170, 168, 165, 162, 160, 158, 157, 156, 155, 156],
+    unit: "",
+    trendText: "+30%",
+    trendSemantic: "bad" as const,
+    trendDirection: "up" as const,
+    baselineText: "队列阈值: 120（本周滚动）",
+    caliberFootnote: "口径：状态∈{待处理,处理中,待复核}且责任人为本人或本组的工单计数",
+    trendBars: [0.35, 0.42, 0.5, 0.58, 0.65, 0.72, 0.78],
+    status: "over_threshold" as const,
+    footerMessage: "超出队列阈值，需减压与分流",
+    showTimeTabs: true,
+    showSceneTabs: false,
   },
 ];
 
 export default function TopDashboard() {
   return (
-    <Row gutter={12} style={{ marginBottom: 12 }}>
-      {METRICS_DATA.map((metric) => (
-        <Col key={metric.title} xs={12} sm={12} md={6}>
-          <MetricCard {...metric} />
+    <Row gutter={[16, 16]} className="layout-mb-lg">
+      {METRICS_DATA.map((m) => (
+        <Col key={m.title} xs={24} sm={12} lg={6}>
+          <AnalystIndicatorCard
+            title={m.title}
+            value={m.value}
+            unit={m.unit}
+            trendText={m.trendText}
+            trendSemantic={m.trendSemantic}
+            trendDirection={m.trendDirection}
+            baselineText={m.baselineText}
+            caliberFootnote={m.caliberFootnote}
+            trendBars={m.trendBars}
+            status={m.status}
+            footerMessage={m.footerMessage}
+            showTimeTabs={m.showTimeTabs}
+            showSceneTabs={m.showSceneTabs}
+            actionLabel="下钻"
+            onAction={() => {
+              void message.info(`「${m.title}」下钻（演示）：将接入监控 / 渠道拆解 / 工单详情`);
+            }}
+          />
         </Col>
       ))}
     </Row>

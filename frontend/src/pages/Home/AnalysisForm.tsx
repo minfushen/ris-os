@@ -76,10 +76,10 @@ export default function AnalysisForm({ onSubmit }: AnalysisFormProps) {
       }}
       size="small"
     >
-      <Text strong style={{ fontSize: 13 }}>
+      <Text strong className="text-[13px]">
         分析配置
       </Text>
-      <Divider style={{ margin: "8px 0" }} />
+      <Divider rootClassName="layout-divider-y-sm" />
 
       <Form.Item
         name="analysisType"
@@ -107,6 +107,7 @@ export default function AnalysisForm({ onSubmit }: AnalysisFormProps) {
             { value: "credit", label: "授信" },
             { value: "draw", label: "支用" },
             { value: "post_loan", label: "贷后" },
+            { value: "general", label: "综合/其他" },
           ]}
         />
       </Form.Item>

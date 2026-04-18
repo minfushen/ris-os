@@ -2,6 +2,9 @@
  * 设计令牌 (Design Tokens)
  * 统一的颜色、间距、字体、阴影等基础变量
  * 所有页面和组件应使用这些变量，而非硬编码值
+ *
+ * 页面级 margin/padding/gap 请优先使用 `layout-spacing.css` 中的
+ * `.layout-mb-*`、`.layout-p-*`、`.layout-gap-*` 等工具类（内部已绑定 --spacing-*）。
  */
 
 :root {
@@ -23,6 +26,8 @@
 
   /* ========== 中性色 ========== */
   --color-bg-layout: #f6f8fb;
+  /* 顶栏 / 侧栏等列表项 hover：实色灰阶，避免半透明叠涂 */
+  --color-bg-interactive-hover: #f0f2f4;
   --color-bg-container: rgba(255, 255, 255, 0.88);
   --color-bg-elevated: rgba(255, 255, 255, 0.94);
   --color-bg-mask: rgba(12, 22, 32, 0.45);
@@ -37,20 +42,23 @@
   --color-text-disabled: #95a2a9;
   --color-text-inverse: #ffffff;
 
-  /* ========== 间距系统 ========== */
-  --spacing-xs: 4px;
-  --spacing-sm: 8px;
-  --spacing-md: 12px;
-  --spacing-lg: 16px;
-  --spacing-xl: 24px;
-  --spacing-xxl: 32px;
+  /* ========== 间距系统（8px 基准阶梯）========== */
+  --spacing-none: 0;
+  --spacing-xs: 4px; /* 图标与文字、标签内边距 */
+  --spacing-sm: 8px; /* 行内元素、紧凑列表 */
+  --spacing-md: 12px; /* 卡片内边距、表格行节奏 */
+  --spacing-lg: 16px; /* 卡片外间距、区块之间 */
+  --spacing-xl: 24px; /* 页面主区内边距、大功能块间距 */
+  --spacing-xxl: 32px; /* 首页模块级分隔 */
+  --spacing-2xl: 32px; /* 与 xxl 同值，命名对齐设计文档 */
+  --spacing-compact: 6px; /* 色条内侧、紧凑缩进（介于 xs 与 sm 之间） */
 
   /* ========== 字体 ========== */
   --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  --font-size-xs: 10px;
-  --font-size-sm: 11px;
-  --font-size-base: 12px;
-  --font-size-md: 13px;
+  --font-size-xs: 12px;
+  --font-size-sm: 12px;
+  --font-size-base: 13px;
+  --font-size-md: 14px;
   --font-size-lg: 14px;
   --font-size-xl: 16px;
   --font-size-xxl: 18px;
@@ -66,26 +74,37 @@
   --line-height-base: 1.5;
   --line-height-loose: 1.75;
 
-  /* ========== 圆角 ========== */
+  /* ========== 圆角阶梯（设计稿）========== */
   --radius-none: 0;
-  --radius-sm: 2px;
+  --radius-2xs: 2px; /* 表内标签、进度条等最小块 */
+  --radius-sm: 2px; /* 兼容旧名 */
+  --radius-tag: 4px; /* Tag / Badge / 迷你按钮 */
   --radius-md: 4px;
-  --radius-lg: 8px;
+  --radius-control: 6px; /* 标准 Button / Input */
+  --radius-card: 8px; /* 标准 Card、Alert、Dropdown */
+  --radius-lg: 8px; /* 兼容旧名 = 标准卡片 */
+  --radius-shell: 12px; /* Modal / Drawer / 大布局壳 */
   --radius-xl: 12px;
+  --radius-glass: 12px; /* 与 shell 一致：区块壳、兼容 Tailwind / TSX */
   --radius-full: 9999px;
 
   /* ========== 阴影 ========== */
+  /* 内容区卡片/面板标准阴影（与风控 OS 稿：仅顶栏与遮罩用 blur，其余实色 + 轻阴影） */
+  --shadow-surface: 0 1px 4px rgba(0, 0, 0, 0.06);
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.03);
   --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.06);
   --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.08);
   --shadow-xl: 0 8px 24px rgba(0, 0, 0, 0.12);
 
   /* ========== 布局尺寸 ========== */
-  --header-height: 48px;
+  --header-height: 44px; /* 顶栏固定高度 */
+  --header-padding-x: 16px; /* 顶栏水平内边距 0 16px */
   --sider-width: 200px;
   --sider-collapsed-width: 64px;
   --content-max-width: 1440px;
-  --page-padding: 16px;
+  --page-padding: 16px; /* 兼容旧名 */
+  --content-padding-x: 24px; /* 主内容区水平内边距（阶梯 xl） */
+  --content-padding-y: 24px; /* 主内容区垂直内边距 */
 
   /* ========== 动画 ========== */
   --transition-fast: 0.15s ease;

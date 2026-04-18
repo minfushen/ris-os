@@ -66,7 +66,7 @@ export default function MLOpsStatusPanel({ status, onTriggerTraining, onDeploy }
       title={
         <Space>
           <RobotOutlined style={{ color: "#6f8f95" }} />
-          <Text strong style={{ fontSize: 13 }}>
+          <Text strong className="text-[13px]">
             MLOps 状态
           </Text>
           <Tag color={PHASE_CONFIG[status.phase].color} icon={PHASE_CONFIG[status.phase].icon}>
@@ -85,13 +85,13 @@ export default function MLOpsStatusPanel({ status, onTriggerTraining, onDeploy }
           </Button>
         ) : null
       }
-      style={{ borderRadius: 0 }}
+      className="rounded-none"
     >
       {/* 样本增量进度 */}
-      <div style={{ marginBottom: 16 }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
-          <Text style={{ fontSize: 12 }}>标注样本增量</Text>
-          <Text style={{ fontSize: 12 }}>
+      <div className="layout-mb-lg">
+        <div className="layout-flex-between layout-mb-sm">
+          <Text className="text-[12px]">标注样本增量</Text>
+          <Text className="text-[12px]">
             {status.currentLabels} / {status.threshold} (阈值)
           </Text>
         </div>
@@ -101,7 +101,7 @@ export default function MLOpsStatusPanel({ status, onTriggerTraining, onDeploy }
           showInfo={false}
         />
         {status.newLabelsCount !== undefined && (
-          <Text type="secondary" style={{ fontSize: 11 }}>
+          <Text type="secondary" className="text-[13px]">
             本次新增 {status.newLabelsCount} 条标注
           </Text>
         )}
@@ -109,8 +109,8 @@ export default function MLOpsStatusPanel({ status, onTriggerTraining, onDeploy }
 
       {/* 训练进度 */}
       {status.phase !== "idle" && status.phase !== "deployed" && (
-        <div style={{ marginBottom: 16 }}>
-          <Text style={{ fontSize: 12, display: "block", marginBottom: 8 }}>
+        <div className="layout-mb-lg">
+          <Text className="text-[12px] block layout-mb-sm">
             当前阶段进度
           </Text>
           <Progress
@@ -127,16 +127,16 @@ export default function MLOpsStatusPanel({ status, onTriggerTraining, onDeploy }
           showIcon
           message="训练失败"
           description={status.error}
-          style={{ marginBottom: 16, borderRadius: 0 }}
+          className="layout-mb-lg rounded-none"
         />
       )}
 
       {/* 模型指标 */}
       {(status.phase === "deployment_ready" || status.phase === "deployed") && status.ks !== undefined && (
-        <Row gutter={12} style={{ marginBottom: 16 }}>
+        <Row gutter={12} className="layout-mb-lg">
           <Col span={8}>
             <Statistic
-              title={<Text style={{ fontSize: 11 }}>KS 值</Text>}
+              title={<Text className="text-[13px]">KS 值</Text>}
               value={status.ks}
               suffix="%"
               valueStyle={{
@@ -145,24 +145,26 @@ export default function MLOpsStatusPanel({ status, onTriggerTraining, onDeploy }
               }}
             />
             {status.previousKs !== undefined && (
-              <Text type="secondary" style={{ fontSize: 10 }}>
+              <Text type="secondary" className="text-[10px]">
                 上版: {status.previousKs}%
                 {status.ks > status.previousKs && (
-                  <Tag color="green" style={{ marginLeft: 4, fontSize: 10 }}>↑</Tag>
+                  <Tag color="green" className="layout-ml-xs text-[10px]">
+                    ↑
+                  </Tag>
                 )}
               </Text>
             )}
           </Col>
           <Col span={8}>
             <Statistic
-              title={<Text style={{ fontSize: 11 }}>AUC</Text>}
+              title={<Text className="text-[13px]">AUC</Text>}
               value={status.auc}
               valueStyle={{ fontSize: 18 }}
             />
           </Col>
           <Col span={8}>
             <Statistic
-              title={<Text style={{ fontSize: 11 }}>准确率</Text>}
+              title={<Text className="text-[13px]">准确率</Text>}
               value={status.accuracy}
               suffix="%"
               valueStyle={{ fontSize: 18 }}
@@ -173,20 +175,22 @@ export default function MLOpsStatusPanel({ status, onTriggerTraining, onDeploy }
 
       {/* 详细信息 */}
       <Descriptions size="small" column={2}>
-        <Descriptions.Item label={<Text type="secondary" style={{ fontSize: 11 }}>模型ID</Text>}>
-          <Text code style={{ fontSize: 11 }}>{status.modelId}</Text>
+        <Descriptions.Item label={<Text type="secondary" className="text-[13px]">模型ID</Text>}>
+          <Text code className="text-[13px]">
+            {status.modelId}
+          </Text>
         </Descriptions.Item>
-        <Descriptions.Item label={<Text type="secondary" style={{ fontSize: 11 }}>模型名称</Text>}>
-          <Text style={{ fontSize: 11 }}>{status.modelName}</Text>
+        <Descriptions.Item label={<Text type="secondary" className="text-[13px]">模型名称</Text>}>
+          <Text className="text-[13px]">{status.modelName}</Text>
         </Descriptions.Item>
         {status.sampleCount && (
-          <Descriptions.Item label={<Text type="secondary" style={{ fontSize: 11 }}>训练样本</Text>}>
-            <Text style={{ fontSize: 11 }}>{status.sampleCount.toLocaleString()}</Text>
+          <Descriptions.Item label={<Text type="secondary" className="text-[13px]">训练样本</Text>}>
+            <Text className="text-[13px]">{status.sampleCount.toLocaleString()}</Text>
           </Descriptions.Item>
         )}
         {status.lastTrainingTime && (
-          <Descriptions.Item label={<Text type="secondary" style={{ fontSize: 11 }}>上次训练</Text>}>
-            <Text style={{ fontSize: 11 }}>
+          <Descriptions.Item label={<Text type="secondary" className="text-[13px]">上次训练</Text>}>
+            <Text className="text-[13px]">
               {new Date(status.lastTrainingTime).toLocaleString("zh-CN")}
             </Text>
           </Descriptions.Item>
@@ -216,28 +220,28 @@ export function MLOpsHistory({ history }: MLOpsHistoryProps) {
       title={
         <Space>
           <ClockCircleOutlined style={{ color: "#6f8f95" }} />
-          <Text strong style={{ fontSize: 13 }}>
+          <Text strong className="text-[13px]">
             训练历史
           </Text>
         </Space>
       }
-      style={{ borderRadius: 0, marginTop: 12 }}
+      className="layout-mt-md rounded-none"
     >
       <Timeline
         items={history.map((item) => ({
           color: item.result === "success" ? "green" : "red",
           children: (
             <div>
-              <Text style={{ fontSize: 11 }}>{item.time}</Text>
+              <Text className="text-[13px]">{item.time}</Text>
               <br />
-              <Text style={{ fontSize: 12 }}>{item.action}</Text>
+              <Text className="text-[12px]">{item.action}</Text>
               {item.ks !== undefined && (
-                <Tag color="blue" style={{ marginLeft: 8, fontSize: 10 }}>
+                <Tag color="blue" className="layout-ml-sm text-[10px]">
                   KS: {item.ks}%
                 </Tag>
               )}
               {item.user && (
-                <Text type="secondary" style={{ fontSize: 11, marginLeft: 8 }}>
+                <Text type="secondary" className="text-[13px] layout-ml-sm">
                   by {item.user}
                 </Text>
               )}

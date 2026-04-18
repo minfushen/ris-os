@@ -16,38 +16,38 @@ export default function StrategyList() {
   const [modalOpen, setModalOpen] = useState(false);
 
   const columns = [
-    { title: "策略ID", dataIndex: "id", width: 80, render: (v: string) => <Text style={{ fontSize: 12 }}>{v}</Text> },
-    { title: "策略名称", dataIndex: "name", width: 200, render: (v: string) => <Text strong style={{ fontSize: 12 }}>{v}</Text> },
+    { title: "策略ID", dataIndex: "id", width: 80, render: (v: string) => <Text style={{ fontSize: 13 }}>{v}</Text> },
+    { title: "策略名称", dataIndex: "name", width: 200, render: (v: string) => <Text strong style={{ fontSize: 13 }}>{v}</Text> },
     {
       title: "场景",
       dataIndex: "scenario",
       width: 80,
       render: (v: string) => (
-        <Tag color={v === "credit" ? "blue" : v === "draw" ? "cyan" : "purple"} style={{ fontSize: 10 }}>
+        <Tag color={v === "credit" ? "blue" : v === "draw" ? "cyan" : "purple"} style={{ fontSize: 12 }}>
           {v === "credit" ? "授信" : v === "draw" ? "支用" : "贷后"}
         </Tag>
       ),
     },
-    { title: "版本", dataIndex: "version", width: 80, render: (v: string) => <Text style={{ fontSize: 11 }}>{v}</Text> },
+    { title: "版本", dataIndex: "version", width: 80, render: (v: string) => <Text style={{ fontSize: 13 }}>{v}</Text> },
     {
       title: "状态",
       dataIndex: "status",
       width: 80,
       render: (v: string) => (
-        <Tag color={v === "active" ? "green" : "default"} style={{ fontSize: 10 }}>
+        <Tag color={v === "active" ? "green" : "default"} style={{ fontSize: 12 }}>
           {v === "active" ? "生效中" : "草稿"}
         </Tag>
       ),
     },
-    { title: "更新时间", dataIndex: "updateTime", width: 120, render: (v: string) => <Text style={{ fontSize: 11 }}>{v}</Text> },
+    { title: "更新时间", dataIndex: "updateTime", width: 120, render: (v: string) => <Text style={{ fontSize: 13 }}>{v}</Text> },
     {
       title: "操作",
       key: "actions",
       width: 150,
       render: () => (
         <Space size={4}>
-          <Button type="link" size="small" icon={<EditOutlined />} style={{ fontSize: 11 }}>编辑</Button>
-          <Button type="link" size="small" icon={<HistoryOutlined />} style={{ fontSize: 11 }}>历史</Button>
+          <Button type="link" size="small" icon={<EditOutlined />} style={{ fontSize: 13 }}>编辑</Button>
+          <Button type="link" size="small" icon={<HistoryOutlined />} style={{ fontSize: 13 }}>历史</Button>
         </Space>
       ),
     },
