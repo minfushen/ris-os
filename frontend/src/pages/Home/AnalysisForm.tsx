@@ -70,7 +70,7 @@ export default function AnalysisForm({ onSubmit }: AnalysisFormProps) {
       onFinish={handleSubmit}
       initialValues={{
         analysisType: "metric_change",
-        scenario: "credit",
+        scenario: "post_loan",
         comparisonBaseline: "prev_period",
         dimensions: ["channel"],
       }}
@@ -107,7 +107,6 @@ export default function AnalysisForm({ onSubmit }: AnalysisFormProps) {
             { value: "credit", label: "授信" },
             { value: "draw", label: "支用" },
             { value: "post_loan", label: "贷后" },
-            { value: "general", label: "综合/其他" },
           ]}
         />
       </Form.Item>

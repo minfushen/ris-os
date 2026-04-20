@@ -57,7 +57,7 @@ const ALERT_ACTIONS: Record<
   RealtimeAlert["type"],
   { typeLabel: string; primary: string; secondary?: string; slaBudgetMin: number }
 > = {
-  gang: { typeLabel: "团伙探测", primary: "发起归因", secondary: "查看图谱", slaBudgetMin: 30 },
+  gang: { typeLabel: "关联预警", primary: "发起归因", secondary: "查看图谱", slaBudgetMin: 30 },
   false_reject: { typeLabel: "误杀预警", primary: "发起捞回分析", secondary: "查看详情", slaBudgetMin: 60 },
   psi_drift: { typeLabel: "PSI 漂移", primary: "发起归因", secondary: "查看详情", slaBudgetMin: 120 },
   throughput_drop: { typeLabel: "通过率下降", primary: "发起归因", secondary: "查看渠道拆解", slaBudgetMin: 45 },
@@ -90,8 +90,8 @@ function buildSeedAlerts(): RealtimeAlert[] {
       level: "high",
       title: "API-04 渠道发现 12 个高度相似设备组",
       description: "发现 12 个高度相似设备组",
-      subtitle: "团伙指纹聚类命中 · 需优先判断是否欺诈链路外溢",
-      conclusionLine: "团伙指纹聚类命中，疑似欺诈链路经 API-04 外溢，需优先判断是否立即拦截。",
+      subtitle: "设备指纹聚类命中 · 需优先判断是否风险链路外溢",
+      conclusionLine: "设备指纹聚类命中，疑似风险链路经 API-04 外溢，需优先判断是否立即拦截。",
       impactScope: "API-04 渠道 · 设备指纹簇 · 授信进件环节（不含贷后）",
       firstTriggeredDisplay: `${fmtCN(firstSl001)}（全渠道首触）`,
       timestamp: new Date(t - 26 * 60_000).toISOString(),
@@ -147,7 +147,7 @@ function buildSeedAlerts(): RealtimeAlert[] {
         { label: "外部借贷成功占比", value: "24%" },
         { label: "首次异常日", value: "2026-04-15" },
         { label: "关联规则集", value: "BR_RULE_V2" },
-        { label: "专家抽检批次", value: "SP-202604-07" },
+        { label: "复盘质检批次", value: "SP-202604-07" },
       ],
     },
     {

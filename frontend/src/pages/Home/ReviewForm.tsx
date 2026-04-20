@@ -58,7 +58,7 @@ export default function ReviewForm({ onSubmit }: ReviewFormProps) {
       layout="vertical"
       onFinish={handleSubmit}
       initialValues={{
-        scenario: "credit",
+        scenario: "post_loan",
         priority: "normal",
       }}
       size="small"
@@ -116,7 +116,6 @@ export default function ReviewForm({ onSubmit }: ReviewFormProps) {
             { value: "credit", label: "授信" },
             { value: "draw", label: "支用" },
             { value: "post_loan", label: "贷后" },
-            { value: "general", label: "综合/其他" },
           ]}
         />
       </Form.Item>

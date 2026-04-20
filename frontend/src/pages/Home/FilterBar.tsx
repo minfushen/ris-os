@@ -39,10 +39,10 @@ const STATUS_OPTIONS = [
 
 const TYPE_OPTIONS = [
   { value: "analysis", label: "归因分析" },
-  { value: "backtest", label: "仿真回测" },
-  { value: "strategy", label: "策略发布" },
-  { value: "inspection", label: "专家抽检" },
-  { value: "fraud", label: "欺诈排查" },
+  { value: "backtest", label: "规则仿真回测" },
+  { value: "strategy", label: "策略发布审批" },
+  { value: "inspection", label: "复盘与质检" },
+  { value: "fraud", label: "预警核查" },
   { value: "review", label: "信审任务" },
 ];
 

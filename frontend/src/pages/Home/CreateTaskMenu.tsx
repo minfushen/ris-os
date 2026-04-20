@@ -29,20 +29,20 @@ const TASK_TYPE_ITEMS = [
   {
     key: "strategy",
     icon: <ControlOutlined />,
-    label: "策略发布申请",
+    label: "策略发布审批",
     description: "策略变更审批流程",
   },
   {
     key: "inspection",
     icon: <AuditOutlined />,
     label: "抽检样本",
-    description: "专家质检抽检任务",
+    description: "复盘与质检抽检任务",
   },
   {
     key: "fraud",
     icon: <SearchOutlined />,
-    label: "欺诈排查",
-    description: "团伙欺诈关联排查",
+    label: "预警核查",
+    description: "预警案件关联核查",
   },
 ];
 

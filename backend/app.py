@@ -29,6 +29,7 @@ from store import (
 )
 from services.review import process_review
 from services.analysis import process_analysis
+from scenario_post_loan import router as post_loan_scenario_router
 
 UPLOAD_ROOT = Path(__file__).resolve().parent / "uploads"
 
@@ -40,6 +41,10 @@ async def lifespan(app: FastAPI):  # noqa: ARG001
 
 
 app = FastAPI(title="风控管理 OS", version="1.0.0", lifespan=lifespan)
+
+app.include_router(post_loan_scenario_router)
+# 网关常只转发 /api/*：与无前缀路由并存，避免 404
+app.include_router(post_loan_scenario_router, prefix="/api")
 
 app.add_middleware(
     CORSMiddleware,

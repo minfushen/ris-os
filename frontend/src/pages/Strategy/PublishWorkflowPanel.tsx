@@ -278,7 +278,7 @@ export default function PublishWorkflowPanel({ changeId }: PublishWorkflowPanelP
       </ModuleSectionCard>
 
       <div className="text-right">
-        <Button onClick={() => navigate("/strategy/list")}>返回策略列表</Button>
+        <Button onClick={() => navigate("/strategy/products")}>返回产品线策略集</Button>
       </div>
     </div>
   );

@@ -76,7 +76,7 @@ const MODULE_ENTRY: Record<
     pendingLabel: "进入回测中心",
   },
   strategy: {
-    path: "/strategy/list",
+    path: "/strategy/products",
     actionLabel: "进入策略中心",
     processingLabel: "查看策略中心",
     pendingLabel: "进入策略中心",
@@ -88,7 +88,7 @@ const MODULE_ENTRY: Record<
     pendingLabel: "进入抽检中心",
   },
   fraud: {
-    path: "/risk/fraud",
+    path: "/risk/workbench",
     actionLabel: "进入排查中心",
     processingLabel: "查看排查中心",
     pendingLabel: "进入排查中心",
@@ -119,10 +119,10 @@ const TASK_TYPE_ICON: Record<TaskType, React.ReactNode> = {
 
 const TASK_TYPE_LABEL: Record<TaskType, string> = {
   analysis: "归因分析",
-  backtest: "仿真回测",
-  strategy: "策略发布",
-  inspection: "专家抽检",
-  fraud: "欺诈排查",
+  backtest: "规则仿真回测",
+  strategy: "策略发布审批",
+  inspection: "复盘与质检",
+  fraud: "预警核查",
   review: "信审任务",
 };
 

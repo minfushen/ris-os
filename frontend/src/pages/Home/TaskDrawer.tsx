@@ -20,11 +20,11 @@ interface TaskDrawerProps {
 }
 
 const DRAWER_TITLES: Record<TaskType, string> = {
-  analysis: "新建归因分析任务",
-  backtest: "发起离线回测",
-  strategy: "创建策略发布申请",
-  inspection: "创建抽检任务",
-  fraud: "发起欺诈排查",
+  analysis: "发起预警归因",
+  backtest: "规则仿真回测",
+  strategy: "策略发布审批",
+  inspection: "创建复盘质检任务",
+  fraud: "预警核查工单",
   review: "新建信审任务",
 };
 

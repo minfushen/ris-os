@@ -13,6 +13,13 @@ export default defineConfig({
     port: 5173,
     strictPort: true,
     host: true,
+    // 若将 VITE_API_BASE_URL 设为相对路径 '' 并走同源 /api，可由此转发到本机后端
+    proxy: {
+      "/api": {
+        target: "http://127.0.0.1:8000",
+        changeOrigin: true,
+      },
+    },
   },
   build: {
     rollupOptions: {

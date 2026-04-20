@@ -1,4 +1,4 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, type ReactNode } from "react";
 import { createHashRouter, Navigate, RouterProvider } from "react-router-dom";
 import { Skeleton } from "antd";
 import AppLayout from "@/components/AppLayout";
@@ -11,16 +11,24 @@ const Dashboard = lazy(() => import("@/pages/Monitor/Dashboard"));
 const Reports = lazy(() => import("@/pages/Monitor/Reports"));
 const O2OMonitor = lazy(() => import("@/pages/Monitor/O2OMonitor"));
 const LabelingFlywheel = lazy(() => import("@/pages/Monitor/LabelingFlywheel"));
+const AssetQuality = lazy(() => import("@/pages/Monitor/AssetQuality"));
 
-// 策略引擎模块
-const StrategyList = lazy(() => import("@/pages/Strategy/List"));
+// 预警策略模块
+const StrategyProducts = lazy(() => import("@/pages/Strategy/Products"));
 const Rules = lazy(() => import("@/pages/Strategy/Rules"));
 const Backtest = lazy(() => import("@/pages/Strategy/Backtest"));
 const PublishPage = lazy(() => import("@/pages/Strategy/PublishPage"));
 
-// 风险核查模块
-const Fraud = lazy(() => import("@/pages/Risk/Fraud"));
+// 案件处置模块
+const Workbench = lazy(() => import("@/pages/Risk/Workbench"));
+const CollectionOps = lazy(() => import("@/pages/Risk/CollectionOps"));
 const Inspection = lazy(() => import("@/pages/Risk/Inspection"));
+
+// 知识沉淀
+const KnowledgeIndex = lazy(() => import("@/pages/Knowledge/Index"));
+const ScriptsLibrary = lazy(() => import("@/pages/Knowledge/ScriptsLibrary"));
+const RuleTuneCases = lazy(() => import("@/pages/Knowledge/RuleTuneCases"));
+const FraudPatterns = lazy(() => import("@/pages/Knowledge/FraudPatterns"));
 
 // 特征工程模块
 const FeatureStudio = lazy(() => import("@/pages/Feature/Studio"));
@@ -36,7 +44,7 @@ function PageFallback() {
   );
 }
 
-function withSuspense(element: React.ReactNode) {
+function withSuspense(element: ReactNode) {
   return <Suspense fallback={<PageFallback />}>{element}</Suspense>;
 }
 
@@ -45,32 +53,34 @@ const router = createHashRouter([
     path: "/",
     element: <AppLayout />,
     children: [
-      // 工作台首页
       { index: true, element: withSuspense(<Home />) },
 
-      // 监控与分析
+      { path: "monitor/asset-quality", element: withSuspense(<AssetQuality />) },
       { path: "monitor/dashboard", element: withSuspense(<Dashboard />) },
       { path: "monitor/o2o", element: withSuspense(<O2OMonitor />) },
       { path: "monitor/labeling", element: withSuspense(<LabelingFlywheel />) },
       { path: "monitor/reports", element: withSuspense(<Reports />) },
 
-      // 策略管控
-      { path: "strategy/list", element: withSuspense(<StrategyList />) },
+      { path: "strategy/list", element: <Navigate to="/strategy/products" replace /> },
+      { path: "strategy/products", element: withSuspense(<StrategyProducts />) },
       { path: "strategy/rules", element: withSuspense(<Rules />) },
       { path: "strategy/backtest", element: withSuspense(<Backtest />) },
       { path: "strategy/publish", element: withSuspense(<PublishPage />) },
 
-      // 风险核查
-      { path: "risk/fraud", element: withSuspense(<Fraud />) },
+      { path: "risk/fraud", element: <Navigate to="/risk/workbench" replace /> },
+      { path: "risk/workbench", element: withSuspense(<Workbench />) },
+      { path: "risk/collection", element: withSuspense(<CollectionOps />) },
       { path: "risk/inspection", element: withSuspense(<Inspection />) },
 
-      // 特征工程
+      { path: "knowledge", element: withSuspense(<KnowledgeIndex />) },
+      { path: "knowledge/scripts", element: withSuspense(<ScriptsLibrary />) },
+      { path: "knowledge/rule-cases", element: withSuspense(<RuleTuneCases />) },
+      { path: "knowledge/fraud-patterns", element: withSuspense(<FraudPatterns />) },
+
       { path: "feature/studio", element: withSuspense(<FeatureStudio />) },
 
-      // 数据资产
       { path: "data/dictionary", element: withSuspense(<Dictionary />) },
 
-      // 未匹配路由重定向到首页
       { path: "*", element: <Navigate to="/" replace /> },
     ],
   },

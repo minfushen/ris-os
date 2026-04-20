@@ -5,10 +5,27 @@ import {
   type TaskListItem,
   type TaskDetail,
 } from "@/types";
+import type {
+  DataDictionarySourceRow,
+  DataDictionaryVariableRow,
+  PostLoanFeatureStudioResponse,
+} from "@/types/scenarioPostLoan";
 
-const BASE_URL =
-  (import.meta.env.VITE_API_BASE_URL as string | undefined) ??
-  "http://127.0.0.1:8000";
+/** 后端根地址。注意：若 .env 里把 VITE_API_BASE_URL 设成空字符串，相对路径会打到 Vite 同源并 404，这里按「未配置」处理。 */
+function resolveApiBaseUrl(): string {
+  const raw = (import.meta.env.VITE_API_BASE_URL as string | undefined)?.trim();
+  if (raw && raw.length > 0) {
+    return raw.replace(/\/$/, "");
+  }
+  return "http://127.0.0.1:8000";
+}
+
+export const API_BASE_URL = resolveApiBaseUrl();
+
+/** 贷后场景资源路径（与 FastAPI 双挂载一致：/api/scenario/post-loan 与 /scenario/post-loan） */
+const POST_LOAN_API_PREFIX = "/api/scenario/post-loan";
+
+const BASE_URL = API_BASE_URL;
 
 const TIMEOUT_MS = 15_000;
 
@@ -32,7 +49,9 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
     if (e.name === "AbortError") {
       throw new ApiError("请求超时");
     }
-    throw new ApiError("服务不可用");
+    throw new ApiError(
+      `无法连接 ${BASE_URL}（后端未启动、端口不一致或跨域被拦）。请在后端目录执行：uvicorn app:app --reload --port 8000`,
+    );
   } finally {
     clearTimeout(timer);
   }
@@ -101,5 +120,33 @@ export const api = {
   /** GET /tasks/{id}/result — 任务结果 */
   getResult(taskId: string): Promise<Record<string, unknown>> {
     return request<Record<string, unknown>>(`/tasks/${encodeURIComponent(taskId)}/result`);
+  },
+
+  // ─── 贷后场景 REST：`/scenario/post-loan/*` ─────────────────────────────
+
+  /** GET …/feature-studio — 特征工作室聚合数据 */
+  getPostLoanFeatureStudio(): Promise<PostLoanFeatureStudioResponse> {
+    return request<PostLoanFeatureStudioResponse>(`${POST_LOAN_API_PREFIX}/feature-studio`);
+  },
+
+  /** GET …/data-dictionary/variables — 变量字典（查询参数过滤） */
+  listPostLoanDataDictionaryVariables(params?: {
+    q?: string;
+    source_code?: string;
+    refresh?: string;
+  }): Promise<DataDictionaryVariableRow[]> {
+    const sp = new URLSearchParams();
+    if (params?.q?.trim()) sp.set("q", params.q.trim());
+    if (params?.source_code) sp.set("source_code", params.source_code);
+    if (params?.refresh) sp.set("refresh", params.refresh);
+    const qs = sp.toString();
+    return request<DataDictionaryVariableRow[]>(
+      `${POST_LOAN_API_PREFIX}/data-dictionary/variables${qs ? `?${qs}` : ""}`,
+    );
+  },
+
+  /** GET …/data-dictionary/sources — 数据源列表 */
+  listPostLoanDataDictionarySources(): Promise<DataDictionarySourceRow[]> {
+    return request<DataDictionarySourceRow[]>(`${POST_LOAN_API_PREFIX}/data-dictionary/sources`);
   },
 };

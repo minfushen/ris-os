@@ -21,6 +21,8 @@ pip install -r requirements.txt
 uvicorn app:app --reload --port 8000
 ```
 
+也可直接 `python main.py`（同样默认监听 `127.0.0.1:8000`，与前端 `VITE_API_BASE_URL` 对齐）。
+
 ## 主要接口
 
 ### 健康检查

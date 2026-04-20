@@ -233,7 +233,7 @@ export function useMockRealtimePush(intervalMs: number = 5000): UseRealtimePushR
 
       const alertTemplates: Record<RealtimeAlert["type"], { title: string; description: string }> = {
         gang: {
-          title: "团伙探测告警",
+          title: "关联预警告警",
           description: `发现 ${Math.floor(Math.random() * 20) + 5} 个高度相似设备组`,
         },
         false_reject: {

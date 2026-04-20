@@ -12,19 +12,21 @@ const { Text } = Typography;
 interface SafeGuardConfigProps {
   initialValues?: {
     enableCircuitBreaker?: boolean;
-    passRateThreshold?: number;
-    o2oDeviationThreshold?: number;
+    warningSpikePct?: number;
+    minEffectivenessPct?: number;
     canaryPercentage?: number;
     rollbackStrategy?: "auto" | "manual";
   };
-  onChange?: (values: any) => void;
+  onChange?: (values: Record<string, unknown>) => void;
 }
 
 export default function SafeGuardConfig({
   initialValues = {
     enableCircuitBreaker: true,
-    passRateThreshold: 15,
-    o2oDeviationThreshold: 5,
+    /** 新增预警量相对灰度前基线的最大环比（%），超过则熔断 */
+    warningSpikePct: 200,
+    /** 预警有效率低于该值则熔断（%） */
+    minEffectivenessPct: 40,
     canaryPercentage: 10,
     rollbackStrategy: "auto",
   },
@@ -67,22 +69,22 @@ export default function SafeGuardConfig({
             <div className="layout-ml-xl layout-mt-md">
               <div className="layout-mb-lg">
                 <Text type="secondary" className="text-[13px] block layout-mb-xs">
-                  通过率波动阈值 (%)
+                  新增预警量环比上限（相对基线 %）
                 </Text>
                 <div className="layout-flex-center layout-gap-md">
                   <Slider
                     style={{ flex: 1 }}
-                    min={1}
-                    max={30}
-                    value={config.passRateThreshold}
-                    onChange={(v) => updateConfig("passRateThreshold", v)}
+                    min={120}
+                    max={300}
+                    value={config.warningSpikePct}
+                    onChange={(v) => updateConfig("warningSpikePct", v)}
                   />
                   <InputNumber
-                    min={1}
-                    max={30}
-                    value={config.passRateThreshold}
-                    onChange={(v) => updateConfig("passRateThreshold", v)}
-                    style={{ width: 60 }}
+                    min={120}
+                    max={300}
+                    value={config.warningSpikePct}
+                    onChange={(v) => updateConfig("warningSpikePct", v)}
+                    style={{ width: 64 }}
                     size="small"
                   />
                   <Text type="secondary" className="text-[13px]">
@@ -93,21 +95,21 @@ export default function SafeGuardConfig({
 
               <div className="layout-mb-lg">
                 <Text type="secondary" className="text-[13px] block layout-mb-xs">
-                  O2O 偏差阈值 (%)
+                  最低有效率红线（低于则熔断）
                 </Text>
                 <div className="layout-flex-center layout-gap-md">
                   <Slider
                     style={{ flex: 1 }}
-                    min={1}
-                    max={20}
-                    value={config.o2oDeviationThreshold}
-                    onChange={(v) => updateConfig("o2oDeviationThreshold", v)}
+                    min={25}
+                    max={60}
+                    value={config.minEffectivenessPct}
+                    onChange={(v) => updateConfig("minEffectivenessPct", v)}
                   />
                   <InputNumber
-                    min={1}
-                    max={20}
-                    value={config.o2oDeviationThreshold}
-                    onChange={(v) => updateConfig("o2oDeviationThreshold", v)}
+                    min={25}
+                    max={60}
+                    value={config.minEffectivenessPct}
+                    onChange={(v) => updateConfig("minEffectivenessPct", v)}
                     style={{ width: 60 }}
                     size="small"
                   />
@@ -124,7 +126,7 @@ export default function SafeGuardConfig({
                 className="layout-mt-sm rounded-none"
                 message={
                   <Text className="text-[13px]">
-                    当 通过率波动 &gt; {config.passRateThreshold}% 或 O2O偏差 &gt; {config.o2oDeviationThreshold}% 时自动回滚
+                    当 新增预警量环比 &gt; {config.warningSpikePct}% 或 有效率 &lt; {config.minEffectivenessPct}% 时自动熔断 / 回滚（贷后护栏）
                   </Text>
                 }
               />

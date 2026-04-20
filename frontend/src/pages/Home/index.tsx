@@ -1,343 +1,120 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Alert, App, Typography } from "antd";
+import "./postLoan/post-loan-ui.css";
 
 const { Text } = Typography;
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useTaskStore } from "@/store/taskStore";
-import { api } from "@/api/client";
-import type { TaskType, ScenarioNode, TaskResponse } from "@/types";
-import { countMyBacklog, pickDominantBacklogTaskType, pickUrgentTitle, type HomeTaskRow } from "@/utils/workbenchStats";
-import type { HeroCta } from "./HomeHero";
-import HomeHero from "./HomeHero";
-import DutyBriefBar from "./DutyBriefBar";
-import StrategyReviewSummary from "./StrategyReviewSummary";
-import QuickEntryPanel from "./QuickEntryPanel";
-import Searchlight from "./Searchlight";
-import TopDashboard from "./TopDashboard";
-import TaskDataGrid from "./TaskDataGrid";
+import { api, API_BASE_URL } from "@/api/client";
+import type { TaskType, TaskResponse } from "@/types";
+import type { AnalysisFormValues } from "./AnalysisForm";
+import type { ReviewFormValues } from "./ReviewForm";
+import PostLoanCoreKpis, { type PostLoanKpiKey } from "./postLoan/PostLoanCoreKpis";
+import PostLoanSearchlight from "./postLoan/PostLoanSearchlight";
+import MyDisposalQueue from "./postLoan/MyDisposalQueue";
+import PostLoanQuickActions, { type PostLoanQuickActionDef } from "./postLoan/PostLoanQuickActions";
 import TaskDrawer from "./TaskDrawer";
-import type { RealtimeAlert } from "@/hooks/useRealtimePush";
+import {
+  PlusOutlined,
+  AimOutlined,
+  ControlOutlined,
+  FileTextOutlined,
+  LineChartOutlined,
+} from "@ant-design/icons";
 
-const MOCK_TASKS: HomeTaskRow[] = [
-  {
-    task_id: "TK-001",
-    task_type: "analysis",
-    status: "processing",
-    title: "自动审批率跌 5%",
-    scenario_node: "credit",
-    created_at: "2026-04-17T10:30:00",
-    updated_at: "2026-04-17T10:30:00",
-    priority: "P0",
-    current_handler: "张三(风控)",
-    sla_due_at: "2026-04-17T18:00:00",
-    progress_pct: 62,
-    initiator: "系统告警",
-    trigger: "自动告警",
-  },
-  {
-    task_id: "TK-002",
-    task_type: "backtest",
-    status: "completed",
-    title: "离线回测-V3.2版本",
-    scenario_node: "draw",
-    created_at: "2026-04-17T09:15:00",
-    updated_at: "2026-04-17T10:00:00",
-    priority: "P2",
-    current_handler: "—",
-    sla_due_at: null,
-    progress_pct: 100,
-    initiator: "李四(策略)",
-    trigger: "手动发起",
-  },
-  {
-    task_id: "TK-003",
-    task_type: "strategy",
-    status: "reviewing",
-    title: "放宽小微贷准入年龄的策略变更",
-    scenario_node: "credit",
-    created_at: "2026-04-17T08:00:00",
-    updated_at: "2026-04-17T08:00:00",
-    priority: "P0",
-    current_handler: "李四(策略)",
-    sla_due_at: "2026-04-17T20:00:00",
-    progress_pct: 88,
-    initiator: "王五(风控)",
-    trigger: "手动发起",
-  },
-  {
-    task_id: "TK-004",
-    task_type: "inspection",
-    status: "processing",
-    title: "4月第一周通过客群抽样复检",
-    scenario_node: "post_loan",
-    created_at: "2026-04-16T14:00:00",
-    updated_at: "2026-04-17T11:00:00",
-    priority: "P1",
-    current_handler: "张三(质检)",
-    sla_due_at: "2026-04-18T09:00:00",
-    progress_pct: 45,
-    initiator: "张三(质检)",
-    trigger: "手动发起",
-  },
-  {
-    task_id: "TK-005",
-    task_type: "analysis",
-    status: "completed",
-    title: "B卡模型PSI超阈值告警分析",
-    scenario_node: "general",
-    created_at: "2026-04-16T10:00:00",
-    updated_at: "2026-04-16T12:00:00",
-    priority: "P2",
-    current_handler: "王五(风控)",
-    sla_due_at: null,
-    progress_pct: 100,
-    initiator: "系统告警",
-    trigger: "自动告警",
-  },
-];
-
-const DOMINANT_CTA: Record<TaskType, { primary: HeroCta; secondary: HeroCta }> = {
-  analysis: {
-    primary: { label: "发起归因分析", action: "analysis" },
-    secondary: { label: "发起仿真回测", action: "backtest" },
-  },
-  backtest: {
-    primary: { label: "发起仿真回测", action: "backtest" },
-    secondary: { label: "发起归因分析", action: "analysis" },
-  },
-  strategy: {
-    primary: { label: "打开策略发布流程", action: "strategy" },
-    secondary: { label: "发起仿真回测", action: "backtest" },
-  },
-  inspection: {
-    primary: { label: "发起专家抽检", action: "inspection" },
-    secondary: { label: "发起归因分析", action: "analysis" },
-  },
-  fraud: {
-    primary: { label: "进入欺诈排查", action: "fraud" },
-    secondary: { label: "发起归因分析", action: "analysis" },
-  },
-  review: {
-    primary: { label: "发起专家抽检", action: "inspection" },
-    secondary: { label: "发起归因分析", action: "analysis" },
-  },
-};
-
-function snoozeSyntheticRow(alert: RealtimeAlert): HomeTaskRow {
-  const now = new Date();
-  const nowIso = now.toISOString();
-  const sla = new Date(now.getTime() + 24 * 3600_000).toISOString();
-  return {
-    task_id: `SQZ-${alert.id}`,
-    task_type: "analysis",
-    status: "pending",
-    title: `[稍后异动] ${alert.title}`,
-    scenario_node: "credit",
-    created_at: nowIso,
-    updated_at: nowIso,
-    priority: "P1",
-    current_handler: "本人",
-    sla_due_at: sla,
-    progress_pct: 12,
-    initiator: "本人",
-    trigger: "探照灯稍后处理",
-  };
+function buildAnalysisTaskDescription(v: AnalysisFormValues): string {
+  const parts = [
+    `类型:${v.analysisType}`,
+    `指标:${v.targetMetric}`,
+    `场景:${v.scenario}`,
+    v.description?.trim(),
+  ].filter(Boolean);
+  const raw = parts.join(" · ").slice(0, 450) || "贷后预警归因分析";
+  // 后端校验描述不少于 10 字符
+  return raw.length >= 10 ? raw : `${raw} · 补充说明待完善`;
 }
 
 export default function Home() {
   const { message } = App.useApp();
   const navigate = useNavigate();
-  const [, setSearchParams] = useSearchParams();
-  const tasks = useTaskStore((s) => s.tasks);
-  const fetchTasks = useTaskStore((s) => s.fetchTasks);
-  const loading = useTaskStore((s) => s.loading);
   const taskError = useTaskStore((s) => s.error);
+  const fetchTasks = useTaskStore((s) => s.fetchTasks);
 
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [drawerType, setDrawerType] = useState<TaskType | null>(null);
-  const [highlightTaskId, setHighlightTaskId] = useState<string | null>(null);
-  const [snoozeRows, setSnoozeRows] = useState<HomeTaskRow[]>([]);
-  const [sinceLastVisitLabel, setSinceLastVisitLabel] = useState("—");
-  const [briefClock, setBriefClock] = useState(() => Date.now());
-
-  const isDemoData = tasks.length === 0 || Boolean(taskError);
-  const displayTasks = tasks.length > 0 ? tasks : MOCK_TASKS;
-  const displayTasksMerged = useMemo(() => [...snoozeRows, ...displayTasks], [snoozeRows, displayTasks]);
-
-  const myBacklogCount = useMemo(() => countMyBacklog(displayTasksMerged), [displayTasksMerged]);
-  const urgentSummary = useMemo(() => pickUrgentTitle(displayTasksMerged), [displayTasksMerged]);
-
-  const dominantType = useMemo(() => pickDominantBacklogTaskType(displayTasksMerged), [displayTasksMerged]);
-  /** 与历史「晨间简报」演示口径一致：高危异动条数（接入实时推送后可改为 store 汇总） */
-  const dutyHighRiskAlertCount = 3;
-  const dutyUpdatedAt = useMemo(() => {
-    const d = new Date(briefClock);
-    return `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
-  }, [briefClock]);
-
-  const heroCtas = useMemo(() => {
-    const key = dominantType ?? "analysis";
-    return DOMINANT_CTA[key] ?? DOMINANT_CTA.analysis;
-  }, [dominantType]);
 
   useEffect(() => {
     void fetchTasks();
   }, [fetchTasks]);
-
-  useEffect(() => {
-    const id = window.setInterval(() => setBriefClock(Date.now()), 60_000);
-    return () => window.clearInterval(id);
-  }, []);
-
-  useEffect(() => {
-    const key = "ris_home_prev_open_ts";
-    const now = Date.now();
-    const prevRaw = sessionStorage.getItem(key);
-    const prev = prevRaw ? Number(prevRaw) : NaN;
-    sessionStorage.setItem(key, String(now));
-    if (!Number.isFinite(prev) || prev <= 0) {
-      setSinceLastVisitLabel("本会话首次");
-      return;
-    }
-    const hours = Math.max(0, Math.round((now - prev) / 3_600_000));
-    setSinceLastVisitLabel(hours < 1 ? "不足 1 小时" : `${hours} 小时`);
-  }, []);
-
-  const scrollToQueue = useCallback(() => {
-    requestAnimationFrame(() => {
-      document.getElementById("work-queue")?.scrollIntoView({ behavior: "smooth", block: "start" });
-    });
-  }, []);
-
-  const scrollToSearchlight = useCallback(() => {
-    requestAnimationFrame(() => {
-      document.getElementById("searchlight-anchor")?.scrollIntoView({ behavior: "smooth", block: "start" });
-    });
-  }, []);
-
-  const handleDutyBriefHighRisk = useCallback(() => {
-    setSearchParams((prev) => {
-      const next = new URLSearchParams(prev);
-      next.set("sl", "high");
-      return next;
-    });
-    scrollToSearchlight();
-  }, [setSearchParams, scrollToSearchlight]);
-
-  const handleDutyBriefMyPending = useCallback(() => {
-    setSearchParams((prev) => {
-      const next = new URLSearchParams(prev);
-      next.set("tab", "mine");
-      next.delete("wq");
-      return next;
-    });
-    scrollToQueue();
-  }, [setSearchParams, scrollToQueue]);
-
-  const handleDutyBriefMetric = useCallback(() => {
-    navigate("/monitor/reports");
-  }, [navigate]);
 
   const openTaskDrawer = (type: TaskType) => {
     setDrawerType(type);
     setDrawerOpen(true);
   };
 
-  const handleQuickAction = (action: string) => {
-    switch (action) {
-      case "analysis":
-        openTaskDrawer("analysis");
-        break;
-      case "backtest":
-        openTaskDrawer("backtest");
-        break;
-      case "strategy":
-        navigate("/strategy/publish");
-        break;
-      case "inspection":
-        openTaskDrawer("inspection");
-        break;
-      case "fraud":
-        navigate("/risk/fraud");
-        break;
-      case "data":
-        navigate("/data/dictionary");
-        break;
-      default:
-        void message.info(`功能开发中：${action}`);
-    }
-  };
+  const handleKpiDrill = useCallback(
+    (key: PostLoanKpiKey) => {
+      switch (key) {
+        case "m1":
+          navigate("/monitor/asset-quality");
+          break;
+        case "newAlert":
+          document.getElementById("searchlight-anchor")?.scrollIntoView({ behavior: "smooth", block: "start" });
+          break;
+        case "timeout":
+          document.getElementById("work-queue")?.scrollIntoView({ behavior: "smooth", block: "start" });
+          break;
+        case "effectiveness":
+          navigate("/strategy/rules");
+          break;
+        default:
+          break;
+      }
+    },
+    [navigate],
+  );
 
-  const handleSearchlightAction = (itemId: string, action: string) => {
-    if (action === "发起归因" || action === "发起捞回分析") {
-      openTaskDrawer("analysis");
-      void message.success(`已关联异动 ${itemId}，请填写并提交创建任务`);
-      return;
-    }
-    if (action === "查看详情" || action === "查看渠道拆解") {
-      void message.info("详情下钻开发中，将跳转至监控模块");
-      navigate("/monitor/dashboard");
-      return;
-    }
-    if (action === "查看图谱" || action === "查看关联图谱") {
-      void message.info("关系图谱开发中");
-      navigate("/risk/fraud");
-      return;
-    }
-    if (action === "规则暂停") {
-      void message.success(`已生成规则暂停变更单草稿（关联 ${itemId}），待双人复核后生效`);
-      return;
-    }
-    if (action === "拉取样数据") {
-      void message.success(`已提交样本拉取任务（关联 ${itemId}），结果将推送至数据工作台`);
-      return;
-    }
-    if (action === "申请协助转派") {
-      void message.info(`已打开转派/协助说明（告警 ${itemId}）：将通知值班长或策略 Owner`);
-      return;
-    }
-    if (action === "转策略排查") {
-      void message.success(`已创建策略排查工单草稿（关联 ${itemId}）`);
-      navigate("/strategy/list");
-      return;
-    }
-    if (action === "转人工复核") {
-      void message.success(`已派送信审/专家复核队列（关联 ${itemId}）`);
-      navigate("/risk/inspection");
-      return;
-    }
-    if (action === "查看同类历史工单") {
-      void message.info(`打开同类历史工单列表（关联 ${itemId}）：将按规则类型聚合展示`);
-      navigate("/monitor/dashboard");
-      return;
-    }
-    if (action === "处置完成关闭" || action === "忽略并记录原因") {
-      void message.info(`已记录审计事件：${action} · ${itemId}`);
-      return;
-    }
-    if (action === "加入黑名单") {
-      void message.warning(`黑名单变更需双人复核（演示）：${itemId}`);
-      return;
-    }
-    void message.info(`功能开发中：${action}`);
-  };
+  const handleClaimVerify = useCallback(
+    (_id: string) => {
+      void message.success("已认领核查（演示），跳转预警核查工作台");
+      navigate("/risk/workbench");
+    },
+    [message, navigate],
+  );
 
-  const handleSnoozeToQueue = (item: RealtimeAlert) => {
-    setSnoozeRows((prev) => {
-      const row = snoozeSyntheticRow(item);
-      return [row, ...prev.filter((r) => r.task_id !== row.task_id)];
-    });
-    void message.info("已加入工作项列表（演示：稍后异动待办）");
-    scrollToQueue();
-  };
+  const handleViewAlertDetail = useCallback(
+    (_id: string) => {
+      void message.info("打开预警详情（演示）：可下钻至客户借据与外部数据源");
+      navigate("/risk/workbench");
+    },
+    [message, navigate],
+  );
+
+  const handleJoinQueue = useCallback(
+    (_id: string) => {
+      void message.success("已加入我的处置队列（演示）");
+      document.getElementById("work-queue")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    },
+    [message],
+  );
 
   const handleSubmitTask = async (type: TaskType, values: unknown): Promise<TaskResponse> => {
-    if (type === "analysis" || type === "review") {
-      const v = values as { description: string; scenario_node?: string };
+    if (type === "analysis") {
+      const v = values as AnalysisFormValues;
       const res = await api.createTask({
-        task_type: type,
+        task_type: "analysis",
+        description: buildAnalysisTaskDescription(v),
+        scenario_node: v.scenario,
+      });
+      void fetchTasks();
+      return res;
+    }
+    if (type === "review") {
+      const v = values as ReviewFormValues;
+      const res = await api.createTask({
+        task_type: "review",
         description: v.description,
-        scenario_node: (v.scenario_node || "credit") as ScenarioNode,
+        scenario_node: v.scenario,
       });
       void fetchTasks();
       return res;
@@ -346,21 +123,47 @@ export default function Home() {
     const res = await api.createTask({
       task_type: "analysis",
       description: v.description || `${type} 任务`,
-      scenario_node: "credit" as ScenarioNode,
+      scenario_node: "post_loan",
     });
     void fetchTasks();
     return res;
   };
 
-  const handleTaskCreated = (taskId: string) => {
-    setHighlightTaskId(taskId);
-    scrollToQueue();
-  };
-
-  const handleProcessTask = (row: HomeTaskRow) => {
-    openTaskDrawer(row.task_type);
-    void message.info(`处理「${row.title}」：已打开「${row.task_type}」类新建/处置入口（演示）`);
-  };
+  const quickActions: PostLoanQuickActionDef[] = [
+    {
+      key: "attribution",
+      label: "发起预警归因",
+      icon: <PlusOutlined />,
+      onClick: () => openTaskDrawer("analysis"),
+    },
+    {
+      key: "visit",
+      label: "上门走访记录",
+      icon: <AimOutlined />,
+      onClick: () => {
+        void message.info("走访记录录入（演示）：可对接移动采集 / 影像件");
+        navigate("/risk/collection");
+      },
+    },
+    {
+      key: "threshold",
+      label: "调整预警阈值",
+      icon: <ControlOutlined />,
+      onClick: () => navigate("/strategy/rules"),
+    },
+    {
+      key: "collection",
+      label: "催收策略配置",
+      icon: <FileTextOutlined />,
+      onClick: () => navigate("/strategy/products"),
+    },
+    {
+      key: "quality",
+      label: "资产质量看板",
+      icon: <LineChartOutlined />,
+      onClick: () => navigate("/monitor/asset-quality"),
+    },
+  ];
 
   return (
     <div className="space-y-6">
@@ -369,76 +172,31 @@ export default function Home() {
           type="warning"
           showIcon
           message="无法连接任务服务"
-          description={`${taskError}。请确认已在 backend 目录启动 API（默认 http://127.0.0.1:8000），并检查 frontend/.env.development 中的 VITE_API_BASE_URL。下方列表展示为演示数据。`}
+          description={`${taskError}。当前前端请求基址：${API_BASE_URL}。队列区为演示数据；接入后端后待核查列表可与 GET /tasks 同步。`}
           className="rounded-lg"
         />
       )}
 
-      {/* 指挥台：当班简报 → 异动探照灯 → 核心指标总览 → 风险工单池 → 策略与复核 → 快捷入口 → 品牌区（可折叠） */}
-      <DutyBriefBar
-        shiftLabel="白班"
-        dutyOfficer="张三(值班)"
-        sinceLastLoginLabel={sinceLastVisitLabel}
-        highRiskAlertCount={dutyHighRiskAlertCount}
-        myPendingWorkCount={myBacklogCount}
-        metricSummary="授信通过率 -2.1%"
-        updatedAtTime={dutyUpdatedAt}
-        onClickHighRiskAlerts={handleDutyBriefHighRisk}
-        onClickMyPending={handleDutyBriefMyPending}
-        onClickMetricSummary={handleDutyBriefMetric}
+      <div className="pl-solid-card px-4 py-3">
+        <Text strong className="text-base text-[#262626]">
+          首页 · 贷后资产总览
+        </Text>
+        <Text className="pl-aux-text mt-1.5 block !text-[12px] leading-relaxed">
+          今日有没有新增预警客户、资产质量有没有恶化、我的处置工单有没有超时 — 三类问题一页收口。
+        </Text>
+      </div>
+
+      <PostLoanCoreKpis onDrill={handleKpiDrill} />
+
+      <PostLoanSearchlight
+        onClaimVerify={handleClaimVerify}
+        onViewDetail={handleViewAlertDetail}
+        onJoinQueue={handleJoinQueue}
       />
 
-      <Searchlight onAction={handleSearchlightAction} onSnoozeToQueue={handleSnoozeToQueue} />
+      <MyDisposalQueue onOpenItem={() => navigate("/risk/workbench")} />
 
-      <section className="section-shell">
-        <div className="section-header">
-          <Text className="section-title">核心指标总览</Text>
-          <Text type="secondary" className="section-subtitle ml-2">
-            授信 / 支用 / 进件与队列阈值（演示口径）
-          </Text>
-        </div>
-        <div className="section-body">
-          <TopDashboard />
-        </div>
-      </section>
-
-      <TaskDataGrid
-        tasks={displayTasksMerged}
-        loading={loading}
-        onRefresh={() => void fetchTasks()}
-        onCreateTask={openTaskDrawer}
-        isDemoData={isDemoData}
-        highlightTaskId={highlightTaskId}
-        onHighlightConsumed={() => setHighlightTaskId(null)}
-        onProcessTask={handleProcessTask}
-      />
-
-      <StrategyReviewSummary
-        onGotoPublish={() => navigate("/strategy/publish")}
-        onGotoInspection={() => navigate("/risk/inspection")}
-        onGotoRules={() => navigate("/strategy/rules")}
-      />
-
-      <QuickEntryPanel
-        onLaunch={(key) => handleQuickAction(key)}
-        onGoto={(path) => navigate(path)}
-      />
-
-      <details className="rounded-[var(--radius-glass)] border border-border-soft glass-panel overflow-hidden group">
-        <summary className="px-4 py-2.5 text-xs text-text-muted cursor-pointer list-none flex items-center gap-2 select-none hover:bg-white/40">
-          <span className="group-open:hidden">展开「风控 OS」品牌区与主操作</span>
-          <span className="hidden group-open:inline">收起品牌区</span>
-        </summary>
-        <div className="px-4 pb-4 border-t border-border-soft">
-          <HomeHero
-            onQuickAction={handleQuickAction}
-            myBacklogCount={myBacklogCount}
-            urgentSummary={urgentSummary}
-            primaryCta={heroCtas.primary}
-            secondaryCta={heroCtas.secondary}
-          />
-        </div>
-      </details>
+      <PostLoanQuickActions actions={quickActions} />
 
       <TaskDrawer
         open={drawerOpen}
@@ -448,7 +206,6 @@ export default function Home() {
           setDrawerType(null);
         }}
         onSubmit={handleSubmitTask}
-        onCreated={handleTaskCreated}
       />
     </div>
   );

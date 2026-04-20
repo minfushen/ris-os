@@ -37,7 +37,7 @@ export default function PublishPage() {
       <ModulePageShell
         title="策略发布进度与灰度闭环"
         subtitle="流程可视、灰度指标对比、全量/回滚决策与审计留痕（演示）"
-        breadcrumb={["策略管控", "策略发布"]}
+        breadcrumb={["预警策略", "策略发布审批"]}
         actions={
           <Space>
             <Button
@@ -48,8 +48,8 @@ export default function PublishPage() {
             >
               新建变更
             </Button>
-            <Button type="primary" onClick={() => navigate("/strategy/list")}>
-              策略列表
+            <Button type="primary" onClick={() => navigate("/strategy/products")}>
+              产品线策略集
             </Button>
           </Space>
         }
@@ -63,10 +63,10 @@ export default function PublishPage() {
     <ModulePageShell
       title="策略变更发布申请"
       subtitle="Diff → 护盾 → 提交；提交后进入流程与灰度跟踪"
-      breadcrumb={["策略管控", "策略发布"]}
+      breadcrumb={["预警策略", "策略发布审批"]}
       actions={
         <Space>
-          <Button onClick={() => navigate("/strategy/list")}>取消</Button>
+          <Button onClick={() => navigate("/strategy/products")}>取消</Button>
           {currentStep < 2 ? (
             <Button type="primary" onClick={() => setCurrentStep(currentStep + 1)}>
               下一步
@@ -120,13 +120,19 @@ export default function PublishPage() {
 
       {currentStep === 2 && (
         <ModuleSectionCard title="确认提交">
+          <div className="bg-[#fffbe6] border border-[#ffe58f] layout-p-md layout-mb-md rounded-md">
+            <Text strong className="text-[12px] block layout-mb-xs">发布流程（贷后）</Text>
+            <Text type="secondary" className="text-[12px]">
+              高影响变更：主管复核 + 联席会签后方可全量；灰度期间若触发护栏（新增预警环比 / 有效率红线）将自动熔断或进入人工回滚。
+            </Text>
+          </div>
           <div className="bg-[#fafafa] layout-p-md layout-mb-md">
             <Space direction="vertical" size={4}>
               <Text style={{ fontSize: 12 }}>
-                • 策略版本: V3.1 → V3.2
+                • 预警规则包: 经营贷包 V2.4 → V2.5
               </Text>
               <Text style={{ fontSize: 12 }}>
-                • 变更内容: 放宽多头查询阈值、收紧负债率阈值
+                • 变更内容: 制造业多头阈值 35%→38%；税报断档天数 45→30
               </Text>
               <Text style={{ fontSize: 12 }}>
                 • 灰度流量: {(safeGuardConfig.canaryPercentage as number) || 10}%
