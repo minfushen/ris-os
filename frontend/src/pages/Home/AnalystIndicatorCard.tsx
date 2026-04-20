@@ -128,7 +128,7 @@ export default function AnalystIndicatorCard({
 
   return (
     <div
-      className="relative h-full overflow-hidden rounded-[var(--radius-card,8px)] border border-border-soft bg-white shadow-[0_1px_4px_rgba(0,0,0,0.06)] text-left transition-shadow hover:shadow-[0_4px_12px_rgba(0,0,0,0.08)]"
+      className="relative h-full overflow-hidden rounded-lg border border-border-soft bg-white shadow-[0_1px_4px_rgba(0,0,0,0.06)] text-left transition-shadow hover:shadow-[0_4px_12px_rgba(0,0,0,0.08)]"
       role="region"
       aria-label={title}
     >

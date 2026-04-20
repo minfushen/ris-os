@@ -38,7 +38,7 @@ export default function StrategyReviewSummary({
       <div className="section-body">
         <Row gutter={[16, 16]}>
           <Col xs={24} md={8}>
-            <div className="glass-panel p-3 rounded-[var(--radius-card,8px)] h-full">
+            <div className="glass-panel p-3 h-full">
               <Space align="start">
                 <DeploymentUnitOutlined className="text-primary text-lg mt-0.5" />
                 <div>
@@ -52,7 +52,7 @@ export default function StrategyReviewSummary({
             </div>
           </Col>
           <Col xs={24} md={8}>
-            <div className="glass-panel p-3 rounded-[var(--radius-card,8px)] h-full">
+            <div className="glass-panel p-3 h-full">
               <Space align="start">
                 <FileSearchOutlined className="text-primary text-lg mt-0.5" />
                 <div>
@@ -66,7 +66,7 @@ export default function StrategyReviewSummary({
             </div>
           </Col>
           <Col xs={24} md={8}>
-            <div className="glass-panel p-3 rounded-[var(--radius-card,8px)] h-full">
+            <div className="glass-panel p-3 h-full">
               <Space align="start">
                 <AuditOutlined className="text-primary text-lg mt-0.5" />
                 <div>

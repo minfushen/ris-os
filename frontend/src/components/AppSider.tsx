@@ -30,7 +30,7 @@ interface NavItem {
   badge?: number | string;
 }
 
-/** 贷后场景（scenario/post-loan）侧栏：与产品导航改造稿对齐 */
+/** 贷后场景侧栏导航 */
 const PRIMARY_NAV: NavItem[] = [
   {
     key: "home",
@@ -142,34 +142,38 @@ export default function AppSider() {
   return (
     <aside
       className={`glass-panel-strong flex flex-col transition-all duration-300 ${
-        collapsed ? "w-16" : "w-52"
+        collapsed ? "w-16" : "w-[220px]"
       }`}
-      style={{ minHeight: "calc(100vh - var(--header-height, 44px))" }}
+      style={{ minHeight: "calc(100vh - var(--header-height, 52px))" }}
     >
-      <div className="flex flex-col items-center justify-center min-h-[3rem] border-b border-border-soft px-1 py-1.5">
-        <Text strong className="text-primary text-base leading-tight">
+      {/* Logo 区域 */}
+      <div className="flex flex-col items-center justify-center min-h-[3.5rem] border-b border-black/[0.06] px-3 py-2">
+        <Text strong className="text-primary text-[15px] leading-tight font-semibold">
           {collapsed ? "🦐" : "🦐 风控 OS"}
         </Text>
         {!collapsed && (
-          <Text type="secondary" className="text-[11px] leading-tight mt-0.5">
+          <Text type="secondary" className="text-[10px] leading-tight mt-0.5 font-medium">
             贷后指挥台
           </Text>
         )}
       </div>
 
-      <nav className="flex-1 py-2 overflow-y-auto">
+      {/* 导航区域 */}
+      <nav className="flex-1 py-3 overflow-y-auto">
         {PRIMARY_NAV.map((item) => (
           <div key={item.key}>
             {item.children ? (
               <div
-                className={`sider-nav-item ${isActive(item) ? "text-primary-deep" : ""}`}
+                className={`sider-nav-item ${isActive(item) ? "text-primary-deep font-medium" : ""}`}
                 onClick={() => toggleGroup(item.key)}
               >
-                <span className="text-lg">{item.icon}</span>
+                <span className="text-[16px]">{item.icon}</span>
                 {!collapsed && (
                   <>
-                    <span className="flex-1 text-sm">{item.label}</span>
-                    <span className="text-xs text-text-weak">{expandedGroups.includes(item.key) ? "▼" : "▶"}</span>
+                    <span className="flex-1 text-[13px]">{item.label}</span>
+                    <span className="text-[10px] text-text-weak transition-transform duration-200" style={{
+                      transform: expandedGroups.includes(item.key) ? "rotate(90deg)" : "rotate(0deg)"
+                    }}>▶</span>
                   </>
                 )}
               </div>
@@ -178,10 +182,10 @@ export default function AppSider() {
                 className={`sider-nav-item ${isActive(item) ? "sider-nav-item-active" : ""}`}
                 onClick={() => handleNavClick(item.path)}
               >
-                <span className="text-lg">{item.icon}</span>
+                <span className="text-[16px]">{item.icon}</span>
                 {!collapsed && (
                   <>
-                    <span className="flex-1 text-sm">{item.label}</span>
+                    <span className="flex-1 text-[13px]">{item.label}</span>
                     {item.badge ? <Badge count={item.badge} size="small" /> : null}
                   </>
                 )}
@@ -189,15 +193,15 @@ export default function AppSider() {
             )}
 
             {item.children && expandedGroups.includes(item.key) && !collapsed && (
-              <div className="ml-4 mt-1 space-y-1">
+              <div className="ml-4 mt-0.5 space-y-0.5">
                 {item.children.map((child) => (
                   <div
                     key={child.key}
                     className={`sider-nav-item py-2 ${isChildActive(child) ? "sider-nav-item-active" : ""}`}
                     onClick={() => handleNavClick(child.path)}
                   >
-                    <span className="text-base">{child.icon ?? <span className="inline-block w-3.5" />}</span>
-                    <span className="flex-1 text-xs">{child.label}</span>
+                    <span className="text-[14px]">{child.icon ?? <span className="inline-block w-3.5" />}</span>
+                    <span className="flex-1 text-[12px]">{child.label}</span>
                     {child.badge ? <Badge count={child.badge} size="small" /> : null}
                   </div>
                 ))}
@@ -207,14 +211,15 @@ export default function AppSider() {
         ))}
       </nav>
 
+      {/* 折叠按钮 */}
       <div
-        className="flex items-center justify-center h-10 border-t border-border-soft cursor-pointer hover:bg-[var(--color-bg-interactive-hover)] transition-colors"
+        className="flex items-center justify-center h-11 border-t border-black/[0.06] cursor-pointer hover:bg-black/[0.03] transition-colors"
         onClick={() => setCollapsed(!collapsed)}
       >
         {collapsed ? (
-          <MenuUnfoldOutlined className="text-text-secondary" />
+          <MenuUnfoldOutlined className="text-text-secondary text-[14px]" />
         ) : (
-          <MenuFoldOutlined className="text-text-secondary" />
+          <MenuFoldOutlined className="text-text-secondary text-[14px]" />
         )}
       </div>
     </aside>

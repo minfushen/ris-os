@@ -1,0 +1,140 @@
+/**
+ * B 端企业级 UI 补充层：浮层、焦点环、表单说明、空态与 z-index。
+ * 依赖 tokens.css 变量；与 antd-tailwind.css 分工：此处偏交互与层级。
+ */
+
+/* —— 主内容区画布（层级：背景 → 画布 → 模块壳） —— */
+.app-main-canvas {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.38) 0%,
+    rgba(246, 248, 251, 0.22) 40%,
+    transparent 72%
+  );
+}
+
+/* —— 模块页纵向节奏 —— */
+.module-page-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+/* —— focus-visible（键盘可达性） —— */
+.ant-btn:focus-visible,
+.ant-tabs-tab-btn:focus-visible,
+.ant-segmented-item:focus-visible,
+.ant-picker:focus-visible,
+.ant-select-focused .ant-select-selector:focus-visible {
+  outline: 2px solid rgba(111, 143, 149, 0.35) !important;
+  outline-offset: 2px;
+}
+
+a:focus-visible {
+  outline: 2px solid rgba(111, 143, 149, 0.3);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* —— 浮层层级与轻阴影 —— */
+.ant-tooltip .ant-tooltip-inner {
+  box-shadow: var(--shadow-float);
+  padding: 6px 10px;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.ant-dropdown .ant-dropdown-menu,
+.ant-select-dropdown .rc-virtual-list,
+.ant-picker-dropdown .ant-picker-panel-container {
+  box-shadow: var(--shadow-float) !important;
+  padding: 4px;
+}
+
+.ant-popover .ant-popover-inner {
+  box-shadow: var(--shadow-float);
+  padding: 10px 12px;
+}
+
+.ant-popover .ant-popover-inner-content {
+  padding: 0;
+}
+
+.ant-dropdown-menu-item,
+.ant-dropdown-menu-submenu-title {
+  border-radius: var(--radius-lg) !important;
+  margin: 2px 4px;
+  padding-inline: 10px !important;
+}
+
+.ant-dropdown-menu-item-active,
+.ant-dropdown-menu-submenu-title-active {
+  background-color: rgba(111, 143, 149, 0.08) !important;
+}
+
+/* —— 表单：错误 / 帮助 / 禁用 —— */
+.ant-form-item-explain-error {
+  color: var(--color-error);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.ant-form-item-extra {
+  color: var(--color-text-tertiary);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.ant-input[disabled],
+.ant-input-affix-wrapper-disabled,
+.ant-select-disabled .ant-select-selector,
+.ant-picker-disabled {
+  color: var(--color-text-secondary) !important;
+  background-color: #f3f5f6 !important;
+  border-color: rgba(130, 150, 160, 0.16) !important;
+  opacity: 1 !important;
+}
+
+.ant-input[disabled]::placeholder {
+  color: var(--color-text-disabled);
+}
+
+/* —— Empty / Spin —— */
+.ant-empty {
+  padding: var(--spacing-xl) var(--spacing-md);
+}
+
+.ant-empty-description {
+  color: var(--color-text-tertiary);
+  font-size: 13px;
+}
+
+.ant-spin-nested-loading > div > .ant-spin {
+  max-height: none;
+}
+
+.ant-spin-blur {
+  opacity: 0.55;
+  filter: saturate(0.92);
+}
+
+/* —— Tabs：更克制的指示（线式导航） —— */
+.ant-tabs-tab {
+  transition: color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.ant-tabs-tab:hover {
+  color: var(--color-text-primary);
+  background-color: rgba(111, 143, 149, 0.04);
+  border-radius: var(--radius-lg);
+}
+
+.ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: var(--color-text-primary) !important;
+  font-weight: 600;
+}
+
+.ant-tabs-ink-bar {
+  height: 2px !important;
+  border-radius: var(--radius-full);
+}

@@ -1,45 +1,74 @@
 /**
- * 设计令牌 (Design Tokens)
+ * 设计令牌 (Design Tokens) - 专业金融风控系统
  * 统一的颜色、间距、字体、阴影等基础变量
  * 所有页面和组件应使用这些变量，而非硬编码值
+ *
+ * 设计理念：
+ * - 专业严谨：金融系统应有的稳重与可信感
+ * - 数据驱动：突出关键指标，强化数据可视化
+ * - 高效交互：清晰的视觉层次与流畅的动效反馈
+ *
+ * 圆角阶梯（与 Tailwind rounded-lg / xl / 2xl 对齐）：
+ * - --radius-lg 8px：控件、表、常规卡片
+ * - --radius-xl 12px：模块壳、侧栏、分区 header
+ * - --radius-2xl 16px：Hero、Modal 外缘
  *
  * 页面级 margin/padding/gap 请优先使用 `layout-spacing.css` 中的
  * `.layout-mb-*`、`.layout-p-*`、`.layout-gap-*` 等工具类（内部已绑定 --spacing-*）。
  */
 
 :root {
-  /* ========== 品牌色（与 tailwind.css @theme 玻璃台一致）========== */
-  --color-primary: #6f8f95;
-  --color-primary-light: #a8c0c3;
-  --color-primary-dark: #4f6970;
-  --color-primary-bg: rgba(111, 143, 149, 0.1);
+  /* ========== 品牌色（专业金融蓝灰系）========== */
+  --color-primary: #3b6b7d;
+  --color-primary-light: #5a9aaa;
+  --color-primary-dark: #2a4f5c;
+  --color-primary-bg: rgba(59, 107, 125, 0.08);
+  --color-primary-bg-hover: rgba(59, 107, 125, 0.12);
+  --color-primary-border: rgba(59, 107, 125, 0.24);
 
-  /* ========== 功能色 ========== */
-  --color-success: #5f9b7a;
-  --color-success-bg: rgba(95, 155, 122, 0.1);
-  --color-warning: #d7a85f;
-  --color-warning-bg: rgba(215, 168, 95, 0.1);
-  --color-error: #c77b78;
-  --color-error-bg: rgba(199, 123, 120, 0.1);
-  --color-info: #6f8f95;
-  --color-info-bg: rgba(111, 143, 149, 0.08);
+  /* ========== 功能色（增强对比度与专业感）========== */
+  --color-success: #52c41a;
+  --color-success-light: #73d13d;
+  --color-success-bg: rgba(82, 196, 26, 0.08);
+  --color-success-bg-strong: rgba(82, 196, 26, 0.15);
+  --color-success-border: rgba(82, 196, 26, 0.24);
 
-  /* ========== 中性色 ========== */
-  --color-bg-layout: #f6f8fb;
-  /* 顶栏 / 侧栏等列表项 hover：实色灰阶，避免半透明叠涂 */
-  --color-bg-interactive-hover: #f0f2f4;
-  --color-bg-container: rgba(255, 255, 255, 0.88);
-  --color-bg-elevated: rgba(255, 255, 255, 0.94);
-  --color-bg-mask: rgba(12, 22, 32, 0.45);
+  --color-warning: #fa8c16;
+  --color-warning-light: #ffa940;
+  --color-warning-bg: rgba(250, 140, 22, 0.08);
+  --color-warning-bg-strong: rgba(250, 140, 22, 0.15);
+  --color-warning-border: rgba(250, 140, 22, 0.24);
 
-  --color-border: rgba(130, 150, 160, 0.22);
-  --color-border-light: rgba(130, 150, 160, 0.12);
-  --color-border-dark: rgba(130, 150, 160, 0.32);
+  --color-error: #f5222d;
+  --color-error-light: #ff4d4f;
+  --color-error-bg: rgba(245, 34, 45, 0.08);
+  --color-error-bg-strong: rgba(245, 34, 45, 0.12);
+  --color-error-border: rgba(245, 34, 45, 0.24);
 
-  --color-text-primary: #1f2a30;
-  --color-text-secondary: #44525a;
-  --color-text-tertiary: #6e7c84;
-  --color-text-disabled: #95a2a9;
+  --color-info: #1677ff;
+  --color-info-light: #4096ff;
+  --color-info-bg: rgba(22, 119, 255, 0.08);
+  --color-info-border: rgba(22, 119, 255, 0.24);
+
+  /* ========== 中性色（增强层次感）========== */
+  --color-bg-layout: #f0f2f5;
+  --color-bg-layout-start: #e8ecf0;
+  --color-bg-layout-end: #f5f7fa;
+  --color-bg-interactive-hover: #e6eaef;
+  --color-bg-interactive-active: #dce2e8;
+  --color-bg-container: #ffffff;
+  --color-bg-elevated: #ffffff;
+  --color-bg-mask: rgba(0, 0, 0, 0.45);
+
+  --color-border: rgba(0, 0, 0, 0.08);
+  --color-border-light: rgba(0, 0, 0, 0.04);
+  --color-border-dark: rgba(0, 0, 0, 0.12);
+  --color-border-focus: rgba(59, 107, 125, 0.4);
+
+  --color-text-primary: #1a1a1a;
+  --color-text-secondary: #4a4a4a;
+  --color-text-tertiary: #7a7a7a;
+  --color-text-disabled: #b0b0b0;
   --color-text-inverse: #ffffff;
 
   /* ========== 间距系统（8px 基准阶梯）========== */
@@ -53,17 +82,20 @@
   --spacing-2xl: 32px; /* 与 xxl 同值，命名对齐设计文档 */
   --spacing-compact: 6px; /* 色条内侧、紧凑缩进（介于 xs 与 sm 之间） */
 
-  /* ========== 字体 ========== */
-  --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  --font-size-xs: 12px;
+  /* ========== 字体（优化可读性）========== */
+  --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --font-family-mono: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  
+  --font-size-xs: 11px;
   --font-size-sm: 12px;
   --font-size-base: 13px;
   --font-size-md: 14px;
-  --font-size-lg: 14px;
+  --font-size-lg: 15px;
   --font-size-xl: 16px;
   --font-size-xxl: 18px;
   --font-size-title: 20px;
-  --font-size-hero: 24px;
+  --font-size-hero: 28px;
+  --font-size-display: 36px;
 
   --font-weight-normal: 400;
   --font-weight-medium: 500;
@@ -74,42 +106,53 @@
   --line-height-base: 1.5;
   --line-height-loose: 1.75;
 
-  /* ========== 圆角阶梯（设计稿）========== */
+  /* ========== 圆角三档（对齐 Tailwind rounded-lg / xl / 2xl 语义）========== */
   --radius-none: 0;
-  --radius-2xs: 2px; /* 表内标签、进度条等最小块 */
-  --radius-sm: 2px; /* 兼容旧名 */
-  --radius-tag: 4px; /* Tag / Badge / 迷你按钮 */
-  --radius-md: 4px;
-  --radius-control: 6px; /* 标准 Button / Input */
-  --radius-card: 8px; /* 标准 Card、Alert、Dropdown */
-  --radius-lg: 8px; /* 兼容旧名 = 标准卡片 */
-  --radius-shell: 12px; /* Modal / Drawer / 大布局壳 */
+  --radius-2xs: 2px;
+  /** lg：控件、表格外壳、常规卡片 */
+  --radius-lg: 8px;
+  /** xl：模块壳、侧栏面板、分区容器 */
   --radius-xl: 12px;
-  --radius-glass: 12px; /* 与 shell 一致：区块壳、兼容 Tailwind / TSX */
+  /** 2xl：顶栏下主画布、大 Hero、Modal 外缘 */
+  --radius-2xl: 16px;
+  /** sm：紧凑块、表内小元素 */
+  --radius-sm: 6px;
+  --radius-tag: 4px;
+  --radius-md: 6px;
   --radius-full: 9999px;
 
-  /* ========== 阴影 ========== */
-  /* 内容区卡片/面板标准阴影（与风控 OS 稿：仅顶栏与遮罩用 blur，其余实色 + 轻阴影） */
-  --shadow-surface: 0 1px 4px rgba(0, 0, 0, 0.06);
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.03);
+  /* 兼容旧名（逐步迁移到 lg/xl/2xl） */
+  --radius-control: var(--radius-lg);
+  --radius-card: var(--radius-lg);
+  --radius-shell: var(--radius-xl);
+  --radius-glass: var(--radius-xl);
+
+  /* ========== 阴影（增强层次感）========== */
+  --shadow-surface: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.04);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
   --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.06);
   --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.08);
-  --shadow-xl: 0 8px 24px rgba(0, 0, 0, 0.12);
+  --shadow-xl: 0 8px 24px rgba(0, 0, 0, 0.1);
+  --shadow-float: 0 6px 20px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.04);
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.04), 0 2px 8px rgba(0, 0, 0, 0.04);
+  --shadow-card-hover: 0 4px 12px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(59, 107, 125, 0.08);
+  --shadow-inset: inset 0 1px 2px rgba(0, 0, 0, 0.04);
 
   /* ========== 布局尺寸 ========== */
-  --header-height: 44px; /* 顶栏固定高度 */
-  --header-padding-x: 16px; /* 顶栏水平内边距 0 16px */
-  --sider-width: 200px;
+  --header-height: 52px; /* 顶栏固定高度（增加以提升专业感）*/
+  --header-padding-x: 20px; /* 顶栏水平内边距 */
+  --sider-width: 220px;
   --sider-collapsed-width: 64px;
   --content-max-width: 1440px;
-  --page-padding: 16px; /* 兼容旧名 */
+  --page-padding: 20px; /* 兼容旧名 */
   --content-padding-x: 24px; /* 主内容区水平内边距（阶梯 xl） */
   --content-padding-y: 24px; /* 主内容区垂直内边距 */
 
-  /* ========== 动画 ========== */
-  --transition-fast: 0.15s ease;
-  --transition-base: 0.2s ease;
-  --transition-slow: 0.3s ease;
+  /* ========== 动画（流畅过渡）========== */
+  --transition-fast: 0.12s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-bounce: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 
   /* ========== Z-index 层级 ========== */
   --z-dropdown: 1000;

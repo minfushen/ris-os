@@ -187,7 +187,7 @@ export default function StrategyDiff({
         </div>
       </div>
 
-      <div className="glass-panel layout-mt-md p-4 rounded-[var(--radius-card,8px)]">
+      <div className="glass-panel layout-mt-md p-4">
         <Text strong className="text-sm block layout-mb-md">
           影响评估（贷后预警 / 演示）
         </Text>

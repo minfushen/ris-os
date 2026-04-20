@@ -74,7 +74,7 @@ export default function Rules() {
       <Alert
         type="info"
         showIcon
-        className="rounded-[var(--radius-card,8px)] mb-2"
+        className="rounded-lg mb-2"
         message="与授信规则差异"
         description="已下线年龄准入、黑名单单笔阈值等授信树节点；阈值按行业分面配置，避免一刀切误报。"
       />

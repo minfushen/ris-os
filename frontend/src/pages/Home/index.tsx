@@ -30,7 +30,6 @@ function buildAnalysisTaskDescription(v: AnalysisFormValues): string {
     v.description?.trim(),
   ].filter(Boolean);
   const raw = parts.join(" · ").slice(0, 450) || "贷后预警归因分析";
-  // 后端校验描述不少于 10 字符
   return raw.length >= 10 ? raw : `${raw} · 补充说明待完善`;
 }
 
@@ -173,30 +172,56 @@ export default function Home() {
           showIcon
           message="无法连接任务服务"
           description={`${taskError}。当前前端请求基址：${API_BASE_URL}。队列区为演示数据；接入后端后待核查列表可与 GET /tasks 同步。`}
-          className="rounded-lg"
+          className="rounded-xl pl-fade-in-up"
+          style={{ borderRadius: 12 }}
         />
       )}
 
-      <div className="pl-solid-card px-4 py-3">
-        <Text strong className="text-base text-[#262626]">
+      {/* 页面标题区 - 吸顶效果 */}
+      <div 
+        className="rounded-xl px-6 py-5 sticky top-0 z-10 pl-fade-in-up"
+        style={{
+          background: "linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(250, 251, 252, 0.95) 100%)",
+          backdropFilter: "blur(8px)",
+          WebkitBackdropFilter: "blur(8px)",
+          border: "1px solid rgba(0, 0, 0, 0.06)",
+          boxShadow: "0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.02)"
+        }}
+      >
+        <Text strong className="text-[19px] text-[#1a1a1a] font-semibold leading-tight">
           首页 · 贷后资产总览
         </Text>
-        <Text className="pl-aux-text mt-1.5 block !text-[12px] leading-relaxed">
+        <Text className="pl-aux-text mt-2 block text-[13px] leading-relaxed opacity-75">
           今日有没有新增预警客户、资产质量有没有恶化、我的处置工单有没有超时 — 三类问题一页收口。
         </Text>
       </div>
 
-      <PostLoanCoreKpis onDrill={handleKpiDrill} />
+      {/* KPI 区域 - 添加背景板 */}
+      <div 
+        className="rounded-2xl p-5 pl-fade-in-up"
+        style={{
+          background: "linear-gradient(135deg, rgba(59, 107, 125, 0.02) 0%, rgba(59, 107, 125, 0.01) 100%)",
+          border: "1px solid rgba(59, 107, 125, 0.08)"
+        }}
+      >
+        <PostLoanCoreKpis onDrill={handleKpiDrill} />
+      </div>
 
-      <PostLoanSearchlight
-        onClaimVerify={handleClaimVerify}
-        onViewDetail={handleViewAlertDetail}
-        onJoinQueue={handleJoinQueue}
-      />
+      <div className="pl-fade-in-up" style={{ animationDelay: "0.1s" }}>
+        <PostLoanSearchlight
+          onClaimVerify={handleClaimVerify}
+          onViewDetail={handleViewAlertDetail}
+          onJoinQueue={handleJoinQueue}
+        />
+      </div>
 
-      <MyDisposalQueue onOpenItem={() => navigate("/risk/workbench")} />
+      <div className="pl-fade-in-up" style={{ animationDelay: "0.2s" }}>
+        <MyDisposalQueue onOpenItem={() => navigate("/risk/workbench")} />
+      </div>
 
-      <PostLoanQuickActions actions={quickActions} />
+      <div className="pl-fade-in-up" style={{ animationDelay: "0.3s" }}>
+        <PostLoanQuickActions actions={quickActions} />
+      </div>
 
       <TaskDrawer
         open={drawerOpen}

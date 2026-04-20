@@ -168,7 +168,7 @@ export default function MetricCard({
 
   return (
     <div
-      className="relative layout-pl-md overflow-hidden rounded-[var(--radius-card,8px)] border border-border-soft bg-white shadow-[0_1px_4px_rgba(0,0,0,0.06)] text-left transition-shadow hover:shadow-[0_4px_12px_rgba(0,0,0,0.08)]"
+      className="relative layout-pl-md overflow-hidden rounded-lg border border-border-soft bg-white shadow-[0_1px_4px_rgba(0,0,0,0.06)] text-left transition-shadow hover:shadow-[0_4px_12px_rgba(0,0,0,0.08)]"
     >
       <div
         className="absolute left-0 top-0 bottom-0 w-1 rounded-l-[inherit]"

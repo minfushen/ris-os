@@ -114,7 +114,7 @@ function VintageTab() {
         <Button icon={<DownloadOutlined />} size="small">导出</Button>
         <Tag color="processing" className="m-0">演示数据</Tag>
       </Space>
-      <div className="glass-panel p-4 rounded-[var(--radius-card,8px)]">
+      <div className="glass-panel p-4">
         <Text strong className="text-sm block layout-mb-sm">
           各批次 Vintage 曲线（MOB × 逾期率%）
         </Text>
@@ -169,7 +169,7 @@ function VintageTab() {
 function RollRateTab() {
   return (
     <div className="space-y-4">
-      <div className="glass-panel p-4 rounded-[var(--radius-card,8px)]">
+      <div className="glass-panel p-4">
         <Text strong className="text-sm block layout-mb-sm">
           迁徙矩阵（热力）
         </Text>
@@ -209,7 +209,7 @@ function RollRateTab() {
           </table>
         </div>
       </div>
-      <div className="glass-panel p-4 rounded-[var(--radius-card,8px)]">
+      <div className="glass-panel p-4">
         <Text strong className="text-sm block layout-mb-sm">关键路径迁徙率</Text>
         <div style={{ width: "100%", height: 220 }}>
           <ResponsiveContainer>
@@ -244,7 +244,7 @@ function WarningEfficiencyTab() {
       <Text type="secondary" className="text-xs block">
         预警有效率报表：规则触发量、真阳性、精度与召回（演示）；生产可对接核查结论回流。
       </Text>
-      <div className="glass-panel p-4 rounded-[var(--radius-card,8px)]">
+      <div className="glass-panel p-4">
         <div style={{ width: "100%", height: 280 }}>
           <ResponsiveContainer>
             <BarChart data={WARNING_RULE_ROWS} margin={{ top: 8, right: 16, left: 8, bottom: 48 }}>
@@ -282,7 +282,7 @@ function CollectionEfficiencyTab() {
       <Text type="secondary" className="text-xs block">
         逾期催收效率：触达率、承诺还款率、滚动治愈（按策略维度）；下表为渠道 DPD7 治愈与单户成本（演示）。
       </Text>
-      <div className="glass-panel p-4 rounded-[var(--radius-card,8px)]">
+      <div className="glass-panel p-4">
         <Text strong className="text-sm block layout-mb-md">按催收策略</Text>
         <Table
           size="small"
@@ -297,7 +297,7 @@ function CollectionEfficiencyTab() {
           ]}
         />
       </div>
-      <div className="glass-panel p-4 rounded-[var(--radius-card,8px)]">
+      <div className="glass-panel p-4">
         <Text strong className="text-sm block layout-mb-md">按渠道</Text>
         <div style={{ width: "100%", height: 240 }}>
           <ResponsiveContainer>
@@ -352,7 +352,7 @@ function IndustryRiskTab() {
       <Text type="secondary" className="text-xs block">
         行业风险热力：风险指数、M1+ 与余额占比；可与「资产质量看板」行业 Top 联动（演示）。
       </Text>
-      <div className="glass-panel p-4 rounded-[var(--radius-card,8px)]">
+      <div className="glass-panel p-4">
         <div style={{ width: "100%", height: 300 }}>
           <ResponsiveContainer>
             <BarChart data={INDUSTRY_RISK} margin={{ top: 8, right: 16, left: 8, bottom: 48 }}>

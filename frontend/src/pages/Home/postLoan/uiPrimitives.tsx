@@ -17,19 +17,39 @@ export function RiskStrip({ variant }: { variant: RiskStripVariant }) {
 
 export type SoftTagVariant = "danger" | "warning" | "success" | "info" | "neutral";
 
-/** 柔和填充标签：浅色底 + 语义色字，避免压抑 */
+/** 柔和填充标签：专业金融风格 */
 const SOFT_TAG_STYLE: Record<SoftTagVariant, CSSProperties> = {
-  danger: { background: "rgba(245, 34, 45, 0.1)", color: "#cf1322" },
-  warning: { background: "#fffae6", color: "#fa8c16" },
-  success: { background: "rgba(82, 196, 26, 0.12)", color: "#389e0d" },
-  info: { background: "rgba(22, 119, 255, 0.1)", color: "#1677ff" },
-  neutral: { background: "rgba(0, 0, 0, 0.04)", color: "#595959" },
+  danger: { 
+    background: "linear-gradient(135deg, rgba(245, 34, 45, 0.1) 0%, rgba(255, 77, 79, 0.06) 100%)", 
+    color: "#f5222d",
+    border: "1px solid rgba(245, 34, 45, 0.15)",
+  },
+  warning: { 
+    background: "linear-gradient(135deg, rgba(250, 140, 22, 0.12) 0%, rgba(255, 169, 64, 0.06) 100%)", 
+    color: "#fa8c16",
+    border: "1px solid rgba(250, 140, 22, 0.2)",
+  },
+  success: { 
+    background: "linear-gradient(135deg, rgba(82, 196, 26, 0.1) 0%, rgba(115, 209, 61, 0.06) 100%)", 
+    color: "#52c41a",
+    border: "1px solid rgba(82, 196, 26, 0.15)",
+  },
+  info: { 
+    background: "linear-gradient(135deg, rgba(22, 119, 255, 0.1) 0%, rgba(64, 150, 255, 0.06) 100%)", 
+    color: "#1677ff",
+    border: "1px solid rgba(22, 119, 255, 0.15)",
+  },
+  neutral: { 
+    background: "rgba(0, 0, 0, 0.03)", 
+    color: "#595959",
+    border: "1px solid rgba(0, 0, 0, 0.06)",
+  },
 };
 
 export function SoftTag({ variant, children }: { variant: SoftTagVariant; children: ReactNode }) {
   return (
     <span
-      className="inline-flex items-center gap-1 max-w-full px-2 py-0.5 rounded text-xs font-medium leading-tight"
+      className="inline-flex items-center gap-1 max-w-full px-2 py-0.5 rounded text-[11px] font-semibold leading-tight"
       style={SOFT_TAG_STYLE[variant]}
     >
       {children}
@@ -37,8 +57,7 @@ export function SoftTag({ variant, children }: { variant: SoftTagVariant; childr
   );
 }
 
-/** 将业务 riskColor 映射到条/标签语义 */
-/** 列表/卡片内「状态文案」专用高亮块（奶黄=注意，红=严重，绿=成功） */
+/** 状态高亮块 */
 export type StatusHighlightTone = "danger" | "warning" | "warning-soft" | "success" | "neutral";
 
 const STATUS_HIGHLIGHT_CLASS: Record<StatusHighlightTone, string> = {
@@ -66,7 +85,7 @@ export function StatusHighlight({
   );
 }
 
-/** 从 SLA 文案推断高亮：超时→红块；短剩余→奶黄强调；其余→淡奶黄注意 */
+/** 从 SLA 文案推断高亮 */
 export function slaToneFromLabel(sla: string, urgentHint?: boolean): StatusHighlightTone {
   const t = sla.trim();
   if (/超时|超期|已逾期/i.test(t)) return "danger";

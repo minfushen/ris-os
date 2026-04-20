@@ -5,15 +5,20 @@ import "@/styles/tailwind.css";
 
 export default function AppLayout() {
   return (
-    <div className="min-h-screen bg-app-bg" style={{ background: "linear-gradient(135deg, #eef4f3 0%, #f8fafc 100%)" }}>
+    <div 
+      className="min-h-screen" 
+      style={{ 
+        background: "linear-gradient(135deg, #e8ecf0 0%, #f5f7fa 50%, #f0f2f5 100%)" 
+      }}
+    >
       {/* 顶部栏 */}
       <AppHeader />
 
-      <div className="flex" style={{ minHeight: "calc(100vh - var(--header-height, 44px))" }}>
+      <div className="flex" style={{ minHeight: "calc(100vh - var(--header-height, 52px))" }}>
         {/* 左侧导航 */}
         <AppSider />
 
-        {/* 主内容区：设计稿 xl=24px 页面内边距 */}
+        {/* 主内容区 */}
         <main
           className="flex-1 overflow-auto"
           style={{

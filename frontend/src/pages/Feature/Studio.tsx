@@ -167,13 +167,13 @@ export default function FeatureStudio() {
       }
     >
       {error ? (
-        <Alert type="error" showIcon className="rounded-[var(--radius-card,8px)] layout-mb-md" message="加载失败" description={error} />
+        <Alert type="error" showIcon className="rounded-xl layout-mb-md" message="加载失败" description={error} />
       ) : null}
 
       <Alert
         type="info"
         showIcon
-        className="rounded-[var(--radius-card,8px)]"
+        className="rounded-xl"
         message="口径变更说明"
         description="已下线：全场景泛化 PSI 监控、授信侧「多头查询次数」等反欺诈特征为主列表。已上线：还款规律性、提前还款率、承诺履约率、联系成功率等；PSI 告警按产品线独立基线与阈值。"
       />

@@ -31,7 +31,7 @@
 
 /* —— 表格 —— */
 .ant-table {
-  border-radius: var(--radius-card, 8px);
+  border-radius: var(--radius-lg, 8px);
   overflow: hidden;
 }
 
@@ -73,7 +73,7 @@
 .ant-input-focused,
 .ant-select-focused .ant-select-selector,
 .ant-picker-focused {
-  box-shadow: 0 0 0 2px rgba(111, 143, 149, 0.18);
+  box-shadow: 0 0 0 2px rgba(111, 143, 149, 0.14);
 }
 
 /* —— 下拉 / 气泡 —— */
@@ -81,9 +81,9 @@
 .ant-select-dropdown,
 .ant-picker-dropdown,
 .ant-popover .ant-popover-inner {
-  border: 1px solid rgba(130, 150, 160, 0.18);
+  border: 1px solid rgba(130, 150, 160, 0.16);
   background-color: #ffffff;
-  box-shadow: 0 8px 28px rgba(12, 22, 32, 0.08);
+  box-shadow: var(--shadow-float, 0 6px 24px rgba(12, 22, 32, 0.08));
 }
 
 /* —— 分页 —— */

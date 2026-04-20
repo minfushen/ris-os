@@ -67,8 +67,8 @@ export default function ModulePageShell({
         </div>
       </header>
 
-      {/* 模块内容 */}
-      <div className="space-y-4">{children}</div>
+      {/* 模块内容：纵向节奏由 .module-page-stack 统一（间距 token） */}
+      <div className="module-page-stack">{children}</div>
     </div>
   );
 }

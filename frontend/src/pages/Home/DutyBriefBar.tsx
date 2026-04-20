@@ -44,7 +44,7 @@ export default function DutyBriefBar({
     "border-0 bg-transparent p-0 m-0 cursor-pointer text-inherit hover:text-primary underline-offset-2 hover:underline text-left font-inherit";
 
   return (
-    <section className="glass-panel px-4 py-3 rounded-[var(--radius-glass)]">
+    <section className="glass-panel px-4 py-3">
       <div className="flex flex-col gap-2">
         <div className="flex flex-wrap items-center justify-between gap-2 min-w-0">
           <div className="flex items-center gap-2 flex-wrap min-w-0">

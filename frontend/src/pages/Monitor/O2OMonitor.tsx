@@ -103,7 +103,7 @@ export default function O2OMonitor() {
       <Alert
         type="info"
         showIcon
-        className="rounded-[var(--radius-card,8px)]"
+        className="rounded-lg"
         message="指标口径说明"
         description="预警有效率评分综合漏斗转化、提前量达标占比与误报控制；生产环境请与风控口径、样本窗口对齐。"
       />

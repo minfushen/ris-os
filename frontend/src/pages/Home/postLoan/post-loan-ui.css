@@ -1,174 +1,300 @@
 /**
- * 贷后首页卡片 UI 规范：实体白底卡片、8px 圆角、底部微投影、左侧 4px 风险条
+ * 贷后首页卡片 UI 规范：专业金融风格
+ * 设计理念：清晰的数据层次、精致的交互反馈、专业的视觉语言
  */
 
+/* ========== 基础卡片 ========== */
 .pl-solid-card {
-  border-radius: 8px;
+  border-radius: 12px;
   background: #ffffff;
-  border: 1px solid rgba(15, 23, 42, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.06);
   box-shadow:
-    0 1px 2px rgba(15, 23, 42, 0.05),
-    0 4px 12px rgba(15, 23, 42, 0.06);
+    0 1px 3px rgba(0, 0, 0, 0.04),
+    0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: 
+    box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .pl-solid-card--interactive {
-  transition:
-    box-shadow 0.2s ease,
-    border-color 0.2s ease;
+  cursor: pointer;
 }
 
 .pl-solid-card--interactive:hover {
-  border-color: rgba(15, 23, 42, 0.1);
+  border-color: rgba(59, 107, 125, 0.15);
   box-shadow:
-    0 2px 4px rgba(15, 23, 42, 0.06),
-    0 8px 20px rgba(15, 23, 42, 0.08);
+    0 2px 6px rgba(0, 0, 0, 0.06),
+    0 4px 16px rgba(0, 0, 0, 0.06),
+    0 0 0 1px rgba(59, 107, 125, 0.08);
+  transform: translateY(-2px);
 }
 
-/* 左侧 4px 风险指示条（与圆角衔接） */
+.pl-solid-card--interactive:active {
+  transform: translateY(0) scale(0.99);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.04),
+    0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+/* ========== 左侧风险指示条 ========== */
 .pl-risk-strip {
   width: 4px;
   min-width: 4px;
   align-self: stretch;
-  border-radius: 8px 0 0 8px;
+  border-radius: 12px 0 0 12px;
+  transition: width 0.2s ease;
+}
+
+.pl-solid-card--interactive:hover .pl-risk-strip {
+  width: 5px;
 }
 
 .pl-risk-strip--danger {
-  background: #f5222d;
+  background: linear-gradient(180deg, #f5222d 0%, #ff4d4f 100%);
 }
 
 .pl-risk-strip--warning {
-  background: #fa8c16;
+  background: linear-gradient(180deg, #fa8c16 0%, #ffa940 100%);
 }
 
-/* 即将超时（弱一档）：仍为橙色语义，略浅以区分强预警 */
 .pl-risk-strip--warning-soft {
-  background: #ffa940;
+  background: linear-gradient(180deg, #ffa940 0%, #ffc53d 100%);
 }
 
 .pl-risk-strip--success {
-  background: #52c41a;
+  background: linear-gradient(180deg, #52c41a 0%, #73d13d 100%);
 }
 
 .pl-risk-strip--info {
-  background: #1677ff;
+  background: linear-gradient(180deg, #1677ff 0%, #4096ff 100%);
 }
 
 .pl-risk-strip--neutral {
-  background: #bfbfbf;
+  background: linear-gradient(180deg, #8c8c8c 0%, #bfbfbf 100%);
 }
 
-/* 辅助说明：12px 灰色 */
+/* ========== 文字层级 ========== */
 .pl-aux-text {
-  font-size: 12px;
-  line-height: 1.5;
+  font-size: 11px;
+  line-height: 1.6;
   color: #8c8c8c;
+  letter-spacing: 0.01em;
 }
 
-/* 卡片主标题层级 */
 .pl-card-title {
   font-size: 15px;
   font-weight: 600;
-  color: #262626;
+  color: #1a1a1a;
   line-height: 1.4;
+  letter-spacing: -0.01em;
 }
 
 .pl-entity-name {
   font-size: 16px;
   font-weight: 600;
-  color: #262626;
+  color: #1a1a1a;
   line-height: 1.35;
+  letter-spacing: -0.01em;
 }
 
-/* 密集列表中的「状态」高亮块：与白底剥离，增加视觉权重 */
+/* ========== 状态高亮块 ========== */
 .pl-status-highlight {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 5px 12px;
+  padding: 5px 11px;
   border-radius: 6px;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
   line-height: 1.25;
   flex-shrink: 0;
+  letter-spacing: 0.02em;
 }
 
-/* 严重 / 超时等：浅红底，区别于奶黄「注意」 */
 .pl-status-highlight--danger {
-  background: #fff1f0;
-  color: #cf1322;
-  border: 1px solid rgba(207, 19, 34, 0.24);
+  background: linear-gradient(135deg, rgba(245, 34, 45, 0.1) 0%, rgba(255, 77, 79, 0.08) 100%);
+  color: #f5222d;
+  border: 1px solid rgba(245, 34, 45, 0.2);
 }
 
-/* 注意 / 预警：奶黄系（强调） */
 .pl-status-highlight--warning {
-  background: #fffae6;
-  color: #d46b08;
-  border: 1px solid rgba(250, 140, 22, 0.38);
+  background: linear-gradient(135deg, rgba(250, 140, 22, 0.12) 0%, rgba(255, 169, 64, 0.08) 100%);
+  color: #fa8c16;
+  border: 1px solid rgba(250, 140, 22, 0.25);
 }
 
-/* 注意 / 预警：奶黄系（弱一档，仍与白底区分） */
 .pl-status-highlight--warning-soft {
-  background: #fffef7;
-  color: #d48806;
-  border: 1px solid rgba(250, 173, 20, 0.28);
+  background: rgba(255, 169, 64, 0.08);
+  color: #fa8c16;
+  border: 1px solid rgba(255, 169, 64, 0.2);
 }
 
-/* 成功闭环 */
 .pl-status-highlight--success {
-  background: #f6ffed;
-  color: #389e0d;
-  border: 1px solid rgba(82, 196, 26, 0.32);
+  background: linear-gradient(135deg, rgba(82, 196, 26, 0.1) 0%, rgba(115, 209, 61, 0.08) 100%);
+  color: #52c41a;
+  border: 1px solid rgba(82, 196, 26, 0.2);
 }
 
-/* 中性归档 */
 .pl-status-highlight--neutral {
   background: #f5f5f5;
   color: #595959;
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.06);
 }
 
-/* 待办列表整行：左侧色条 + 行级浅底色，从灰底列表中「整条」突显 */
+/* ========== 队列行 ========== */
 .pl-queue-row {
   display: flex;
   width: 100%;
   overflow: hidden;
-  border-radius: 8px;
-  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
   background: #ffffff;
-  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
   text-align: left;
   cursor: pointer;
-  transition:
+  transition: 
     box-shadow 0.2s ease,
     border-color 0.2s ease,
-    background 0.2s ease;
+    transform 0.2s ease;
 }
 
 .pl-queue-row:focus-visible {
-  outline: 2px solid rgba(22, 119, 255, 0.35);
+  outline: 2px solid rgba(59, 107, 125, 0.3);
   outline-offset: 1px;
 }
 
 .pl-queue-row:hover {
   box-shadow:
-    0 2px 6px rgba(15, 23, 42, 0.07),
-    0 6px 16px rgba(15, 23, 42, 0.06);
+    0 2px 6px rgba(0, 0, 0, 0.06),
+    0 4px 12px rgba(0, 0, 0, 0.04);
+  transform: translateY(-1px);
 }
 
-/* 超时：红条 + 极浅红铺底（整行） */
+.pl-queue-row:active {
+  transform: translateY(0) scale(0.99);
+}
+
 .pl-queue-row--sla-danger {
-  background: linear-gradient(90deg, rgba(245, 34, 45, 0.14) 0px, rgba(245, 34, 45, 0.05) 56px, #ffffff 100%);
-  border-color: rgba(245, 34, 45, 0.28);
+  background: linear-gradient(90deg, rgba(245, 34, 45, 0.08) 0px, rgba(245, 34, 45, 0.03) 48px, #ffffff 100%);
+  border-color: rgba(245, 34, 45, 0.2);
+  animation: pulse-danger 2s ease-in-out infinite;
 }
 
-/* 即将超时（强）：橙条 + 浅橙铺底 */
+@keyframes pulse-danger {
+  0%, 100% {
+    box-shadow: 0 1px 3px rgba(245, 34, 45, 0.1);
+  }
+  50% {
+    box-shadow: 0 1px 3px rgba(245, 34, 45, 0.2), 0 0 0 2px rgba(245, 34, 45, 0.1);
+  }
+}
+
+.pl-queue-row--sla-danger:hover {
+  background: linear-gradient(90deg, rgba(245, 34, 45, 0.1) 0px, rgba(245, 34, 45, 0.04) 48px, #ffffff 100%);
+  animation: none;
+}
+
 .pl-queue-row--sla-warning {
-  background: linear-gradient(90deg, rgba(250, 140, 22, 0.16) 0px, rgba(250, 140, 22, 0.06) 64px, #ffffff 100%);
-  border-color: rgba(250, 140, 22, 0.32);
+  background: linear-gradient(90deg, rgba(250, 140, 22, 0.1) 0px, rgba(250, 140, 22, 0.04) 48px, #ffffff 100%);
+  border-color: rgba(250, 140, 22, 0.2);
 }
 
-/* 即将超时（弱）：浅橙条 + 更淡的整行提示 */
+.pl-queue-row--sla-warning:hover {
+  background: linear-gradient(90deg, rgba(250, 140, 22, 0.12) 0px, rgba(250, 140, 22, 0.05) 48px, #ffffff 100%);
+}
+
 .pl-queue-row--sla-warning-soft {
-  background: linear-gradient(90deg, rgba(255, 169, 64, 0.12) 0px, rgba(255, 169, 64, 0.04) 48px, #ffffff 100%);
-  border-color: rgba(250, 140, 22, 0.2);
+  background: linear-gradient(90deg, rgba(255, 169, 64, 0.06) 0px, rgba(255, 169, 64, 0.02) 40px, #ffffff 100%);
+  border-color: rgba(255, 169, 64, 0.15);
+}
+
+/* ========== KPI 卡片增强 ========== */
+.pl-kpi-value {
+  font-family: var(--font-family-mono, 'SF Mono', 'Fira Code', monospace);
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  transition: transform 0.2s ease;
+}
+
+.pl-solid-card--interactive:hover .pl-kpi-value {
+  transform: scale(1.02);
+}
+
+.pl-kpi-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: #7a7a7a;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+/* ========== 趋势指示器 ========== */
+.pl-trend-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  transition: transform 0.2s ease;
+}
+
+.pl-trend-indicator:hover {
+  transform: scale(1.05);
+}
+
+.pl-trend-indicator--up {
+  background: rgba(82, 196, 26, 0.1);
+  color: #52c41a;
+}
+
+.pl-trend-indicator--down {
+  background: rgba(245, 34, 45, 0.1);
+  color: #f5222d;
+}
+
+.pl-trend-indicator--neutral {
+  background: rgba(0, 0, 0, 0.04);
+  color: #7a7a7a;
+}
+
+/* ========== 加载动画 ========== */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.pl-skeleton {
+  animation: shimmer 2s infinite linear;
+  background: linear-gradient(
+    90deg,
+    #f0f0f0 0%,
+    #f8f8f8 50%,
+    #f0f0f0 100%
+  );
+  background-size: 1000px 100%;
+}
+
+/* ========== 数据刷新提示 ========== */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.pl-fade-in-up {
+  animation: fade-in-up 0.3s ease-out;
 }

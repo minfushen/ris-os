@@ -1,5 +1,5 @@
 import { Typography, Button, Space } from "antd";
-import { BankOutlined, TeamOutlined } from "@ant-design/icons";
+import { BankOutlined, TeamOutlined, ClockCircleOutlined } from "@ant-design/icons";
 import {
   RiskStrip,
   SoftTag,
@@ -15,7 +15,6 @@ export interface PostLoanAlertCard {
   id: string;
   entityName: string;
   headline: string;
-  /** 借据号、行业等辅助信息，12px 灰色展示 */
   auxiliaryText: string;
   riskTag: string;
   riskColor: "red" | "orange" | "gold" | "blue";
@@ -67,6 +66,72 @@ interface PostLoanSearchlightProps {
   onJoinQueue?: (id: string) => void;
 }
 
+function AlertCard({ alert }: { alert: PostLoanAlertCard }) {
+  const { strip, tag: riskSoft } = mapRiskColorToVariant(alert.riskColor);
+  const stripVariant: RiskStripVariant = strip;
+  
+  return (
+    <div className="pl-solid-card pl-solid-card--interactive flex min-w-0 flex-1 overflow-hidden group">
+      <RiskStrip variant={stripVariant} />
+      <div className="flex min-w-0 flex-1 flex-col gap-3 py-4 pl-4 pr-4">
+        {/* 头部：实体名 + 标签 */}
+        <div className="flex gap-3 items-start">
+          <div className="min-w-0 flex-1 pr-2">
+            <div className="flex items-center gap-2 mb-1">
+              <Text strong className="pl-entity-name">{alert.entityName}</Text>
+              <div
+                className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-sm"
+                style={{ 
+                  background: alert.riskColor === "red" 
+                    ? "rgba(207, 19, 34, 0.1)" 
+                    : "rgba(212, 136, 6, 0.1)", 
+                  color: alert.riskColor === "red" ? "#cf1322" : "#d48806" 
+                }}
+              >
+                {alert.icon === "trade" ? <TeamOutlined /> : <BankOutlined />}
+              </div>
+            </div>
+            <div className="pl-card-title">{alert.headline}</div>
+            <div className="pl-aux-text mt-1.5">{alert.auxiliaryText}</div>
+          </div>
+          
+          {/* 右侧标签组 */}
+          <div className="flex shrink-0 flex-col items-end gap-1.5">
+            <SoftTag variant={riskSoft}>{alert.riskTag}</SoftTag>
+            <SoftTag variant="info">{alert.categoryTag}</SoftTag>
+            <StatusHighlight tone={slaToneFromLabel(alert.slaText, alert.slaUrgent)}>
+              <ClockCircleOutlined className="text-[10px]" />
+              {alert.slaText}
+            </StatusHighlight>
+          </div>
+        </div>
+
+        {/* 底部操作栏 */}
+        <div className="mt-auto flex flex-wrap items-center justify-between gap-2 border-t border-black/[0.04] pt-3">
+          <Text type="secondary" className="text-[11px]">
+            {alert.id}
+          </Text>
+          <Space size="small">
+            <Button 
+              type="primary" 
+              size="small" 
+              onClick={alert.onPrimary}
+              className="shadow-sm"
+            >
+              {alert.primaryLabel}
+            </Button>
+            {alert.secondaryLabel && (
+              <Button size="small" onClick={alert.onSecondary}>
+                {alert.secondaryLabel}
+              </Button>
+            )}
+          </Space>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function PostLoanSearchlight({ onClaimVerify, onViewDetail, onJoinQueue }: PostLoanSearchlightProps) {
   const alerts: PostLoanAlertCard[] = SEED_ALERTS.map((a) => ({
     ...a,
@@ -85,51 +150,9 @@ export default function PostLoanSearchlight({ onClaimVerify, onViewDetail, onJoi
       </div>
       <div className="section-body">
         <div className="flex flex-col lg:flex-row gap-4">
-          {alerts.map((a) => {
-            const { strip, tag: riskSoft } = mapRiskColorToVariant(a.riskColor);
-            const stripVariant: RiskStripVariant = strip;
-            return (
-              <div
-                key={a.id}
-                className="pl-solid-card pl-solid-card--interactive flex min-w-0 flex-1 overflow-hidden"
-              >
-                <RiskStrip variant={stripVariant} />
-                <div className="flex min-w-0 flex-1 flex-col gap-3 py-3 pl-4 pr-4">
-                  <div className="flex gap-3 items-start">
-                    <div className="min-w-0 flex-1 pr-2">
-                      <div className="pl-entity-name">{a.entityName}</div>
-                      <div className="pl-card-title mt-2">{a.headline}</div>
-                      <div className="pl-aux-text mt-1.5">{a.auxiliaryText}</div>
-                    </div>
-                    <div className="flex shrink-0 flex-col items-end gap-1.5">
-                      <SoftTag variant={riskSoft}>{a.riskTag}</SoftTag>
-                      <SoftTag variant="info">{a.categoryTag}</SoftTag>
-                      <StatusHighlight tone={slaToneFromLabel(a.slaText, a.slaUrgent)}>{a.slaText}</StatusHighlight>
-                    </div>
-                  </div>
-
-                  <div className="mt-auto flex flex-wrap items-center justify-between gap-2 border-t border-black/[0.06] pt-3">
-                    <div
-                      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md text-base"
-                      style={{ background: "rgba(22, 119, 255, 0.08)", color: "#1677ff" }}
-                    >
-                      {a.icon === "trade" ? <TeamOutlined /> : <BankOutlined />}
-                    </div>
-                    <Space wrap size="small">
-                      <Button type="primary" size="small" onClick={a.onPrimary}>
-                        {a.primaryLabel}
-                      </Button>
-                      {a.secondaryLabel && (
-                        <Button size="small" onClick={a.onSecondary}>
-                          {a.secondaryLabel}
-                        </Button>
-                      )}
-                    </Space>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
+          {alerts.map((alert) => (
+            <AlertCard key={alert.id} alert={alert} />
+          ))}
         </div>
       </div>
     </section>
