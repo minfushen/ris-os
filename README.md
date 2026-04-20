@@ -1,40 +1,56 @@
 # RIS OS · 风控管理 OS
 
 [![Repo](https://img.shields.io/badge/GitHub-ris--os-24292e?logo=github)](https://github.com/minfushen/ris-os)
+[![Branch](https://img.shields.io/badge/branch-scenario%2Fpost--loan-0969da)](https://github.com/minfushen/ris-os/tree/scenario/post-loan)
 
-面向信贷 / 反欺诈场景的 **风控工作台（Risk Intelligence System OS）** 前后端原型：态势总览 → 异动与待办 → 处置闭环。前端为「浅色金融玻璃台」工作台骨架，后端为最小可运行 API，便于本地演示与二次开发。
+面向信贷全生命周期的 **风控工作台（Risk Intelligence System OS）** 前后端原型。本仓库 **`scenario/post-loan`（贷后场景）** 分支在导航、页面与接口上对齐 **贷后预警与处置**：资产态势、策略追踪、核查工作台、催收作业、特征与数据 REST 等；前端为「浅色金融玻璃台」骨架，后端为 FastAPI 最小可运行 API，便于本地演示与二次开发。
 
 **远程仓库：** [https://github.com/minfushen/ris-os](https://github.com/minfushen/ris-os)
 
 ---
 
-## 功能概览
+## 贷后场景分支说明（`scenario/post-loan`）
+
+| 项 | 说明 |
+|----|------|
+| **分支名** | `scenario/post-loan` |
+| **与主线** | 自 `main` 同一起点延伸，可独立演进；合并回 `main` 前建议走 PR 评审 |
+| **前端入口** | Hash 路由：`http://localhost:5173/#/` |
+| **后端默认** | `http://127.0.0.1:8000`（与 `frontend/.env.development` 中 `VITE_API_BASE_URL` 一致） |
+| **贷后 REST** | 前端调用 **`/api/scenario/post-loan/*`**（后端同时挂载无前缀 `/scenario/post-loan/*`，便于兼容旧网关） |
+
+拉取并切换到本分支：
+
+```bash
+git fetch origin
+git switch scenario/post-loan
+```
+
+---
+
+## 功能概览（贷后分支）
 
 | 模块 | 说明 |
 |------|------|
-| **工作台** | **指挥台首页**：当班简报条、异动探照灯（认领排他 / 影响量化 / SLA / 推荐动作与展开佐证）、核心指标分析师卡、风险工单池、策略与复核摘要、快捷入口；筛选与 URL / session 同步，顶栏与导航回首页可恢复状态 |
-| **监控与分析** | 战情看板、O2O、标注飞轮、报表等页面骨架 |
-| **策略管控** | 策略集、规则引擎、回测、发布等页面骨架 |
-| **风险核查** | 团伙欺诈、专家抽检等页面骨架 |
-| **特征工程** | 特征工作室占位 |
-| **数据资产** | 数据字典占位 |
+| **指挥台首页** | 贷后核心 KPI（M1+、新增预警、逾期工单等）、处置队列、预警探照灯与快捷入口；任务列表仍对接 `/tasks` |
+| **资产监控** | 资产质量看板、预警探照灯（原战情看板口径调整）、策略效果追踪、报表中心、标注飞轮（URL 保留） |
+| **预警策略** | 产品线策略集、规则配置（含行业阈值矩阵示意）、规则仿真回测、发布审批与护栏 |
+| **案件处置** | 预警核查工作台、催收作业管理（M1/M2/M3 分池）、复盘与质检 |
+| **知识沉淀** | 话术库、规则调优案例、风险模式库 |
+| **特征与数据** | **贷后特征工作室**（还款/催收反馈特征、分产品线 PSI、阈值告警）；**数据源管理**（企信/司法/金税等 + 刷新频率元数据），数据来自 **`GET /api/scenario/post-loan/*`** |
+| **任务流（通用）** | 创建/查询分析任务、信审任务（`POST /tasks/analysis`、`POST /tasks/review`、`GET /tasks` 等） |
+
+更多接口见 **[backend/README.md](./backend/README.md)**。
 
 ---
 
 ## Git 分支（场景延伸）
 
-在 `main` 主线稳定迭代的基础上，已建立与 **贷前 / 贷中 / 贷后** 对齐的长期分支（与当时 `main` 同一起点，可各自演进）：
-
 | 场景 | 分支名 |
 |------|--------|
 | 贷前 | `scenario/pre-loan` |
 | 贷中 | `scenario/in-loan` |
-| 贷后 | `scenario/post-loan` |
-
-```bash
-git fetch origin
-git switch scenario/post-loan   # 示例：开发贷后
-```
+| **贷后** | **`scenario/post-loan`**（当前文档默认描述对象） |
 
 ---
 
@@ -51,11 +67,11 @@ git switch scenario/post-loan   # 示例：开发贷后
 
 ```text
 .
-├── backend/          FastAPI 最小 API（任务创建、列表、详情）
-├── frontend/       Vite + React 工作台与模块路由
-├── docs/             信息架构清单、视觉与规格说明等
-├── sampledata/       示例数据
-└── 线框图原型/        产品方向说明
+├── backend/              FastAPI：任务 API + 贷后场景 REST（scenario_post_loan）
+├── frontend/             Vite + React 工作台与模块路由
+├── docs/                 信息架构清单、视觉与规格说明等
+├── sampledata/           示例数据
+└── 线框图原型/            产品方向说明
 ```
 
 ---
@@ -70,18 +86,20 @@ git switch scenario/post-loan   # 示例：开发贷后
 
 ## 快速开始
 
-### 1. 克隆仓库
+### 1. 克隆并切换到贷后分支
 
 ```bash
 git clone https://github.com/minfushen/ris-os.git
 cd ris-os
+git fetch origin
+git switch scenario/post-loan
 ```
 
 若使用 SSH：
 
 ```bash
 git clone git@github.com:minfushen/ris-os.git
-cd ris-os
+cd ris-os && git switch scenario/post-loan
 ```
 
 ### 2. 启动后端（默认端口 8000）
@@ -92,6 +110,12 @@ python3 -m venv .venv
 source .venv/bin/activate   # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 uvicorn app:app --reload --host 127.0.0.1 --port 8000
+```
+
+**验证贷后接口：**
+
+```bash
+curl -s http://127.0.0.1:8000/api/scenario/post-loan/feature-studio | head -c 200
 ```
 
 ### 3. 启动前端（默认 Vite 5173）
@@ -106,7 +130,9 @@ npm run dev
 
 ### 4. 前端环境变量
 
-开发环境可使用仓库内 `frontend/.env.development`（已指向 `http://127.0.0.1:8000`）。若后端端口变更，请同步修改 `VITE_API_BASE_URL`。
+- 开发环境使用 **`frontend/.env.development`**，默认 `VITE_API_BASE_URL=http://127.0.0.1:8000`。
+- **不要将 `VITE_API_BASE_URL` 设为空字符串**：否则请求会发到 Vite 同源路径，易返回 404（界面提示「资源不存在」）。
+- Vite 已配置 **`/api` → 127.0.0.1:8000** 的开发代理；若改为同源相对路径访问 `/api`，开发时亦可转发到后端。
 
 ---
 
@@ -123,9 +149,10 @@ npm run dev
 
 ## 文档索引
 
-1. [线框图原型](./线框图原型)
-2. [首页信息架构改版建议清单](./docs/首页信息架构改版建议清单.md)
-3. [新首页 / 全局导航骨架视觉设计方案](./docs/superpowers/specs/2026-04-17-home-navigation-tailwind-glass-design.md)（若路径存在）
+1. [后端 API 说明（含贷后 REST）](./backend/README.md)
+2. [线框图原型](./线框图原型)
+3. [首页信息架构改版建议清单](./docs/首页信息架构改版建议清单.md)
+4. [新首页 / 全局导航骨架视觉设计方案](./docs/superpowers/specs/2026-04-17-home-navigation-tailwind-glass-design.md)（若路径存在）
 
 ---
 
@@ -135,22 +162,22 @@ npm run dev
 
 ```bash
 git remote add origin https://github.com/minfushen/ris-os.git
-git branch -M main
-git push -u origin main
+git push -u origin scenario/post-loan
 ```
 
 若远程已初始化且需强推（慎用）：
 
 ```bash
-git push -u origin main --force
+git push -u origin scenario/post-loan --force
 ```
 
 ---
 
 ## 说明
 
-- 后端为**同步执行**的最小闭环，无独立 worker；生产化需自行扩展队列、鉴权与审计。
-- 部分页面为占位与演示数据；接口失败时前端会降级展示演示列表并提示检查 API。
+- 后端任务处理为**同步**最小闭环，无独立 worker；生产化需自行扩展队列、鉴权与审计。
+- 贷后「特征工作室」「数据源管理」页依赖上述 **REST**；任务列表等仍使用原有 `/tasks` 接口。若后端未启动或端口不一致，前端会提示连接错误。
+- 部分页面仍为演示数据或占位交互，便于产品走查与对接真实网关。
 
 ---
 
