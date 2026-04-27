@@ -30,10 +30,10 @@ export default function PostLoanQuickActions({ actions }: PostLoanQuickActionsPr
               key={a.key}
               type="default"
               size="large"
-              className="pl-solid-card pl-solid-card--interactive !h-auto !py-4 min-w-[140px] flex-1 basis-[calc(50%-6px)] sm:basis-[calc(33.333%-8px)] lg:basis-0 lg:flex-1 lg:max-w-none !bg-white !border-black/[0.08] flex flex-col items-center gap-2 text-[#262626]"
+              className="pl-solid-card pl-solid-card--interactive !h-auto !py-4 min-w-[140px] flex-1 basis-[calc(50%-6px)] sm:basis-[calc(33.333%-8px)] lg:basis-0 lg:flex-1 lg:max-w-none !bg-[var(--color-bg-container)] !border-[var(--color-border-light)] flex flex-col items-center gap-2 text-text-primary"
               onClick={a.onClick}
             >
-              <span className="text-xl text-[#1677ff]">{a.icon}</span>
+              <span className="text-xl text-primary">{a.icon}</span>
               <span className="text-sm font-semibold text-center leading-snug whitespace-normal">{a.label}</span>
             </Button>
           ))}

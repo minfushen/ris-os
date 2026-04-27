@@ -21,7 +21,7 @@ interface TaskDrawerProps {
 
 const DRAWER_TITLES: Record<TaskType, string> = {
   analysis: "发起预警归因",
-  backtest: "规则仿真回测",
+  backtest: "仿真回溯",
   strategy: "策略发布审批",
   inspection: "创建复盘质检任务",
   fraud: "预警核查工单",
@@ -93,7 +93,7 @@ export default function TaskDrawer({
         </Text>
       }
       placement="right"
-      width={480}
+      width={520}
       open={open}
       onClose={handleClose}
       closable={false}

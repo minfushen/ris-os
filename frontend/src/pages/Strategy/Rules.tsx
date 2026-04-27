@@ -69,7 +69,7 @@ export default function Rules() {
     <ModulePageShell
       title="预警规则配置"
       subtitle="贷后规则树 + 行业分层阈值矩阵；原位仿真调整参数后即时预览触发量变化（演示）"
-      breadcrumb={["预警策略", "预警规则配置"]}
+      breadcrumb={["策略与模型", "预警规则配置"]}
     >
       <Alert
         type="info"

@@ -175,7 +175,7 @@ export const handlers = [
       task_id: "tsk_new00001",
       task_type: (body.task_type as "analysis" | "review") ?? "analysis",
       initial_status: "created",
-      redirect_target: "#/taskflow",
+      redirect_target: "/taskflow",
     };
     return HttpResponse.json(resp);
   }),
@@ -186,7 +186,7 @@ export const handlers = [
       task_id: "tsk_withfile1",
       task_type: "review",
       initial_status: "created",
-      redirect_target: "#/taskflow",
+      redirect_target: "/taskflow",
     };
     return HttpResponse.json(resp);
   }),

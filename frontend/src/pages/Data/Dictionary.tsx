@@ -285,7 +285,7 @@ export default function Dictionary() {
     <ModulePageShell
       title="数据源管理"
       subtitle="变量与数据源由贷后场景 REST 提供：/api/scenario/post-loan/data-dictionary/*"
-      breadcrumb={["特征与数据", "数据源管理"]}
+      breadcrumb={["数据与特征", "数据源管理"]}
     >
       {error ? (
         <Alert type="error" showIcon className="layout-mb-md" message="接口错误" description={error} />

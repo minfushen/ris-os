@@ -13,7 +13,7 @@ export default function RuleTuneCases() {
     <ModulePageShell
       title="规则调优案例"
       subtitle="记录参数调整前后触发量、有效率与误报变化，供策略效果追踪与发布审批引用（演示）"
-      breadcrumb={["知识沉淀", "规则调优案例"]}
+      breadcrumb={["策略与模型", "调优案例"]}
     >
       <ModuleSectionCard noPadding>
         <Table

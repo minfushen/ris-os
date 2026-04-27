@@ -35,11 +35,11 @@ const VINTAGE_M1 = [
   { cohort: "2024-05", m1: 0.95, m3: null },
 ];
 
-/** 风险分层占比 % */
+/** 风险分层占比 %（fill 使用 CSS 变量，由 tokens 定义实际色值） */
 const RISK_BUCKETS = [
-  { name: "正常", value: 72, color: "#5f9b7a" },
-  { name: "关注", value: 18, color: "#faad14" },
-  { name: "次级+", value: 10, color: "#c77b78" },
+  { name: "正常", value: 72, color: "var(--color-success)" },
+  { name: "关注", value: 18, color: "var(--color-warning-light)" },
+  { name: "次级+", value: 10, color: "var(--color-danger-light)" },
 ];
 
 /** 产品结构余额占比 */
@@ -74,10 +74,10 @@ const TOP_INDUSTRIES = [
   { industry: "软件信息", npl: 1.6, balance: 12 },
 ];
 
-function regionColor(risk: number): string {
-  if (risk >= 50) return "rgba(207, 19, 34, 0.35)";
-  if (risk >= 44) return "rgba(250, 140, 22, 0.28)";
-  return "rgba(111, 143, 149, 0.15)";
+function regionHeatBackground(risk: number): string {
+  if (risk >= 50) return "var(--color-error-bg-strong)";
+  if (risk >= 44) return "var(--color-warning-bg-strong)";
+  return "var(--color-primary-bg)";
 }
 
 export default function AssetQuality() {
@@ -85,7 +85,7 @@ export default function AssetQuality() {
     <ModulePageShell
       title="资产质量看板"
       subtitle="管理视角：余额、不良、Vintage·M1+、风险分层、结构、账龄与区域/行业热点（演示数据）"
-      breadcrumb={["资产监控", "资产质量看板"]}
+      breadcrumb={["预警监控", "资产质量看板"]}
       actions={
         <Space>
           <Button icon={<HeatMapOutlined />}>区域下钻</Button>
@@ -96,28 +96,28 @@ export default function AssetQuality() {
       <ModuleSectionCard title="资产总览" subtitle="关键大数">
         <Row gutter={[16, 16]}>
           <Col xs={12} lg={6}>
-            <div className="rounded-lg border border-black/[0.08] bg-white p-4 shadow-sm">
-              <Text type="secondary" className="text-[12px] block">在贷余额（亿）</Text>
-              <Text strong className="text-[28px] text-[#4f6970] block mt-1">{KPI.balanceYi}</Text>
+            <div className="kpi-stat-card">
+              <span className="kpi-stat-card__label">在贷余额（亿）</span>
+              <span className="kpi-stat-card__value" style={{ color: "var(--color-primary-deep)" }}>{KPI.balanceYi}</span>
             </div>
           </Col>
           <Col xs={12} lg={6}>
-            <div className="rounded-lg border border-black/[0.08] bg-white p-4 shadow-sm">
-              <Text type="secondary" className="text-[12px] block">NPL 率</Text>
-              <Text strong className="text-[28px] text-[#c77b78] block mt-1">{KPI.nplRate}%</Text>
+            <div className="kpi-stat-card">
+              <span className="kpi-stat-card__label">NPL 率</span>
+              <span className="kpi-stat-card__value" style={{ color: "var(--color-danger-light)" }}>{KPI.nplRate}%</span>
               <Text type="secondary" className="text-[12px]">90+ 口径</Text>
             </div>
           </Col>
           <Col xs={12} lg={6}>
-            <div className="rounded-lg border border-black/[0.08] bg-white p-4 shadow-sm">
-              <Text type="secondary" className="text-[12px] block">M1+ 逾期率</Text>
-              <Text strong className="text-[28px] text-[#d46b08] block mt-1">{KPI.m1Plus}%</Text>
+            <div className="kpi-stat-card">
+              <span className="kpi-stat-card__label">M1+ 逾期率</span>
+              <span className="kpi-stat-card__value" style={{ color: "var(--color-warning)" }}>{KPI.m1Plus}%</span>
             </div>
           </Col>
           <Col xs={12} lg={6}>
-            <div className="rounded-lg border border-black/[0.08] bg-white p-4 shadow-sm">
-              <Text type="secondary" className="text-[12px] block">观察名单占比</Text>
-              <Text strong className="text-[28px] text-[#6f8f95] block mt-1">{KPI.watchList}%</Text>
+            <div className="kpi-stat-card">
+              <span className="kpi-stat-card__label">观察名单占比</span>
+              <span className="kpi-stat-card__value" style={{ color: "var(--color-primary)" }}>{KPI.watchList}%</span>
             </div>
           </Col>
         </Row>
@@ -126,34 +126,38 @@ export default function AssetQuality() {
       <Row gutter={[16, 16]}>
         <Col xs={24} lg={14}>
           <ModuleSectionCard title="Vintage · M1 / M3 趋势" subtitle="按放款 cohort 对比质量演化">
-            <div style={{ width: "100%", height: 280 }}>
-              <ResponsiveContainer>
-                <LineChart data={VINTAGE_M1} margin={{ top: 8, right: 16, left: 0, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                  <XAxis dataKey="cohort" tick={{ fontSize: 11 }} />
-                  <YAxis tick={{ fontSize: 11 }} width={40} unit="%" />
-                  <RTooltip formatter={(v: number) => (v == null || Number.isNaN(v) ? "—" : `${v}%`)} />
-                  <Legend />
-                  <Line type="monotone" dataKey="m1" name="M1%" stroke="#6f8f95" strokeWidth={2} dot connectNulls />
-                  <Line type="monotone" dataKey="m3" name="M3%" stroke="#c77b78" strokeWidth={2} dot connectNulls />
-                </LineChart>
-              </ResponsiveContainer>
+            <div className="chart-card">
+              <div className="chart-card-body" style={{ width: "100%", height: 280 }}>
+                <ResponsiveContainer>
+                  <LineChart data={VINTAGE_M1} margin={{ top: 8, right: 16, left: 0, bottom: 0 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border-light)" />
+                    <XAxis dataKey="cohort" tick={{ fontSize: 11 }} />
+                    <YAxis tick={{ fontSize: 11 }} width={40} unit="%" />
+                    <RTooltip formatter={(v: number) => (v == null || Number.isNaN(v) ? "—" : `${v}%`)} />
+                    <Legend />
+                    <Line type="monotone" dataKey="m1" name="M1%" stroke="var(--color-primary)" strokeWidth={2} dot connectNulls />
+                    <Line type="monotone" dataKey="m3" name="M3%" stroke="var(--color-danger-light)" strokeWidth={2} dot connectNulls />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
             </div>
           </ModuleSectionCard>
         </Col>
         <Col xs={24} lg={10}>
           <ModuleSectionCard title="风险等级分布" subtitle="分池占比">
-            <div style={{ width: "100%", height: 280 }}>
-              <ResponsiveContainer>
-                <PieChart>
-                  <Pie data={RISK_BUCKETS} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={88} label={(p) => `${String(p.name)} ${p.value}%`}>
-                    {RISK_BUCKETS.map((e) => (
-                      <Cell key={e.name} fill={e.color} />
-                    ))}
-                  </Pie>
-                  <RTooltip />
-                </PieChart>
-              </ResponsiveContainer>
+            <div className="chart-card">
+              <div className="chart-card-body" style={{ width: "100%", height: 280 }}>
+                <ResponsiveContainer>
+                  <PieChart>
+                    <Pie data={RISK_BUCKETS} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={88} label={(p) => `${String(p.name)} ${p.value}%`}>
+                      {RISK_BUCKETS.map((e) => (
+                        <Cell key={e.name} fill={e.color} />
+                      ))}
+                    </Pie>
+                    <RTooltip />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
             </div>
           </ModuleSectionCard>
         </Col>
@@ -162,31 +166,35 @@ export default function AssetQuality() {
       <Row gutter={[16, 16]}>
         <Col xs={24} md={12}>
           <ModuleSectionCard title="产品结构（余额占比）" subtitle="Portfolio mix">
-            <div style={{ width: "100%", height: 240 }}>
-              <ResponsiveContainer>
-                <BarChart data={PRODUCT_MIX} margin={{ top: 8, right: 8, left: 0, bottom: 24 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                  <XAxis dataKey="name" tick={{ fontSize: 11 }} />
-                  <YAxis tick={{ fontSize: 11 }} label={{ value: "%", angle: 0, position: "insideTopLeft", fontSize: 10 }} />
-                  <RTooltip formatter={(v: number) => [`${v}%`, "占比"]} />
-                  <Bar dataKey="amt" name="占比%" fill="#4f6970" radius={[4, 4, 0, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
+            <div className="chart-card">
+              <div className="chart-card-body" style={{ width: "100%", height: 240 }}>
+                <ResponsiveContainer>
+                  <BarChart data={PRODUCT_MIX} margin={{ top: 8, right: 8, left: 0, bottom: 24 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border-light)" />
+                    <XAxis dataKey="name" tick={{ fontSize: 11 }} />
+                    <YAxis tick={{ fontSize: 11 }} label={{ value: "%", angle: 0, position: "insideTopLeft", fontSize: 10 }} />
+                    <RTooltip formatter={(v: number) => [`${v}%`, "占比"]} />
+                    <Bar dataKey="amt" name="占比%" fill="var(--color-primary-deep)" radius={[4, 4, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
             </div>
           </ModuleSectionCard>
         </Col>
         <Col xs={24} md={12}>
           <ModuleSectionCard title="逾期账龄结构" subtitle="Outstanding 分布（演示单位：百万）">
-            <div style={{ width: "100%", height: 240 }}>
-              <ResponsiveContainer>
-                <BarChart data={AGEING} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                  <XAxis dataKey="bucket" tick={{ fontSize: 11 }} />
-                  <YAxis tick={{ fontSize: 11 }} />
-                  <RTooltip formatter={(v: number) => [v, "余额"]} />
-                  <Bar dataKey="amt" name="余额" fill="#d7a85f" radius={[4, 4, 0, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
+            <div className="chart-card">
+              <div className="chart-card-body" style={{ width: "100%", height: 240 }}>
+                <ResponsiveContainer>
+                  <BarChart data={AGEING} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border-light)" />
+                    <XAxis dataKey="bucket" tick={{ fontSize: 11 }} />
+                    <YAxis tick={{ fontSize: 11 }} />
+                    <RTooltip formatter={(v: number) => [v, "余额"]} />
+                    <Bar dataKey="amt" name="余额" fill="var(--color-warning-light)" radius={[4, 4, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
             </div>
           </ModuleSectionCard>
         </Col>
@@ -199,8 +207,8 @@ export default function AssetQuality() {
               {REGION_HEAT.map((r) => (
                 <div
                   key={r.region}
-                  className="rounded-lg border border-black/[0.06] p-3 text-center"
-                  style={{ backgroundColor: regionColor(r.risk) }}
+                  className="rounded-lg border border-[var(--color-border-light)] p-3 text-center"
+                  style={{ backgroundColor: regionHeatBackground(r.risk) }}
                 >
                   <Text strong className="text-[13px] block">{r.region}</Text>
                   <Text type="secondary" className="text-[11px] block">风险指数 {r.risk}</Text>

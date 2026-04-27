@@ -17,7 +17,7 @@
 .module-page-stack {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-lg);
+  gap: var(--section-gap, var(--spacing-md));
 }
 
 /* —— focus-visible（键盘可达性） —— */
@@ -90,7 +90,7 @@ a:focus-visible {
 .ant-select-disabled .ant-select-selector,
 .ant-picker-disabled {
   color: var(--color-text-secondary) !important;
-  background-color: #f3f5f6 !important;
+  background-color: var(--color-bg-disabled) !important;
   border-color: rgba(130, 150, 160, 0.16) !important;
   opacity: 1 !important;
 }

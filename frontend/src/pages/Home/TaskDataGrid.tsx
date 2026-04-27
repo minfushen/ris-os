@@ -47,16 +47,16 @@ interface TaskDataGridProps {
 }
 
 const STATUS_CONFIG: Record<TaskStatus, { color: string; icon: React.ReactNode; text: string }> = {
-  created: { color: "#6e7c84", icon: <ClockCircleOutlined />, text: "已创建" },
-  accepted: { color: "#6e7c84", icon: <ClockCircleOutlined />, text: "已接单" },
-  running: { color: "#6f8f95", icon: <LoadingOutlined />, text: "运行中" },
-  waiting_user: { color: "#4f6970", icon: <AuditOutlined />, text: "待确认" },
-  pending: { color: "#6e7c84", icon: <ClockCircleOutlined />, text: "待处理" },
-  processing: { color: "#6f8f95", icon: <LoadingOutlined />, text: "处理中" },
-  reviewing: { color: "#4f6970", icon: <AuditOutlined />, text: "待复核" },
-  completed: { color: "#5f9b7a", icon: <CheckCircleOutlined />, text: "已完成" },
-  rejected: { color: "#c77b78", icon: <CloseCircleOutlined />, text: "已驳回" },
-  failed: { color: "#c77b78", icon: <CloseCircleOutlined />, text: "已失败" },
+  created: { color: "var(--color-text-tertiary)", icon: <ClockCircleOutlined />, text: "已创建" },
+  accepted: { color: "var(--color-text-tertiary)", icon: <ClockCircleOutlined />, text: "已接单" },
+  running: { color: "var(--color-primary)", icon: <LoadingOutlined />, text: "运行中" },
+  waiting_user: { color: "var(--color-primary-deep)", icon: <AuditOutlined />, text: "待确认" },
+  pending: { color: "var(--color-text-tertiary)", icon: <ClockCircleOutlined />, text: "待处理" },
+  processing: { color: "var(--color-primary)", icon: <LoadingOutlined />, text: "处理中" },
+  reviewing: { color: "var(--color-primary-deep)", icon: <AuditOutlined />, text: "待复核" },
+  completed: { color: "var(--color-success-light)", icon: <CheckCircleOutlined />, text: "已完成" },
+  rejected: { color: "var(--color-accent-danger)", icon: <CloseCircleOutlined />, text: "已驳回" },
+  failed: { color: "var(--color-accent-danger)", icon: <CloseCircleOutlined />, text: "已失败" },
 };
 
 const MODULE_ENTRY: Record<
@@ -119,7 +119,7 @@ const TASK_TYPE_ICON: Record<TaskType, React.ReactNode> = {
 
 const TASK_TYPE_LABEL: Record<TaskType, string> = {
   analysis: "归因分析",
-  backtest: "规则仿真回测",
+  backtest: "仿真回溯",
   strategy: "策略发布审批",
   inspection: "复盘与质检",
   fraud: "预警核查",
@@ -470,7 +470,7 @@ export default function TaskDataGrid({
               <span style={{ color: config.color, fontSize: 12 }}>{config.icon}</span>
               <Text style={{ fontSize: 12, color: config.color }} className="truncate">{config.text}</Text>
             </Space>
-            <Progress percent={pct} size="small" showInfo={false} strokeColor={config.color} trailColor="#f0f0f0" />
+            <Progress percent={pct} size="small" showInfo={false} strokeColor={config.color} trailColor="var(--color-progress-trail)" />
           </Space>
         );
       },
@@ -482,7 +482,7 @@ export default function TaskDataGrid({
       render: (_: unknown, record: HomeTaskRow) => {
         const due = effectiveSlaDueIso(record);
         const { text, tone } = formatSlaRemaining(due, nowMs);
-        const color = tone === "over" ? "#cf1322" : tone === "warn" ? "#d48806" : undefined;
+        const color = tone === "over" ? "var(--color-danger-light)" : tone === "warn" ? "var(--color-warning-light)" : undefined;
         return (
           <Tooltip title={due ? `截止 ${new Date(due).toLocaleString("zh-CN")}` : "无 SLA / 已闭环"}>
             <Text style={{ fontSize: 13, color }} strong={tone === "over"}>
@@ -626,7 +626,7 @@ export default function TaskDataGrid({
           }}
         />
 
-        <div className="flex justify-between items-center px-3 py-2 border-t border-border-soft bg-[#fafbfc]">
+        <div className="flex justify-between items-center px-3 py-2 border-t border-border-soft bg-[var(--color-table-footer-surface)]">
           <Text type="secondary" style={{ fontSize: 12 }}>
             共 {filteredTasks.length} 条
             {completedTodayOnly ? "（仅今日已完成）" : ""}

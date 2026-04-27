@@ -1,5 +1,5 @@
 import { lazy, Suspense, type ReactNode } from "react";
-import { createHashRouter, Navigate, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom";
 import { Skeleton } from "antd";
 import AppLayout from "@/components/AppLayout";
 
@@ -17,9 +17,12 @@ const AssetQuality = lazy(() => import("@/pages/Monitor/AssetQuality"));
 const StrategyProducts = lazy(() => import("@/pages/Strategy/Products"));
 const Rules = lazy(() => import("@/pages/Strategy/Rules"));
 const Backtest = lazy(() => import("@/pages/Strategy/Backtest"));
+const ModelFactory = lazy(() => import("@/pages/Strategy/ModelFactory"));
+const ModelRegistry = lazy(() => import("@/pages/Strategy/ModelRegistry"));
+const DecisionFlow = lazy(() => import("@/pages/Strategy/DecisionFlow"));
 const PublishPage = lazy(() => import("@/pages/Strategy/PublishPage"));
 
-// 案件处置模块
+// 处置闭环模块
 const Workbench = lazy(() => import("@/pages/Risk/Workbench"));
 const CollectionOps = lazy(() => import("@/pages/Risk/CollectionOps"));
 const Inspection = lazy(() => import("@/pages/Risk/Inspection"));
@@ -36,6 +39,17 @@ const FeatureStudio = lazy(() => import("@/pages/Feature/Studio"));
 // 数据资产模块
 const Dictionary = lazy(() => import("@/pages/Data/Dictionary"));
 
+// 智能体协同模块
+const AgentAttribution = lazy(() => import("@/pages/Agents/AttributionAgent"));
+const AgentDisposition = lazy(() => import("@/pages/Agents/DispositionAgent"));
+const AgentStrategyTuning = lazy(() => import("@/pages/Agents/StrategyTuningAgent"));
+const AgentScriptCompliance = lazy(() => import("@/pages/Agents/ScriptComplianceAgent"));
+const AgentReviewQa = lazy(() => import("@/pages/Agents/ReviewQaAgent"));
+const AgentOpsMonitor = lazy(() => import("@/pages/Agents/OpsMonitor"));
+
+// 系统架构说明
+const IntegrationArchitecture = lazy(() => import("@/pages/Architecture/Integration"));
+
 function PageFallback() {
   return (
     <div className="p-6">
@@ -48,7 +62,7 @@ function withSuspense(element: ReactNode) {
   return <Suspense fallback={<PageFallback />}>{element}</Suspense>;
 }
 
-const router = createHashRouter([
+const router = createBrowserRouter([
   {
     path: "/",
     element: <AppLayout />,
@@ -64,6 +78,9 @@ const router = createHashRouter([
       { path: "strategy/list", element: <Navigate to="/strategy/products" replace /> },
       { path: "strategy/products", element: withSuspense(<StrategyProducts />) },
       { path: "strategy/rules", element: withSuspense(<Rules />) },
+      { path: "strategy/model-factory", element: withSuspense(<ModelFactory />) },
+      { path: "strategy/model-registry", element: withSuspense(<ModelRegistry />) },
+      { path: "strategy/decision-flow", element: withSuspense(<DecisionFlow />) },
       { path: "strategy/backtest", element: withSuspense(<Backtest />) },
       { path: "strategy/publish", element: withSuspense(<PublishPage />) },
 
@@ -80,6 +97,15 @@ const router = createHashRouter([
       { path: "feature/studio", element: withSuspense(<FeatureStudio />) },
 
       { path: "data/dictionary", element: withSuspense(<Dictionary />) },
+
+      { path: "agents/attribution", element: withSuspense(<AgentAttribution />) },
+      { path: "agents/disposition", element: withSuspense(<AgentDisposition />) },
+      { path: "agents/strategy-tuning", element: withSuspense(<AgentStrategyTuning />) },
+      { path: "agents/script-compliance", element: withSuspense(<AgentScriptCompliance />) },
+      { path: "agents/review-qa", element: withSuspense(<AgentReviewQa />) },
+      { path: "agents/ops-monitor", element: withSuspense(<AgentOpsMonitor />) },
+
+      { path: "architecture/integration", element: withSuspense(<IntegrationArchitecture />) },
 
       { path: "*", element: <Navigate to="/" replace /> },
     ],

@@ -15,17 +15,17 @@ export type AnalystTimeGrain = "day" | "week" | "month";
 export type AnalystScene = "credit" | "draw" | "post_loan";
 
 const STATUS_STRIP: Record<MetricCardStatus, string> = {
-  alert: "var(--color-accent-danger, #c77b78)",
-  attention: "var(--color-accent-warning, #d7a85f)",
-  normal: "var(--color-accent-success, #5f9b7a)",
-  over_threshold: "#a34d4a",
+  alert: "var(--color-accent-danger)",
+  attention: "var(--color-accent-warning)",
+  normal: "var(--color-accent-success)",
+  over_threshold: "var(--color-danger)",
 };
 
 const BAR_HI: Record<MetricCardStatus, string> = {
-  alert: "rgba(199, 123, 120, 0.9)",
-  attention: "rgba(215, 168, 95, 0.9)",
-  normal: "rgba(95, 155, 122, 0.9)",
-  over_threshold: "rgba(163, 77, 74, 0.95)",
+  alert: "color-mix(in srgb, var(--color-danger-light) 90%, transparent)",
+  attention: "color-mix(in srgb, var(--color-warning-light) 90%, transparent)",
+  normal: "color-mix(in srgb, var(--color-success-light) 90%, transparent)",
+  over_threshold: "color-mix(in srgb, var(--color-danger) 92%, transparent)",
 };
 
 function normalizeToSeven(raw?: number[]): number[] {
@@ -110,10 +110,10 @@ export default function AnalystIndicatorCard({
 
   const trendColor =
     trendSemantic === "bad"
-      ? "var(--color-accent-danger, #c77b78)"
+      ? "var(--color-accent-danger)"
       : trendSemantic === "good"
-        ? "var(--color-accent-success, #5f9b7a)"
-        : "var(--color-text-muted, #6e7c84)";
+        ? "var(--color-accent-success)"
+        : "var(--color-text-muted)";
 
   const TrendIcon = trendDirection === "down" ? FallOutlined : RiseOutlined;
 
@@ -128,7 +128,7 @@ export default function AnalystIndicatorCard({
 
   return (
     <div
-      className="relative h-full overflow-hidden rounded-lg border border-border-soft bg-white shadow-[0_1px_4px_rgba(0,0,0,0.06)] text-left transition-shadow hover:shadow-[0_4px_12px_rgba(0,0,0,0.08)]"
+      className="relative h-full overflow-hidden rounded-lg border border-border-soft bg-[var(--color-bg-container)] shadow-[var(--shadow-card)] text-left transition-shadow hover:shadow-[var(--shadow-card-hover)]"
       role="region"
       aria-label={title}
     >
@@ -141,7 +141,7 @@ export default function AnalystIndicatorCard({
           {showTimeTabs ? (
             <Segmented
               size="small"
-              className="shrink-0 bg-[rgba(0,0,0,0.04)]"
+              className="shrink-0 bg-[var(--color-border-light)]"
               value={timeGrain}
               onChange={(v) => setTimeGrain(v as AnalystTimeGrain)}
               options={[
@@ -179,7 +179,7 @@ export default function AnalystIndicatorCard({
           {showSceneTabs ? (
             <Segmented
               size="small"
-              className="shrink-0 bg-[rgba(0,0,0,0.04)]"
+              className="shrink-0 bg-[var(--color-border-light)]"
               value={scene}
               onChange={(v) => setScene(v as AnalystScene)}
               options={[

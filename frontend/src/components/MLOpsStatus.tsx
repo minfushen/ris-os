@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, type ReactNode } from "react";
 import { Card, Typography, Tag, Space, Button, Progress, Descriptions, Timeline, Statistic, Row, Col, Alert } from "antd";
 import {
   RobotOutlined,
@@ -46,7 +46,7 @@ interface MLOpsStatusPanelProps {
   onDeploy?: () => void;
 }
 
-const PHASE_CONFIG: Record<MLOpsPhase, { label: string; color: string; icon: React.ReactNode }> = {
+const PHASE_CONFIG: Record<MLOpsPhase, { label: string; color: string; icon: ReactNode }> = {
   idle: { label: "待机", color: "default", icon: <ClockCircleOutlined /> },
   sample_preparation: { label: "样本准备", color: "processing", icon: <DatabaseOutlined /> },
   training: { label: "模型训练", color: "processing", icon: <SyncOutlined spin /> },
@@ -65,7 +65,7 @@ export default function MLOpsStatusPanel({ status, onTriggerTraining, onDeploy }
       size="small"
       title={
         <Space>
-          <RobotOutlined style={{ color: "#6f8f95" }} />
+          <RobotOutlined style={{ color: "var(--color-primary)" }} />
           <Text strong className="text-[13px]">
             MLOps 状态
           </Text>
@@ -85,7 +85,7 @@ export default function MLOpsStatusPanel({ status, onTriggerTraining, onDeploy }
           </Button>
         ) : null
       }
-      className="rounded-none"
+      className="rounded-[var(--radius-lg)]"
     >
       {/* 样本增量进度 */}
       <div className="layout-mb-lg">
@@ -97,7 +97,7 @@ export default function MLOpsStatusPanel({ status, onTriggerTraining, onDeploy }
         </div>
         <Progress
           percent={Math.min(progressPercent, 100)}
-          strokeColor={progressPercent >= 100 ? "#52c41a" : "#1890ff"}
+          strokeColor={progressPercent >= 100 ? "var(--color-success-light)" : "var(--color-info)"}
           showInfo={false}
         />
         {status.newLabelsCount !== undefined && (
@@ -127,7 +127,7 @@ export default function MLOpsStatusPanel({ status, onTriggerTraining, onDeploy }
           showIcon
           message="训练失败"
           description={status.error}
-          className="layout-mb-lg rounded-none"
+          className="layout-mb-lg rounded-[var(--radius-lg)]"
         />
       )}
 
@@ -141,7 +141,7 @@ export default function MLOpsStatusPanel({ status, onTriggerTraining, onDeploy }
               suffix="%"
               valueStyle={{
                 fontSize: 18,
-                color: status.ks >= 30 ? "#52c41a" : status.ks >= 20 ? "#faad14" : "#ff4d4f",
+                color: status.ks >= 30 ? "var(--color-success-light)" : status.ks >= 20 ? "var(--color-warning-light)" : "var(--color-danger-light)",
               }}
             />
             {status.previousKs !== undefined && (
@@ -219,13 +219,13 @@ export function MLOpsHistory({ history }: MLOpsHistoryProps) {
       size="small"
       title={
         <Space>
-          <ClockCircleOutlined style={{ color: "#6f8f95" }} />
+          <ClockCircleOutlined style={{ color: "var(--color-primary)" }} />
           <Text strong className="text-[13px]">
             训练历史
           </Text>
         </Space>
       }
-      className="layout-mt-md rounded-none"
+      className="layout-mt-md rounded-[var(--radius-lg)]"
     >
       <Timeline
         items={history.map((item) => ({

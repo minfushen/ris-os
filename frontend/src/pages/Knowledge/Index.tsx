@@ -34,7 +34,7 @@ export default function KnowledgeIndex() {
     <ModulePageShell
       title="知识沉淀"
       subtitle="贷后风控经验资产：发现问题 → 处置 → 沉淀 → 再调用，与预警核查工作台联动。"
-      breadcrumb={["知识沉淀", "总览"]}
+      breadcrumb={["数据与特征", "知识沉淀"]}
     >
       <ModuleSectionCard>
         <Row gutter={[16, 16]}>

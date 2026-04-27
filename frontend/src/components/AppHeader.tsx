@@ -5,6 +5,9 @@ import { BellOutlined, UserOutlined, SettingOutlined, LogoutOutlined, SearchOutl
 import { useLocation, useNavigate } from "react-router-dom";
 import { getRouteMeta } from "@/config/routeMeta";
 import WorkbenchHomeLink from "@/components/WorkbenchHomeLink";
+import AppBrandMark from "@/components/AppBrandMark";
+import { PLATFORM_NAME } from "@/config/brand";
+import { getSessionDisplayName } from "@/config/demoSession";
 
 const { Text } = Typography;
 
@@ -68,31 +71,23 @@ export default function AppHeader() {
       {/* 左侧：Logo + 模块标题 */}
       <div className="flex items-center gap-3 min-w-0">
         <WorkbenchHomeLink className="flex items-center gap-2 shrink-0 text-text-primary hover:text-primary transition-colors no-underline rounded-md px-2 -ml-2 hover:bg-[var(--color-bg-interactive-hover)]">
-          <span className="text-xl leading-none" aria-hidden>
-            🦐
-          </span>
-          <Text strong className="!mb-0 text-primary text-sm sm:text-base whitespace-nowrap font-semibold">
-            风控 OS
+          <AppBrandMark />
+          <Text strong className="!mb-0 text-primary text-[15px] whitespace-nowrap font-medium">
+            {PLATFORM_NAME}
           </Text>
         </WorkbenchHomeLink>
 
         {routeMeta && (
-          <div className="flex items-center gap-2 min-w-0 border-l border-black/[0.08] pl-3">
-            <Text className="text-[15px] font-semibold text-text-primary truncate">{routeMeta.title}</Text>
+          <div className="flex items-center gap-2 min-w-0 border-l border-[var(--color-border)] pl-3">
+            <Text className="text-[15px] font-medium text-text-primary truncate">{routeMeta.title}</Text>
             {routeMeta.subtitle && (
-              <Text className="text-[13px] text-text-muted hidden sm:inline truncate">{routeMeta.subtitle}</Text>
+              <Text className="text-[13px] font-normal text-text-muted hidden sm:inline truncate">{routeMeta.subtitle}</Text>
             )}
           </div>
         )}
 
         {/* 环境标签 */}
-        <Tag 
-          className="text-[10px] ml-1 shrink-0 font-medium px-2 py-0.5 rounded border-0"
-          style={{ 
-            background: "linear-gradient(135deg, rgba(212, 136, 6, 0.12) 0%, rgba(250, 173, 20, 0.08) 100%)",
-            color: "#d48806"
-          }}
-        >
+        <Tag className="env-tag--uat text-[11px] ml-1 shrink-0 px-2 py-0.5 rounded leading-tight">
           UAT
         </Tag>
       </div>
@@ -106,8 +101,7 @@ export default function AppHeader() {
             placeholder="搜索任务…"
             prefix={<SearchOutlined className="text-text-muted text-[13px]" />}
             size="small"
-            className="w-48"
-            style={{ borderRadius: 8 }}
+            className="w-48 rounded-[var(--radius-control)]"
             value={searchDraft}
             onChange={(e) => setSearchDraft(e.target.value)}
             onPressEnter={commitWorkbenchSearch}
@@ -133,8 +127,8 @@ export default function AppHeader() {
         {/* 用户菜单 */}
         <Dropdown menu={{ items: userMenuItems }} placement="bottomRight">
           <Space size={8} className="cursor-pointer hover:bg-black/[0.04] rounded-lg px-2 py-1 transition-colors">
-            <Avatar size={28} icon={<UserOutlined />} style={{ backgroundColor: "#3b6b7d" }} />
-            <Text className="text-[13px] text-text-secondary font-medium">张三</Text>
+            <Avatar size={28} icon={<UserOutlined />} style={{ backgroundColor: "var(--color-primary-deep)" }} />
+            <Text className="text-[13px] text-text-secondary font-normal">{getSessionDisplayName()}</Text>
           </Space>
         </Dropdown>
       </div>

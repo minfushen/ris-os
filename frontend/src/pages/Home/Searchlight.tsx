@@ -30,19 +30,19 @@ function readDutyDisplayName(): string {
 
 const LEVEL_CONFIG = {
   high: {
-    strip: "var(--color-accent-danger, #c77b78)",
+    strip: "var(--color-accent-danger)",
     icon: <FlagOutlined />,
     riskTag: "高危",
     riskColor: "red" as const,
   },
   medium: {
-    strip: "var(--color-accent-warning, #d7a85f)",
+    strip: "var(--color-accent-warning)",
     icon: <WarningOutlined />,
     riskTag: "警告",
     riskColor: "orange" as const,
   },
   low: {
-    strip: "var(--color-accent-success, #5f9b7a)",
+    strip: "var(--color-accent-success)",
     icon: <InfoCircleOutlined />,
     riskTag: "提示",
     riskColor: "green" as const,
@@ -60,8 +60,15 @@ const ALERT_ACTIONS: Record<
   gang: { typeLabel: "关联预警", primary: "发起归因", secondary: "查看图谱", slaBudgetMin: 30 },
   false_reject: { typeLabel: "误杀预警", primary: "发起捞回分析", secondary: "查看详情", slaBudgetMin: 60 },
   psi_drift: { typeLabel: "PSI 漂移", primary: "发起归因", secondary: "查看详情", slaBudgetMin: 120 },
-  throughput_drop: { typeLabel: "通过率下降", primary: "发起归因", secondary: "查看渠道拆解", slaBudgetMin: 45 },
+  throughput_drop: { typeLabel: "策略熔断", primary: "发起归因", secondary: "查看渠道拆解", slaBudgetMin: 45 },
 };
+
+/** 「影响量化」面板：误杀→信息蓝；熔断（通过率骤降）→危险红；其余默认警告琥珀 */
+function searchlightImpactPanelModifier(type: RealtimeAlert["type"]): string {
+  if (type === "false_reject") return "searchlight-callout-impact--info";
+  if (type === "throughput_drop") return "searchlight-callout-impact--danger";
+  return "";
+}
 
 function fmtCN(iso: string): string {
   try {
@@ -180,6 +187,38 @@ function buildSeedAlerts(): RealtimeAlert[] {
         { label: "影响模型", value: "B卡 v3.2" },
         { label: "首次漂移", value: "昨日 19:12" },
         { label: "责任人", value: "特征平台" },
+      ],
+    },
+    {
+      id: "SL004",
+      type: "throughput_drop",
+      level: "high",
+      title: "API-01 授信通过率 2h 内骤降 11pt · 疑似策略熔断",
+      description: "通过率短时断崖下跌",
+      subtitle: "渠道侧已触发限流 · 建议先确认是否熔断/配额耗尽",
+      conclusionLine: "通过率与昨日同窗对比断崖下跌，优先排查规则熔断、渠道配额与上游数据源可用性，必要时暂停该渠道自动审批。",
+      impactScope: "API-01 渠道 · 授信自动审批链路 · 规则集 AUTO_V1",
+      firstTriggeredDisplay: `${fmtCN(new Date(t - 12 * 60_000).toISOString())}（熔断首触）`,
+      timestamp: new Date(t - 12 * 60_000).toISOString(),
+      metadata: { channel: "API-01", dropPt: 11 },
+      impact: { amountWan: 42, applications: 380, momentum: "2h 窗内通过率 -11pt" },
+      recurrence: {
+        timesIn30d: 1,
+        lastOccurredAt: "—",
+        lastResolutionSummary: "—",
+      },
+      evidenceRows: [
+        { label: "2h 通过率变化", value: "-11pt", hint: "环比同窗" },
+        { label: "渠道健康度", value: "熔断阈值已触达", hint: "AUTO_V1" },
+        { label: "上游错误率", value: "0.8% → 6.2%", hint: "三方征信" },
+      ],
+      detailPairs: [
+        { label: "骤降窗口", value: "近 2 小时" },
+        { label: "渠道", value: "API-01" },
+        { label: "涉及进件", value: "约 380 笔在途" },
+        { label: "影响金额", value: "约 42 万（在审）" },
+        { label: "规则集", value: "AUTO_V1" },
+        { label: "值班动作", value: "建议限流 + 人工复核" },
       ],
     },
   ];
@@ -313,9 +352,9 @@ export default function Searchlight({ onAction, onSnoozeToQueue, enableRealtime 
     const base = "text-[13px] tabular-nums transition-colors duration-300";
     const color =
       urgency === "critical"
-        ? "text-red-600 font-semibold"
+        ? "text-[var(--color-danger-light)] font-semibold"
         : urgency === "warn"
-          ? "text-orange-600 font-medium"
+          ? "text-[var(--color-warning-light)] font-medium"
           : "text-text-secondary";
     const pulse = urgency === "critical" ? " animate-pulse" : "";
     void _tick;
@@ -445,24 +484,24 @@ export default function Searchlight({ onAction, onSnoozeToQueue, enableRealtime 
           return (
             <div
               key={item.id}
-              className={`relative overflow-hidden rounded-lg border bg-white shadow-[0_1px_4px_rgba(0,0,0,0.05)] layout-pl-compact ${
-                isNew ? "ring-1 ring-red-200" : ""
+              className={`relative overflow-hidden rounded-lg border bg-[var(--color-bg-container)] shadow-[var(--shadow-card)] layout-pl-compact ${
+                isNew ? "ring-1 ring-[var(--color-error-border)]" : ""
               } ${wf === "snoozed" ? "opacity-75" : ""} ${
-                claimedOther ? "border-slate-300 ring-1 ring-slate-200/80" : "border-border-soft"
+                claimedOther ? "border-[var(--color-card-border)] ring-1 ring-[var(--color-border-soft)]" : "border-border-soft"
               }`}
             >
               <div className="absolute left-0 top-0 bottom-0 w-1 rounded-l" style={{ backgroundColor: levelCfg.strip }} />
               <div className="pl-3 pr-3 py-3">
                 {claimedOther ? (
-                  <div className="mb-2 flex flex-wrap items-center gap-2 rounded border border-slate-200 bg-slate-50 px-2 py-1.5 text-[12px] text-text-secondary">
-                    <LockOutlined className="text-slate-500" />
+                  <div className="searchlight-callout-inline searchlight-callout-inline--locked">
+                    <LockOutlined />
                     <span>
                       处理权已锁定：<strong>{claimById[item.id]}</strong> 认领中。可展开查看「上次同类处置」与佐证；协作请点「转人工复核」或申请转派。
                     </span>
                   </div>
                 ) : null}
                 {claimedMe ? (
-                  <div className="mb-2 flex flex-wrap items-center gap-2 rounded border border-emerald-200/90 bg-emerald-50/60 px-2 py-1.5 text-[12px] text-emerald-900">
+                  <div className="searchlight-callout-inline searchlight-callout-inline--success">
                     <CheckCircleOutlined />
                     <span>
                       您已认领，<strong>排他处理</strong>：推荐动作已全部解锁（除他人锁定场景）。
@@ -509,10 +548,14 @@ export default function Searchlight({ onAction, onSnoozeToQueue, enableRealtime 
                   {item.conclusionLine ?? item.subtitle ?? item.description}
                 </Text>
 
-                {/* 第三行：影响量化（含影响范围 + 金额/笔数） */}
-                <div className="mt-2 rounded-md border border-amber-200/90 bg-amber-50/70 px-2.5 py-2">
+                {/* 第三行：影响量化（含影响范围 + 金额/笔数）；误杀→蓝、熔断→红 */}
+                <div
+                  className={["searchlight-callout-impact", searchlightImpactPanelModifier(item.type)]
+                    .filter(Boolean)
+                    .join(" ")}
+                >
                   <div className="flex flex-wrap items-baseline justify-between gap-2">
-                    <Text strong className="text-[12px] text-amber-950/90 m-0">
+                    <Text strong className="searchlight-callout-impact__title">
                       影响量化
                     </Text>
                     <Text type="secondary" className="text-[11px] m-0">
@@ -559,13 +602,13 @@ export default function Searchlight({ onAction, onSnoozeToQueue, enableRealtime 
 
                 {/* 必备字段：持续 / 首触 / 责任人 / 上次同类 */}
                 <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 text-[12px]">
-                  <div className="rounded border border-border-soft bg-[#faf8f4]/80 px-2 py-1.5">
+                  <div className="rounded border border-border-soft bg-[color-mix(in_srgb,var(--color-searchlight-surface)_80%,transparent)] px-2 py-1.5">
                     <Text type="secondary" className="text-[11px] block">
                       持续时长 · SLA
                     </Text>
                     <div className="mt-0.5">{renderSlaLine(item, actionCfg.slaBudgetMin, tick)}</div>
                   </div>
-                  <div className="rounded border border-border-soft bg-[#faf8f4]/80 px-2 py-1.5">
+                  <div className="rounded border border-border-soft bg-[color-mix(in_srgb,var(--color-searchlight-surface)_80%,transparent)] px-2 py-1.5">
                     <Text type="secondary" className="text-[11px] block">
                       首次触发时间
                     </Text>
@@ -573,13 +616,13 @@ export default function Searchlight({ onAction, onSnoozeToQueue, enableRealtime 
                       {item.firstTriggeredDisplay ?? fmtCN(item.timestamp)}
                     </Text>
                   </div>
-                  <div className="rounded border border-border-soft bg-[#faf8f4]/80 px-2 py-1.5">
+                  <div className="rounded border border-border-soft bg-[color-mix(in_srgb,var(--color-searchlight-surface)_80%,transparent)] px-2 py-1.5">
                     <Text type="secondary" className="text-[11px] block">
                       当前责任人 / 认领
                     </Text>
                     <Text className="text-[12px] text-text-primary block mt-0.5 font-medium">{ownerLabel(item, wf)}</Text>
                   </div>
-                  <div className="rounded border border-border-soft bg-[#faf8f4]/80 px-2 py-1.5 sm:col-span-2 lg:col-span-1">
+                  <div className="rounded border border-border-soft bg-[color-mix(in_srgb,var(--color-searchlight-surface)_80%,transparent)] px-2 py-1.5 sm:col-span-2 lg:col-span-1">
                     <Text type="secondary" className="text-[11px] block">
                       上次同类处置摘要
                     </Text>
@@ -606,7 +649,7 @@ export default function Searchlight({ onAction, onSnoozeToQueue, enableRealtime 
                         </Button>
                       </Tooltip>
                     ) : (
-                      <Button size="small" disabled className="border-emerald-300 text-emerald-800">
+                      <Button size="small" disabled className="searchlight-btn-claimed-disabled">
                         已认领 · {claimById[item.id] ?? dutyName}
                       </Button>
                     )}
@@ -660,9 +703,9 @@ export default function Searchlight({ onAction, onSnoozeToQueue, enableRealtime 
                 </div>
 
                 {expanded && (
-                  <div className="mt-3 space-y-3 rounded-md bg-[#faf8f4] border border-[#ebe6dc] px-3 py-3">
+                  <div className="mt-3 space-y-3 rounded-md border border-[var(--color-searchlight-border)] bg-[var(--color-searchlight-surface)] px-3 py-3">
                     {item.recurrence ? (
-                      <div className="rounded border border-[#e0d8cc] bg-white/90 px-3 py-2">
+                      <div className="rounded border border-[var(--color-searchlight-border-strong)] bg-[color-mix(in_srgb,var(--color-bg-container)_90%,transparent)] px-3 py-2">
                         <Text strong className="text-[12px] text-text-primary block mb-1">
                           上次同类怎么处理的
                         </Text>
@@ -694,7 +737,7 @@ export default function Searchlight({ onAction, onSnoozeToQueue, enableRealtime 
                         </Text>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                           {item.evidenceRows.map((row) => (
-                            <div key={`${item.id}-ev-${row.label}`} className="rounded border border-[#e8e0d4] bg-white/80 px-2.5 py-2">
+                            <div key={`${item.id}-ev-${row.label}`} className="rounded border border-[var(--color-searchlight-border-tile)] bg-[color-mix(in_srgb,var(--color-bg-container)_80%,transparent)] px-2.5 py-2">
                               <Text type="secondary" className="text-[11px] block">
                                 {row.label}
                               </Text>
@@ -730,7 +773,7 @@ export default function Searchlight({ onAction, onSnoozeToQueue, enableRealtime 
                       </>
                     ) : null}
 
-                    <div className="flex flex-col gap-2 border-t border-[#ebe6dc] pt-3">
+                    <div className="flex flex-col gap-2 border-t border-[var(--color-searchlight-border)] pt-3">
                       <Text type="secondary" className="text-[11px] block">
                         并行处置动作（认领后可用）
                       </Text>
@@ -776,7 +819,7 @@ export default function Searchlight({ onAction, onSnoozeToQueue, enableRealtime 
                       </Space>
                     </div>
 
-                    <div className="flex flex-col gap-2 border-t border-[#ebe6dc] pt-2">
+                    <div className="flex flex-col gap-2 border-t border-[var(--color-searchlight-border)] pt-2">
                       <Button
                         type="default"
                         size="small"

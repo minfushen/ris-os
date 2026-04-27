@@ -39,6 +39,21 @@
   gap: 1px;
 }
 
+.layout-gap-workbench {
+  gap: var(--layout-workbench-gap);
+}
+
+.layout-section-header-tight {
+  padding-block: var(--spacing-sm);
+  padding-inline: var(--spacing-md);
+}
+
+.layout-kpi-footnote {
+  margin-top: var(--spacing-xs);
+  font-size: var(--font-size-xs);
+  color: var(--color-kpi-footnote);
+}
+
 .layout-pr-sm {
   padding-right: var(--spacing-sm);
 }

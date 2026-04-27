@@ -1,6 +1,5 @@
 import { Typography, Breadcrumb } from "antd";
 import { HomeOutlined } from "@ant-design/icons";
-import { Link } from "react-router-dom";
 import type { ReactNode } from "react";
 import WorkbenchHomeLink from "@/components/WorkbenchHomeLink";
 
@@ -25,8 +24,8 @@ export default function ModulePageShell({
     <div>
       {/* 模块头部 */}
       <header className="module-header">
-        <div className="flex justify-between items-start">
-          <div>
+        <div className="module-header-inner">
+          <div className="module-header-main">
             {/* 面包屑 */}
             {breadcrumb && breadcrumb.length > 0 && (
               <Breadcrumb
@@ -43,9 +42,9 @@ export default function ModulePageShell({
                       index === breadcrumb.length - 1 ? (
                         <span className="text-text-primary">{item}</span>
                       ) : (
-                        <Link to="#" className="text-text-muted hover:text-primary">
+                        <span className="text-text-muted">
                           {item}
-                        </Link>
+                        </span>
                       ),
                   })),
                 ]}
@@ -53,17 +52,12 @@ export default function ModulePageShell({
               />
             )}
 
-            {/* 标题 */}
-            <h1 className="text-lg font-semibold text-text-primary m-0">{title}</h1>
+            <h1 className="module-header-title">{title}</h1>
 
-            {/* 副标题 */}
-            {subtitle && (
-              <p className="text-sm text-text-muted mt-1 mb-0">{subtitle}</p>
-            )}
+            {subtitle ? <p className="module-header-subtitle">{subtitle}</p> : null}
           </div>
 
-          {/* 操作区 */}
-          {actions && <div className="flex items-center gap-2">{actions}</div>}
+          {actions ? <div className="module-header-actions">{actions}</div> : null}
         </div>
       </header>
 

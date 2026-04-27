@@ -3,7 +3,7 @@
 [![Repo](https://img.shields.io/badge/GitHub-ris--os-24292e?logo=github)](https://github.com/minfushen/ris-os)
 [![Branch](https://img.shields.io/badge/branch-scenario%2Fpost--loan-0969da)](https://github.com/minfushen/ris-os/tree/scenario/post-loan)
 
-面向信贷全生命周期的 **风控工作台（Risk Intelligence System OS）** 前后端原型。本仓库 **`scenario/post-loan`（贷后场景）** 分支在导航、页面与接口上对齐 **贷后预警与处置**：资产态势、策略追踪、核查工作台、催收作业、特征与数据 REST 等；前端为「浅色金融玻璃台」骨架，后端为 FastAPI 最小可运行 API，便于本地演示与二次开发。
+面向信贷全生命周期的 **风控工作台（Risk Intelligence System OS）** 前后端原型。本仓库 **`scenario/post-loan`（贷后场景）** 分支在导航、页面与接口上对齐 **贷后预警与处置**；产品展示名为 **贷后风险智能运营平台**（副标题：预警监控 · 处置闭环 · 策略仿真 · 智能体协同）。前端为「浅色金融玻璃台」骨架（Browser 路径路由），后端为 FastAPI 最小可运行 API，便于本地演示与二次开发。
 
 **远程仓库：** [https://github.com/minfushen/ris-os](https://github.com/minfushen/ris-os)
 
@@ -15,7 +15,7 @@
 |----|------|
 | **分支名** | `scenario/post-loan` |
 | **与主线** | 自 `main` 同一起点延伸，可独立演进；合并回 `main` 前建议走 PR 评审 |
-| **前端入口** | Hash 路由：`http://localhost:5173/#/` |
+| **前端入口** | Browser 路径路由：`http://localhost:5173/`（例：`/monitor/dashboard`、`/risk/workbench`、`/reports`） |
 | **后端默认** | `http://127.0.0.1:8000`（与 `frontend/.env.development` 中 `VITE_API_BASE_URL` 一致） |
 | **贷后 REST** | 前端调用 **`/api/scenario/post-loan/*`**（后端同时挂载无前缀 `/scenario/post-loan/*`，便于兼容旧网关） |
 
@@ -32,13 +32,16 @@ git switch scenario/post-loan
 
 | 模块 | 说明 |
 |------|------|
-| **指挥台首页** | 贷后核心 KPI（M1+、新增预警、逾期工单等）、处置队列、预警探照灯与快捷入口；任务列表仍对接 `/tasks` |
-| **资产监控** | 资产质量看板、预警探照灯（原战情看板口径调整）、策略效果追踪、报表中心、标注飞轮（URL 保留） |
-| **预警策略** | 产品线策略集、规则配置（含行业阈值矩阵示意）、规则仿真回测、发布审批与护栏 |
-| **案件处置** | 预警核查工作台、催收作业管理（M1/M2/M3 分池）、复盘与质检 |
+| **指挥台首页** | 贷后核心 KPI、处置队列、预警探照灯与快捷入口；任务列表对接 `/tasks` |
+| **预警监控** | 资产质量看板、预警探照灯、策略效果追踪、**报表中心**（含**监控报告库** Tab）、标注飞轮 |
+| **处置闭环** | 预警核查工作台（含**监控报告**生成/预览/下载/审计留档）、催收作业（M1/M2/M3 分池）、复盘与质检 |
+| **策略与模型** | 产品线策略集、规则配置、发布审批与护栏 |
+| **仿真回溯** | 规则仿真回测、压力测试与护栏 |
+| **智能体协同** | 智能体目录、运行与观测占位 |
+| **能力与架构** | 集成架构说明（数据源/模型服务/MCP 等） |
 | **知识沉淀** | 话术库、规则调优案例、风险模式库 |
-| **特征与数据** | **贷后特征工作室**（还款/催收反馈特征、分产品线 PSI、阈值告警）；**数据源管理**（企信/司法/金税等 + 刷新频率元数据），数据来自 **`GET /api/scenario/post-loan/*`** |
-| **任务流（通用）** | 创建/查询分析任务、信审任务（`POST /tasks/analysis`、`POST /tasks/review`、`GET /tasks` 等） |
+| **特征与数据** | **贷后特征工作室**、**数据源管理**，数据来自 **`GET /api/scenario/post-loan/*`** |
+| **任务流（通用）** | `POST /tasks/analysis`、`POST /tasks/review`、`GET /tasks` 等 |
 
 更多接口见 **[backend/README.md](./backend/README.md)**。
 
@@ -126,7 +129,7 @@ npm install
 npm run dev
 ```
 
-浏览器访问：**http://localhost:5173/#/**（Hash 路由）
+浏览器访问：**http://localhost:5173/**（路径路由，直接打开子路径亦可）
 
 ### 4. 前端环境变量
 

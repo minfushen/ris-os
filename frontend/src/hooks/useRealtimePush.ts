@@ -245,8 +245,8 @@ export function useMockRealtimePush(intervalMs: number = 5000): UseRealtimePushR
           description: `特征 ${["多头查询", "负债率", "年龄"][Math.floor(Math.random() * 3)]} PSI 超过阈值`,
         },
         throughput_drop: {
-          title: "通过率下降",
-          description: `通过率较昨日下降 ${Math.floor(Math.random() * 10) + 3}%`,
+          title: "策略熔断",
+          description: `通过率短时下降 ${Math.floor(Math.random() * 10) + 3}pt · 渠道或规则熔断`,
         },
       };
 

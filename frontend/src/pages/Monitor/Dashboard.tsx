@@ -1,4 +1,6 @@
-import { Row, Col, Typography, Table, Tag, Button } from "antd";
+import { useMemo, useState } from "react";
+import { Row, Col, Typography, Table, Tag, Button, Progress, Space } from "antd";
+import type { ColumnsType } from "antd/es/table";
 import { ReloadOutlined, ThunderboltOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import {
@@ -11,212 +13,232 @@ import {
   ResponsiveContainer,
   BarChart,
   Bar,
+  Cell,
 } from "recharts";
 import ModulePageShell, { ModuleSectionCard } from "@/components/ModulePageShell";
 
 const { Text } = Typography;
 
-/** 近 8 周 M1+ 逾期率（%） */
-const M1_TREND = [
-  { week: "W-7", m1: 2.9 },
-  { week: "W-6", m1: 3.0 },
-  { week: "W-5", m1: 3.1 },
-  { week: "W-4", m1: 3.15 },
-  { week: "W-3", m1: 3.22 },
-  { week: "W-2", m1: 3.28 },
-  { week: "W-1", m1: 3.35 },
-  { week: "本周", m1: 3.42 },
+const WARNING_OVERVIEW = [
+  { label: "总预警数", value: "156", hint: "今日新增 +18", color: "#4f6970" },
+  { label: "红灯", value: "23", hint: "需实时触达", color: "#cf1322" },
+  { label: "黄灯", value: "133", hint: "批量提醒", color: "#d46b08" },
+  { label: "处置率", value: "87%", hint: "SLA 内闭环", color: "#5f9b7a" },
 ];
 
-/** 按规则分组的预警有效率（演示） */
-const RULE_EFFICIENCY = [
-  { rule: "司法涉诉", rate: 83, count: 42 },
-  { rule: "多头借贷", rate: 71, count: 128 },
-  { rule: "经营异常", rate: 65, count: 56 },
-  { rule: "设备簇", rate: 58, count: 89 },
+const WARNING_TREND = [
+  { day: "9/1", red: 18, yellow: 122 },
+  { day: "9/2", red: 21, yellow: 128 },
+  { day: "9/3", red: 26, yellow: 136 },
+  { day: "9/4", red: 30, yellow: 142 },
+  { day: "9/5", red: 24, yellow: 138 },
+  { day: "9/6", red: 20, yellow: 131 },
+  { day: "9/7", red: 23, yellow: 133 },
 ];
 
-/** 产品线 × 预警强度（热力演示：0–100） */
-const HEAT_PRODUCTS = ["经营贷", "税金贷", "消费贷", "小微贷"];
-const HEAT_CHANNELS = ["自营", "API", "地推", "联营"];
-const HEAT_MATRIX: number[][] = [
-  [72, 88, 45, 62],
-  [55, 49, 70, 58],
-  [38, 42, 33, 51],
-  [64, 71, 52, 66],
+const WARNING_TYPES = [
+  { type: "涉诉预警", pct: 45, color: "#cf1322" },
+  { type: "征信预警", pct: 30, color: "#d46b08" },
+  { type: "工商预警", pct: 15, color: "#4f6970" },
+  { type: "其他", pct: 10, color: "#8c8c8c" },
 ];
 
-function heatColor(v: number): string {
-  if (v >= 75) return "rgba(207, 19, 34, 0.45)";
-  if (v >= 55) return "rgba(250, 140, 22, 0.35)";
-  if (v >= 40) return "rgba(250, 173, 20, 0.22)";
-  return "rgba(111, 143, 149, 0.12)";
-}
+const MODEL_EFFECTS = [
+  { label: "PSI: 0.08", status: "正常", color: "green" },
+  { label: "KS: 0.42", status: "正常", color: "green" },
+  { label: "命中率: 68%", status: "较上周 +3%", color: "blue" },
+];
 
-const REALTIME_ALERTS = [
+const PENDING_ALERTS = [
   {
     id: "W-240418-01",
-    customer: "张三科技",
-    rule: "司法被执行",
-    level: "high" as const,
+    customer: "XX科技有限公司",
+    type: "涉诉",
+    rule: "RULE_023",
+    level: "red" as const,
+    manager: "张三",
+    time: "09:30",
     sla: "剩 4h",
-    time: "10:32",
-    aux: "CL20240312 · 制造业",
   },
   {
     id: "W-240418-02",
-    customer: "李四贸易",
-    rule: "多头余额异动",
-    level: "medium" as const,
-    sla: "剩 1天",
-    time: "09:15",
-    aux: "CL20231220 · 批发零售",
+    customer: "YY贸易有限公司",
+    type: "失信",
+    rule: "RULE_056",
+    level: "red" as const,
+    manager: "李四",
+    time: "10:15",
+    sla: "剩 6h",
   },
   {
     id: "W-240418-03",
-    customer: "王五物流",
-    rule: "税报断档",
-    level: "low" as const,
-    sla: "剩 3天",
-    time: "08:40",
-    aux: "WH20251088 · 道路运输",
+    customer: "ZZ物流有限公司",
+    type: "征信",
+    rule: "RULE_078",
+    level: "yellow" as const,
+    manager: "王五",
+    time: "11:20",
+    sla: "剩 1天",
   },
 ];
 
+type PendingAlertRow = (typeof PENDING_ALERTS)[number];
+
 export default function Dashboard() {
   const navigate = useNavigate();
+  const [lastRefresh, setLastRefresh] = useState("10:42");
 
-  const columns = [
-    { title: "预警单号", dataIndex: "id", width: 120, render: (v: string) => <Text code className="text-[13px]">{v}</Text> },
-    { title: "客户 / 主体", dataIndex: "customer", width: 100, render: (v: string) => <Text strong className="text-[13px]">{v}</Text> },
-    { title: "命中规则", dataIndex: "rule", width: 110, render: (v: string) => <Text className="text-[13px]">{v}</Text> },
+  const columns = useMemo<ColumnsType<PendingAlertRow>>(() => [
     {
-      title: "级别",
+      title: "等级",
       dataIndex: "level",
       width: 72,
-      render: (v: "high" | "medium" | "low") => (
-        <Tag color={v === "high" ? "red" : v === "medium" ? "orange" : "blue"} className="!m-0 text-[12px]">
-          {v === "high" ? "高" : v === "medium" ? "中" : "低"}
+      render: (v: "red" | "yellow") => (
+        <Tag color={v === "red" ? "red" : "orange"} className="!m-0 text-[12px]">
+          {v === "red" ? "红灯" : "黄灯"}
         </Tag>
       ),
     },
-    { title: "SLA", dataIndex: "sla", width: 80, render: (v: string) => <Text className="text-[13px] text-[#d46b08]">{v}</Text> },
-    { title: "触发", dataIndex: "time", width: 64, render: (v: string) => <Text type="secondary" className="text-[12px]">{v}</Text> },
-    {
-      title: "辅助信息",
-      dataIndex: "aux",
-      ellipsis: true,
-      render: (v: string) => <Text type="secondary" className="text-[12px]">{v}</Text>,
-    },
+    { title: "客户名称", dataIndex: "customer", width: 160, render: (v: string) => <Text strong className="text-[13px]">{v}</Text> },
+    { title: "预警类型", dataIndex: "type", width: 96, render: (v: string) => <Text className="text-[13px]">{v}</Text> },
+    { title: "命中规则", dataIndex: "rule", width: 100, render: (v: string) => <Text code className="text-[12px]">{v}</Text> },
+    { title: "预警时间", dataIndex: "time", width: 92, render: (v: string) => <Text className="text-[13px]">{v}</Text> },
+    { title: "客户经理", dataIndex: "manager", width: 92, render: (v: string) => <Text className="text-[13px]">{v}</Text> },
+    { title: "SLA", dataIndex: "sla", width: 88, render: (v: string) => <Text className="text-[13px] text-[#d46b08]">{v}</Text> },
     {
       title: "操作",
       key: "op",
       width: 120,
-      render: (_: unknown, row: (typeof REALTIME_ALERTS)[0]) => (
+      render: (_: unknown, row) => (
         <Button type="primary" size="small" icon={<ThunderboltOutlined />} onClick={() => navigate("/risk/workbench", { state: { alertId: row.id } })}>
           认领并核查
         </Button>
       ),
     },
-  ];
+  ], [navigate]);
 
   return (
     <ModulePageShell
-      title="预警探照灯"
-      subtitle="贷后资产预警发现与处置入口：从静态看板转为可行动任务流（演示数据）"
-      breadcrumb={["资产监控", "预警探照灯"]}
+      title="贷后预警监控大盘"
+      subtitle="面向面试演示的贷后预警主看板：监控态势、模型效果与待处置队列一页收口（演示数据）"
+      breadcrumb={["预警监控", "预警大盘"]}
       actions={
-        <Button icon={<ReloadOutlined />}>刷新</Button>
+        <Space wrap>
+          <Text type="secondary" className="text-[12px]">最近刷新 {lastRefresh}</Text>
+          <Button
+            icon={<ReloadOutlined />}
+            onClick={() => setLastRefresh(new Date().toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit" }))}
+          >
+            刷新
+          </Button>
+        </Space>
       }
     >
-      <ModuleSectionCard title="预警概览" subtitle="新增预警客户（今日 / 本周）">
+      <ModuleSectionCard title="今日预警概览" subtitle="红灯实时推送，黄灯批量推送；处置率按 SLA 内结案统计">
         <Row gutter={[16, 16]}>
-          <Col xs={24} sm={12} md={6}>
-            <div className="rounded-lg border border-black/[0.08] bg-white p-4 shadow-sm">
-              <Text type="secondary" className="text-[12px] block">今日新增预警客户</Text>
-              <Text strong className="text-[28px] leading-tight text-[#d46b08] block mt-1">23</Text>
-              <Text type="secondary" className="text-[12px]">较昨日 +8</Text>
-            </div>
-          </Col>
-          <Col xs={24} sm={12} md={6}>
-            <div className="rounded-lg border border-black/[0.08] bg-white p-4 shadow-sm">
-              <Text type="secondary" className="text-[12px] block">本周新增预警客户</Text>
-              <Text strong className="text-[28px] leading-tight text-[#4f6970] block mt-1">104</Text>
-              <Text type="secondary" className="text-[12px]">含司法 / 多头 / 经营类</Text>
-            </div>
-          </Col>
-          <Col xs={24} sm={24} md={12}>
-            <div className="rounded-lg border border-black/[0.08] bg-white p-3 shadow-sm h-full min-h-[120px]">
-              <Text strong className="text-[13px] block mb-2">M1+ 逾期率趋势</Text>
-              <div style={{ width: "100%", height: 140 }}>
-                <ResponsiveContainer>
-                  <LineChart data={M1_TREND} margin={{ top: 4, right: 8, left: 0, bottom: 0 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                    <XAxis dataKey="week" tick={{ fontSize: 11 }} />
-                    <YAxis domain={[2.5, 3.6]} tick={{ fontSize: 11 }} width={36} unit="%" />
-                    <RTooltip formatter={(v: number) => [`${v}%`, "M1+"]} />
-                    <Line type="monotone" dataKey="m1" name="M1+(%)" stroke="#c77b78" strokeWidth={2} dot={{ r: 3 }} />
-                  </LineChart>
-                </ResponsiveContainer>
+          {WARNING_OVERVIEW.map((item) => (
+            <Col xs={24} sm={12} md={6} key={item.label}>
+              <div className="kpi-stat-card">
+                <Text className="kpi-stat-card__label">{item.label}</Text>
+                <Text strong className="kpi-stat-card__value" style={{ color: item.color }}>
+                  {item.value}
+                </Text>
+                <Text type="secondary" className="text-[12px]">{item.hint}</Text>
               </div>
-            </div>
-          </Col>
+            </Col>
+          ))}
         </Row>
       </ModuleSectionCard>
 
+      <ModuleSectionCard title="预警趋势图" subtitle="近 7 日红灯 / 黄灯预警量走势">
+        <div style={{ width: "100%", height: 260 }}>
+          <ResponsiveContainer>
+            <LineChart data={WARNING_TREND} margin={{ top: 8, right: 16, left: 0, bottom: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+              <XAxis dataKey="day" tick={{ fontSize: 11 }} />
+              <YAxis tick={{ fontSize: 11 }} width={36} />
+              <RTooltip />
+              <Line type="monotone" dataKey="red" name="红灯" stroke="#cf1322" strokeWidth={2} dot={{ r: 3 }} />
+              <Line type="monotone" dataKey="yellow" name="黄灯" stroke="#d46b08" strokeWidth={2} dot={{ r: 3 }} />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+      </ModuleSectionCard>
+
+      <Row gutter={[16, 16]}>
+        <Col xs={24} lg={12}>
+          <ModuleSectionCard title="预警类型分布" subtitle="用于判断外部数据源与规则触发结构">
+            <Space direction="vertical" className="w-full" size={12}>
+              {WARNING_TYPES.map((item) => (
+                <div key={item.type}>
+                  <div className="flex justify-between text-[12px] mb-1">
+                    <Text>{item.type}</Text>
+                    <Text type="secondary">{item.pct}%</Text>
+                  </div>
+                  <Progress percent={item.pct} showInfo={false} strokeColor={item.color} />
+                </div>
+              ))}
+            </Space>
+          </ModuleSectionCard>
+        </Col>
+        <Col xs={24} lg={12}>
+          <ModuleSectionCard title="模型效果监控" subtitle="异常时反向驱动数据源排查与规则/模型迭代">
+            <Space direction="vertical" className="w-full" size={12}>
+              {MODEL_EFFECTS.map((item) => (
+                <div key={item.label} className="rounded-lg border border-black/[0.08] bg-[#fafafa] px-4 py-3">
+                  <div className="flex items-center justify-between gap-3">
+                    <Text strong className="text-[15px]">{item.label}</Text>
+                    <Tag color={item.color} className="!m-0">{item.status}</Tag>
+                  </div>
+                </div>
+              ))}
+              <Text type="secondary" className="text-[12px]">
+                讲解口径：PSI 偏高排查数据漂移，KS 下滑排查模型区分度，命中率下降触发规则调优。
+              </Text>
+            </Space>
+          </ModuleSectionCard>
+        </Col>
+      </Row>
+
       <Row gutter={[16, 16]}>
         <Col xs={24} lg={10}>
-          <ModuleSectionCard title="预警有效率（按规则）" subtitle="命中后核查为「有效预警」占比（演示）">
+          <ModuleSectionCard title="监控驱动迭代" subtitle="把监控指标直接转成策略动作">
             <div style={{ width: "100%", height: 240 }}>
               <ResponsiveContainer>
-                <BarChart data={RULE_EFFICIENCY} layout="vertical" margin={{ left: 88, right: 16 }}>
+                <BarChart data={WARNING_TYPES} layout="vertical" margin={{ left: 88, right: 16 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
                   <XAxis type="number" domain={[0, 100]} tick={{ fontSize: 11 }} unit="%" />
-                  <YAxis type="category" dataKey="rule" width={84} tick={{ fontSize: 11 }} />
-                  <RTooltip formatter={(v: number, _n, p) => [`${v}%`, `样本 ${(p?.payload as { count: number }).count}`]} />
-                  <Bar dataKey="rate" name="有效率%" fill="#5f9b7a" radius={[0, 4, 4, 0]} />
+                  <YAxis type="category" dataKey="type" width={84} tick={{ fontSize: 11 }} />
+                  <RTooltip formatter={(v: number) => [`${v}%`, "占比"]} />
+                  <Bar dataKey="pct" name="占比%" radius={[0, 4, 4, 0]}>
+                    {WARNING_TYPES.map((entry) => (
+                      <Cell key={entry.type} fill={entry.color} />
+                    ))}
+                  </Bar>
                 </BarChart>
               </ResponsiveContainer>
             </div>
           </ModuleSectionCard>
         </Col>
         <Col xs={24} lg={14}>
-          <ModuleSectionCard title="产品线 × 渠道 预警热力" subtitle="数值越高表示预警密度越大（演示）">
-            <div className="overflow-x-auto">
-              <table className="border-collapse text-xs w-full max-w-2xl">
-                <thead>
-                  <tr>
-                    <th className="border border-[#f0f0f0] p-2 bg-[#fafafa] w-20">产品 \ 渠道</th>
-                    {HEAT_CHANNELS.map((h) => (
-                      <th key={h} className="border border-[#f0f0f0] p-2 bg-[#fafafa] font-medium">{h}</th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {HEAT_MATRIX.map((row, ri) => (
-                    <tr key={HEAT_PRODUCTS[ri]}>
-                      <td className="border border-[#f0f0f0] p-2 bg-[#fafafa] font-medium">{HEAT_PRODUCTS[ri]}</td>
-                      {row.map((cell, ci) => (
-                        <td
-                          key={ci}
-                          className="border border-[#f0f0f0] p-2 text-center tabular-nums font-medium"
-                          style={{ backgroundColor: heatColor(cell) }}
-                        >
-                          {cell}
-                        </td>
-                      ))}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+          <ModuleSectionCard title="处置闭环设计" subtitle="预警不是终点，处置结果会反哺规则优化">
+            <div className="grid gap-3 md:grid-cols-4">
+              {["预警推送", "客户经理认领", "处置反馈", "规则优化"].map((step, index) => (
+                <div key={step} className="rounded-lg border border-black/[0.08] bg-[#fafafa] p-4">
+                  <Text type="secondary" className="text-[11px]">Step {index + 1}</Text>
+                  <Text strong className="block text-[14px] mt-1">{step}</Text>
+                </div>
+              ))}
             </div>
-            <Text type="secondary" className="text-[12px] block mt-2">下钻：可联动至「策略效果追踪」规则维度与「预警核查工作台」队列。</Text>
+            <Text type="secondary" className="text-[12px] block mt-3">
+              红灯通过站内信 / 企业微信实时触达，黄灯按批次进入客户经理队列；误报多的规则进入调优案例库。
+            </Text>
           </ModuleSectionCard>
         </Col>
       </Row>
 
-      <ModuleSectionCard title="实时预警列表" subtitle="可认领并进入核查闭环">
-        <Table dataSource={REALTIME_ALERTS} columns={columns} rowKey="id" size="small" pagination={false} scroll={{ x: 900 }} />
+      <ModuleSectionCard title="待处置预警列表" subtitle="点击红灯预警进入处置工作台，形成面试演示主链路">
+        <Table dataSource={PENDING_ALERTS} columns={columns} rowKey="id" size="small" pagination={false} scroll={{ x: 900 }} />
       </ModuleSectionCard>
     </ModulePageShell>
   );

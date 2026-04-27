@@ -93,7 +93,7 @@ export default function O2OMonitor() {
     <ModulePageShell
       title="策略效果追踪"
       subtitle="从「线过线拒一致性」转为预警策略设计预期 vs 实际运营效果；聚焦 15 天预警提前量痛点（演示数据）"
-      breadcrumb={["资产监控", "策略效果追踪"]}
+      breadcrumb={["预警监控", "策略效果追踪"]}
       actions={
         <Button type="primary" icon={<ToolOutlined />} onClick={() => navigate("/strategy/rules")}>
           发起规则调优

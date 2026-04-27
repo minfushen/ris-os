@@ -15,7 +15,7 @@ export default function FraudPatterns() {
     <ModulePageShell
       title="风险模式库"
       subtitle="真实贷后风险案例与识别要点，供核查备注引用与模型训练（演示）"
-      breadcrumb={["知识沉淀", "风险模式库"]}
+      breadcrumb={["策略与模型", "风险模式库"]}
       actions={
         <Link to="/risk/workbench">
           <Button type="primary" size="small">打开核查工作台</Button>

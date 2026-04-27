@@ -19,37 +19,37 @@ export type SoftTagVariant = "danger" | "warning" | "success" | "info" | "neutra
 
 /** 柔和填充标签：专业金融风格 */
 const SOFT_TAG_STYLE: Record<SoftTagVariant, CSSProperties> = {
-  danger: { 
-    background: "linear-gradient(135deg, rgba(245, 34, 45, 0.1) 0%, rgba(255, 77, 79, 0.06) 100%)", 
-    color: "#f5222d",
-    border: "1px solid rgba(245, 34, 45, 0.15)",
+  danger: {
+    background: "linear-gradient(135deg, var(--color-error-bg-strong) 0%, var(--color-error-bg) 100%)",
+    color: "var(--color-danger)",
+    border: "1px solid var(--color-error-border)",
   },
-  warning: { 
-    background: "linear-gradient(135deg, rgba(250, 140, 22, 0.12) 0%, rgba(255, 169, 64, 0.06) 100%)", 
-    color: "#fa8c16",
-    border: "1px solid rgba(250, 140, 22, 0.2)",
+  warning: {
+    background: "linear-gradient(135deg, var(--color-warning-bg-strong) 0%, var(--color-warning-bg) 100%)",
+    color: "var(--color-warning)",
+    border: "1px solid var(--color-warning-border)",
   },
-  success: { 
-    background: "linear-gradient(135deg, rgba(82, 196, 26, 0.1) 0%, rgba(115, 209, 61, 0.06) 100%)", 
-    color: "#52c41a",
-    border: "1px solid rgba(82, 196, 26, 0.15)",
+  success: {
+    background: "linear-gradient(135deg, var(--color-success-bg-strong) 0%, var(--color-success-bg) 100%)",
+    color: "var(--color-success)",
+    border: "1px solid var(--color-success-border)",
   },
-  info: { 
-    background: "linear-gradient(135deg, rgba(22, 119, 255, 0.1) 0%, rgba(64, 150, 255, 0.06) 100%)", 
-    color: "#1677ff",
-    border: "1px solid rgba(22, 119, 255, 0.15)",
+  info: {
+    background: "linear-gradient(135deg, var(--color-info-bg) 0%, color-mix(in srgb, var(--color-info) 8%, transparent) 100%)",
+    color: "var(--color-info)",
+    border: "1px solid var(--color-info-border)",
   },
-  neutral: { 
-    background: "rgba(0, 0, 0, 0.03)", 
-    color: "#595959",
-    border: "1px solid rgba(0, 0, 0, 0.06)",
+  neutral: {
+    background: "var(--color-bg-interactive-hover)",
+    color: "var(--color-text-secondary)",
+    border: "1px solid var(--color-border-light)",
   },
 };
 
 export function SoftTag({ variant, children }: { variant: SoftTagVariant; children: ReactNode }) {
   return (
     <span
-      className="inline-flex items-center gap-1 max-w-full px-2 py-0.5 rounded text-[11px] font-semibold leading-tight"
+      className="inline-flex items-center gap-1 max-w-full px-2 py-0.5 rounded-[2px] text-[11px] font-medium leading-tight"
       style={SOFT_TAG_STYLE[variant]}
     >
       {children}

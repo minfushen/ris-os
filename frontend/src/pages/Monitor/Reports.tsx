@@ -1,5 +1,6 @@
 import { Typography, Tabs, Table, Select, DatePicker, Space, Button, Tag, Progress } from "antd";
-import { DownloadOutlined } from "@ant-design/icons";
+import { AuditOutlined, DownloadOutlined, EyeOutlined } from "@ant-design/icons";
+import type { ColumnsType } from "antd/es/table";
 import {
   LineChart,
   Line,
@@ -80,6 +81,54 @@ const INDUSTRY_RISK = [
   { industry: "软件信息", riskIdx: 35, m1plus: 1.9, balanceShare: 12 },
 ];
 
+interface MonitorReportRow {
+  id: string;
+  title: string;
+  company: string;
+  monitorLevel: string;
+  version: string;
+  source: string;
+  generatedAt: string;
+  status: "草稿" | "已生成" | "已归档";
+  riskTrend: string;
+}
+
+const MONITOR_REPORT_ROWS: MonitorReportRow[] = [
+  {
+    id: "SKILL-CRM-HD-20260415-002",
+    title: "信贷风险定期监控报告（深度分析版）",
+    company: "某大型房企B（破产重整）",
+    monitorLevel: "最高级（日监控）",
+    version: "v3.0",
+    source: "Agent + 人工复核",
+    generatedAt: "2026-04-15 10:00",
+    status: "已归档",
+    riskTrend: "持续恶化",
+  },
+  {
+    id: "RPT-POST-20260418-011",
+    title: "贷后预警客户监控报告",
+    company: "XX科技有限公司",
+    monitorLevel: "高风险（日监控）",
+    version: "v1.2",
+    source: "预警核查工作台",
+    generatedAt: "2026-04-18 11:30",
+    status: "草稿",
+    riskTrend: "待核查",
+  },
+  {
+    id: "RPT-POST-20260418-008",
+    title: "税易贷客户风险跟踪报告",
+    company: "YY贸易有限公司",
+    monitorLevel: "高风险（日监控）",
+    version: "v1.1",
+    source: "定时任务",
+    generatedAt: "2026-04-18 09:20",
+    status: "已生成",
+    riskTrend: "短期上升",
+  },
+];
+
 function buildVintageChartRows(): Record<string, string | number>[] {
   const mobKeys = ["m0", "m1", "m2", "m3", "m4", "m5", "m6"] as const;
   return mobKeys.map((k, i) => {
@@ -153,9 +202,9 @@ function VintageTab() {
           { title: "M1", dataIndex: "m1", width: 56, render: (v: number) => <Text style={{ fontSize: 13 }}>{v ?? "—"}</Text> },
           { title: "M2", dataIndex: "m2", width: 56, render: (v: number) => <Text style={{ fontSize: 13 }}>{v ?? "—"}</Text> },
           { title: "M3", dataIndex: "m3", width: 56, render: (v: number) => <Text style={{ fontSize: 13 }}>{v ?? "—"}</Text> },
-          { title: "M4", dataIndex: "m4", width: 56, render: (v: number) => <Text style={{ fontSize: 13 }}>{v ?? "—"}</Text> },
-          { title: "M5", dataIndex: "m5", width: 56, render: (v: number) => <Text style={{ fontSize: 13 }}>{v ?? "—"}</Text> },
-          { title: "M6", dataIndex: "m6", width: 56, render: (v: number) => <Text style={{ fontSize: 13 }}>{v ?? "—"}</Text> },
+          { title: "M4", dataIndex: "m4", width: 56, render: (v: number | null) => <Text style={{ fontSize: 13 }}>{v ?? "—"}</Text> },
+          { title: "M5", dataIndex: "m5", width: 56, render: (v: number | null) => <Text style={{ fontSize: 13 }}>{v ?? "—"}</Text> },
+          { title: "M6", dataIndex: "m6", width: 56, render: (v: number | null) => <Text style={{ fontSize: 13 }}>{v ?? "—"}</Text> },
         ]}
         rowKey="month"
         size="small"
@@ -190,13 +239,13 @@ function RollRateTab() {
             </thead>
             <tbody>
               {ROLL_MATRIX.map((row, ri) => (
-                <tr key={ri}>
+                <tr key={ROLL_MATRIX_LABELS[ri]}>
                   <td className="border border-[var(--color-border-soft)] p-2 bg-[#fafafa] font-medium text-text-secondary">
                     {ROLL_MATRIX_LABELS[ri]}
                   </td>
                   {row.map((cell, ci) => (
                     <td
-                      key={ci}
+                      key={ROLL_MATRIX_LABELS[ci]}
                       className="border border-[var(--color-border-soft)] p-2 text-center tabular-nums"
                       style={{ backgroundColor: matrixCellColor(cell) }}
                     >
@@ -322,7 +371,7 @@ function RmPerformanceTab() {
   return (
     <div className="space-y-4">
       <Text type="secondary" className="text-xs block">
-        客户经理（RM）在贷后预警处置、回款闭环上的工作量与结果指标（演示）。
+        客户经理（RM）在贷后处置闭环、回款闭环上的工作量与结果指标（演示）。
       </Text>
       <Table
         size="small"
@@ -384,8 +433,87 @@ function IndustryRiskTab() {
   );
 }
 
+function MonitorReportLibraryTab() {
+  const columns: ColumnsType<MonitorReportRow> = [
+    {
+      title: "报告名称",
+      dataIndex: "title",
+      width: 220,
+      render: (v: string, row) => (
+        <div className="min-w-0">
+          <Text strong className="text-[13px] block truncate">{v}</Text>
+          <Text type="secondary" className="text-[12px] block truncate">审计留档编号：{row.id}</Text>
+        </div>
+      ),
+    },
+    { title: "目标企业", dataIndex: "company", width: 180 },
+    { title: "监控级别", dataIndex: "monitorLevel", width: 140 },
+    { title: "版本", dataIndex: "version", width: 80 },
+    { title: "生成来源", dataIndex: "source", width: 120 },
+    { title: "生成时间", dataIndex: "generatedAt", width: 140 },
+    {
+      title: "风险趋势",
+      dataIndex: "riskTrend",
+      width: 110,
+      render: (v: string) => <Tag color={v.includes("恶化") || v.includes("上升") ? "red" : "orange"} className="!m-0">{v}</Tag>,
+    },
+    {
+      title: "状态",
+      dataIndex: "status",
+      width: 90,
+      render: (v: MonitorReportRow["status"]) => <Tag color={v === "已归档" ? "green" : v === "已生成" ? "blue" : "default"} className="!m-0">{v}</Tag>,
+    },
+    {
+      title: "操作",
+      key: "actions",
+      fixed: "right",
+      width: 148,
+      render: () => (
+        <Space size={4}>
+          <Button size="small" icon={<EyeOutlined />}>预览</Button>
+          <Button size="small" icon={<DownloadOutlined />}>下载</Button>
+        </Space>
+      ),
+    },
+  ];
+
+  return (
+    <div className="space-y-4">
+      <div className="glass-panel p-4">
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <Text strong className="text-sm block layout-mb-sm">监控报告库</Text>
+            <Text type="secondary" className="text-xs block max-w-3xl">
+              汇总从预警核查工作台、定时监控任务和 Agent 辅助生成的单客贷后监控报告，支持预览、下载、审计留档与后续复盘。
+            </Text>
+          </div>
+          <Space wrap>
+            <Button size="small" icon={<AuditOutlined />}>审计导出</Button>
+            <Button type="primary" size="small" icon={<DownloadOutlined />}>批量下载</Button>
+          </Space>
+        </div>
+        <div className="mt-3 flex flex-wrap gap-2 text-xs">
+          <Tag color="processing" className="!m-0">生成来源：手动 / 定时 / Agent</Tag>
+          <Tag color="warning" className="!m-0">报告链路：预警 → 核查 → 报告 → 归档</Tag>
+          <Tag className="!m-0">审计留档编号：SKILL-CRM-HD-20260415-002</Tag>
+        </div>
+      </div>
+
+      <Table
+        size="small"
+        rowKey="id"
+        dataSource={MONITOR_REPORT_ROWS}
+        pagination={false}
+        columns={columns}
+        scroll={{ x: 1260 }}
+      />
+    </div>
+  );
+}
+
 export default function Reports() {
   const items = [
+    { key: "monitor_reports", label: "监控报告库", children: <MonitorReportLibraryTab /> },
     { key: "vintage", label: "Vintage 分析", children: <VintageTab /> },
     { key: "rollrate", label: "迁徙率 / 矩阵", children: <RollRateTab /> },
     { key: "warning_eff", label: "预警有效率", children: <WarningEfficiencyTab /> },
@@ -398,10 +526,10 @@ export default function Reports() {
     <ModulePageShell
       title="报表中心"
       subtitle="贷后扩展报表：Vintage、迁徙矩阵、预警有效率、催收效率、RM 业绩与行业风险（演示数据）；已移除授信期模型监控占位 Tab。"
-      breadcrumb={["资产监控", "报表中心"]}
+      breadcrumb={["预警监控", "报表中心"]}
     >
       <ModuleSectionCard noPadding>
-        <Tabs items={items} className="layout-px-lg layout-pb-md" />
+        <Tabs items={items} defaultActiveKey="monitor_reports" className="layout-px-lg layout-pb-md" />
       </ModuleSectionCard>
     </ModulePageShell>
   );

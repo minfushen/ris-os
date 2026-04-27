@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useState } from "react";
-import { Alert, App, Typography } from "antd";
+import { App, Typography } from "antd";
 import "./postLoan/post-loan-ui.css";
 
 const { Text } = Typography;
 import { useNavigate } from "react-router-dom";
 import { useTaskStore } from "@/store/taskStore";
 import { api, API_BASE_URL } from "@/api/client";
+import { PLATFORM_NAME, PLATFORM_SUBTITLE } from "@/config/brand";
 import type { TaskType, TaskResponse } from "@/types";
 import type { AnalysisFormValues } from "./AnalysisForm";
 import type { ReviewFormValues } from "./ReviewForm";
@@ -165,45 +166,32 @@ export default function Home() {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-col gap-3">
       {taskError && (
-        <Alert
-          type="warning"
-          showIcon
-          message="无法连接任务服务"
-          description={`${taskError}。当前前端请求基址：${API_BASE_URL}。队列区为演示数据；接入后端后待核查列表可与 GET /tasks 同步。`}
-          className="rounded-xl pl-fade-in-up"
-          style={{ borderRadius: 12 }}
-        />
+        <details
+          aria-label="任务服务调试信息（任务服务连接失败）"
+          className="max-w-full self-start rounded-md border border-border-soft bg-white/70 px-2.5 py-1 text-[12px] text-text-muted shadow-sm"
+        >
+          <summary className="cursor-pointer select-none text-text-secondary">
+            <span className="sr-only">任务服务连接失败：</span>
+            <span>任务服务调试信息</span>
+          </summary>
+          <div className="mt-1 max-w-[760px] leading-relaxed">
+            无法连接任务服务：{taskError}。当前前端请求基址：{API_BASE_URL}。队列区为演示数据；接入后端后待核查列表可与 GET /tasks 同步。
+          </div>
+        </details>
       )}
 
-      {/* 页面标题区 - 吸顶效果 */}
-      <div 
-        className="rounded-xl px-6 py-5 sticky top-0 z-10 pl-fade-in-up"
-        style={{
-          background: "linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(250, 251, 252, 0.95) 100%)",
-          backdropFilter: "blur(8px)",
-          WebkitBackdropFilter: "blur(8px)",
-          border: "1px solid rgba(0, 0, 0, 0.06)",
-          boxShadow: "0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.02)"
-        }}
-      >
-        <Text strong className="text-[19px] text-[#1a1a1a] font-semibold leading-tight">
-          首页 · 贷后资产总览
+      <div className="pl-home-page-header pl-fade-in-up">
+        <Text strong className="block font-medium leading-tight text-text-primary" style={{ fontSize: "var(--font-size-lg)" }}>
+          {PLATFORM_NAME}
         </Text>
-        <Text className="pl-aux-text mt-2 block text-[13px] leading-relaxed opacity-75">
-          今日有没有新增预警客户、资产质量有没有恶化、我的处置工单有没有超时 — 三类问题一页收口。
+        <Text className="mt-1.5 block font-normal leading-relaxed text-text-secondary" style={{ fontSize: "var(--font-size-base)" }}>
+          {PLATFORM_SUBTITLE}
         </Text>
       </div>
 
-      {/* KPI 区域 - 添加背景板 */}
-      <div 
-        className="rounded-2xl p-5 pl-fade-in-up"
-        style={{
-          background: "linear-gradient(135deg, rgba(59, 107, 125, 0.02) 0%, rgba(59, 107, 125, 0.01) 100%)",
-          border: "1px solid rgba(59, 107, 125, 0.08)"
-        }}
-      >
+      <div className="pl-home-kpi-shell pl-fade-in-up">
         <PostLoanCoreKpis onDrill={handleKpiDrill} />
       </div>
 

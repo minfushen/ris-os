@@ -82,7 +82,7 @@ export default function Inspection() {
     <ModulePageShell
       title="复盘与质检"
       subtitle="对象由授信材料改为「RM 预警核查处置记录」：评估处置时效、结论准确性、留痕完整性；不合格样本回流训练 / 规则（演示）。已移除授信侧 PDF 上传与 OCR 流程。"
-      breadcrumb={["案件处置", "复盘与质检"]}
+      breadcrumb={["处置闭环", "复盘与质检"]}
       actions={
         <Button type="primary" icon={<PlusOutlined />} size="small">
           创建抽检任务

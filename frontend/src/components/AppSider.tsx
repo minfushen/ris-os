@@ -1,124 +1,59 @@
 import { useState } from "react";
-import { Typography, Badge } from "antd";
+import { Badge } from "antd";
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
-  HomeOutlined,
-  DashboardOutlined,
-  ControlOutlined,
-  SafetyOutlined,
-  DatabaseOutlined,
-  BookOutlined,
-  PartitionOutlined,
-  FundOutlined,
-  AlertOutlined,
-  CustomerServiceOutlined,
-  AuditOutlined,
-  FileTextOutlined,
-  TagsOutlined,
 } from "@ant-design/icons";
 import { useLocation, useNavigate } from "react-router-dom";
+import AppBrandMark from "@/components/AppBrandMark";
+import { PLATFORM_NAME } from "@/config/brand";
+import { getSiderDutySubtitle } from "@/config/demoSession";
+import { PRIMARY_NAV, type NavItem } from "@/config/navigation";
 
-const { Text } = Typography;
-
-interface NavItem {
-  key: string;
-  label: string;
-  icon?: React.ReactNode;
-  path?: string;
-  children?: NavItem[];
-  badge?: number | string;
+function toPathname(path?: string): string | undefined {
+  return path?.split(/[?#]/)[0];
 }
 
-/** 贷后场景侧栏导航 */
-const PRIMARY_NAV: NavItem[] = [
-  {
-    key: "home",
-    label: "首页·贷后资产总览",
-    icon: <HomeOutlined />,
-    path: "/",
-  },
-  {
-    key: "monitor",
-    label: "资产监控",
-    icon: <DashboardOutlined />,
-    children: [
-      { key: "asset-quality", label: "资产质量看板", icon: <FundOutlined />, path: "/monitor/asset-quality" },
-      { key: "dashboard", label: "预警探照灯", icon: <AlertOutlined />, path: "/monitor/dashboard" },
-      { key: "o2o", label: "策略效果追踪", icon: <DashboardOutlined />, path: "/monitor/o2o", badge: 2 },
-      { key: "labeling", label: "标注飞轮", icon: <TagsOutlined />, path: "/monitor/labeling" },
-      { key: "reports", label: "报表中心", icon: <FileTextOutlined />, path: "/monitor/reports" },
-    ],
-  },
-  {
-    key: "strategy",
-    label: "预警策略",
-    icon: <ControlOutlined />,
-    children: [
-      { key: "products", label: "产品线策略集", icon: <ControlOutlined />, path: "/strategy/products" },
-      { key: "rules", label: "预警规则配置", icon: <ControlOutlined />, path: "/strategy/rules" },
-      { key: "backtest", label: "规则仿真回测", icon: <ControlOutlined />, path: "/strategy/backtest" },
-      { key: "publish", label: "策略发布审批", icon: <ControlOutlined />, path: "/strategy/publish" },
-    ],
-  },
-  {
-    key: "risk",
-    label: "案件处置",
-    icon: <SafetyOutlined />,
-    children: [
-      { key: "workbench", label: "预警核查工作台", icon: <SafetyOutlined />, path: "/risk/workbench" },
-      { key: "collection", label: "催收作业管理", icon: <CustomerServiceOutlined />, path: "/risk/collection" },
-      { key: "inspection", label: "复盘与质检", icon: <AuditOutlined />, path: "/risk/inspection" },
-    ],
-  },
-  {
-    key: "knowledge",
-    label: "知识沉淀",
-    icon: <BookOutlined />,
-    children: [
-      { key: "knowledge-home", label: "知识总览", icon: <BookOutlined />, path: "/knowledge" },
-      { key: "scripts", label: "催收话术库", icon: <BookOutlined />, path: "/knowledge/scripts" },
-      { key: "rule-cases", label: "规则调优案例", icon: <FileTextOutlined />, path: "/knowledge/rule-cases" },
-      { key: "fraud-patterns", label: "风险模式库", icon: <SafetyOutlined />, path: "/knowledge/fraud-patterns" },
-    ],
-  },
-  {
-    key: "feature-data",
-    label: "特征与数据",
-    icon: <PartitionOutlined />,
-    children: [
-      { key: "studio", label: "贷后特征工作室", icon: <PartitionOutlined />, path: "/feature/studio" },
-      { key: "dictionary", label: "数据源管理", icon: <DatabaseOutlined />, path: "/data/dictionary" },
-    ],
-  },
-];
+function pathInGroup(item: NavItem, pathname: string): boolean {
+  if (item.children?.some((c) => toPathname(c.path) === pathname)) return true;
+  if (item.moreChildren?.some((c) => toPathname(c.path) === pathname)) return true;
+  return false;
+}
 
-function getParentKey(path: string): string | null {
-  for (const item of PRIMARY_NAV) {
-    if (item.children) {
-      for (const child of item.children) {
-        if (child.path === path) {
-          return item.key;
-        }
-      }
-    }
+function isSameNavTarget(path: string | undefined, location: ReturnType<typeof useLocation>) {
+  if (!path) return false;
+  const currentPath = location.pathname;
+  const currentWithHash = `${location.pathname}${location.hash}`;
+  const currentWithQuery = `${location.pathname}${location.search}`;
+  const currentFull = `${location.pathname}${location.search}${location.hash}`;
+
+  if (path.includes("?")) {
+    return path === currentWithQuery || path === currentFull;
   }
-  return null;
+  if (path.includes("#")) {
+    return path === currentWithHash || path === currentFull;
+  }
+  return toPathname(path) === currentPath;
 }
 
 export default function AppSider() {
   const location = useLocation();
   const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(false);
-  const [expandedGroups, setExpandedGroups] = useState<string[]>(() => {
-    const parentKey = getParentKey(location.pathname);
-    return parentKey ? [parentKey] : [];
-  });
+  const [collapsedGroups, setCollapsedGroups] = useState<string[]>([]);
 
   const currentPath = location.pathname;
 
-  const toggleGroup = (key: string) => {
-    setExpandedGroups((prev) => (prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key]));
+  const isLeafActive = (child: NavItem) => {
+    const hashEntryIsActive = PRIMARY_NAV.some(
+      (item) =>
+        item.children?.some((c) => isSameNavTarget(c.path, location) && c.path?.includes("#")) ||
+        item.moreChildren?.some((c) => isSameNavTarget(c.path, location) && c.path?.includes("#")),
+    );
+    if (hashEntryIsActive && child.path === currentPath && !child.path.includes("#")) {
+      return false;
+    }
+    return isSameNavTarget(child.path, location);
   };
 
   const handleNavClick = (path: string | undefined) => {
@@ -128,99 +63,165 @@ export default function AppSider() {
   };
 
   const isActive = (item: NavItem): boolean => {
-    if (item.path === currentPath) return true;
-    if (item.children) {
-      return item.children.some((child) => child.path === currentPath);
+    if (isSameNavTarget(item.path, location)) return true;
+    if (item.children || item.moreChildren) {
+      return pathInGroup(item, currentPath);
     }
     return false;
   };
 
-  const isChildActive = (child: NavItem): boolean => {
-    return child.path === currentPath;
+  const isGroupOpen = (item: NavItem) => isActive(item) || !collapsedGroups.includes(item.key);
+
+  const toggleGroup = (item: NavItem) => {
+    if (isActive(item)) return;
+    setCollapsedGroups((prev) =>
+      prev.includes(item.key) ? prev.filter((key) => key !== item.key) : [...prev, item.key],
+    );
+  };
+
+  const renderLeaf = (child: NavItem) => (
+    <div
+      key={child.key}
+      className={`sider-nav-item sider-nav-item--l2 ${isLeafActive(child) ? "sider-nav-item-active" : ""}`}
+      onClick={() => handleNavClick(child.path)}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          handleNavClick(child.path);
+        }
+      }}
+      role="button"
+      tabIndex={0}
+      aria-current={isLeafActive(child) ? "page" : undefined}
+    >
+      <span className="sider-nav-item__icon inline-flex">{child.icon ?? <span className="inline-block w-3.5" />}</span>
+      <span className="sider-nav-item__text truncate">{child.label}</span>
+      {child.badge != null ? <Badge count={child.badge} size="small" className="sider-nav-badge shrink-0" /> : null}
+    </div>
+  );
+
+  const renderGroup = (item: NavItem) => {
+    const groupOpen = isGroupOpen(item);
+    const groupPanelId = `sider-group-${item.key}`;
+
+    return (
+      <>
+        <div
+          className={`sider-nav-item sider-nav-item--l1 ${isActive(item) ? "sider-nav-item--group-active" : ""} ${
+            groupOpen ? "sider-nav-item--group-open" : ""
+          }`}
+          onClick={() => toggleGroup(item)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              toggleGroup(item);
+            }
+          }}
+          role="button"
+          tabIndex={0}
+          aria-expanded={groupOpen}
+          aria-controls={groupPanelId}
+          aria-disabled={isActive(item) ? true : undefined}
+          title={isActive(item) ? "当前页面所在分组保持展开" : undefined}
+        >
+          <span className="sider-nav-item__icon inline-flex">{item.icon}</span>
+          {!collapsed ? (
+            <>
+              <span className="sider-nav-group-title truncate">{item.label}</span>
+              <span
+                className="sider-nav-item__chevron"
+                style={{
+                  transform: groupOpen ? "rotate(90deg)" : "rotate(0deg)",
+                }}
+                aria-hidden
+              >
+                ▶
+              </span>
+            </>
+          ) : null}
+        </div>
+
+        {(item.children || item.moreChildren) && !collapsed && groupOpen ? (
+          <div id={groupPanelId} className="sider-nav-children" role="group" aria-label={`${item.label}导航`}>
+            {item.children?.map(renderLeaf)}
+            {item.moreChildren?.map(renderLeaf)}
+          </div>
+        ) : null}
+      </>
+    );
   };
 
   return (
     <aside
-      className={`glass-panel-strong flex flex-col transition-all duration-300 ${
-        collapsed ? "w-16" : "w-[220px]"
+      className={`glass-panel-strong flex flex-col shrink-0 transition-all duration-300 ${
+        collapsed ? "w-[var(--sider-collapsed-width)]" : "w-[var(--sider-width)]"
       }`}
-      style={{ minHeight: "calc(100vh - var(--header-height, 52px))" }}
+      style={{ minHeight: "calc(100vh - var(--header-height))" }}
+      aria-label="主导航"
     >
-      {/* Logo 区域 */}
-      <div className="flex flex-col items-center justify-center min-h-[3.5rem] border-b border-black/[0.06] px-3 py-2">
-        <Text strong className="text-primary text-[15px] leading-tight font-semibold">
-          {collapsed ? "🦐" : "🦐 风控 OS"}
-        </Text>
-        {!collapsed && (
-          <Text type="secondary" className="text-[10px] leading-tight mt-0.5 font-medium">
-            贷后指挥台
-          </Text>
+      <div className="sider-brand">
+        {!collapsed ? (
+          <div className="flex items-start gap-2">
+            <AppBrandMark className="shrink-0" />
+            <div className="min-w-0 flex-1">
+              <span className="sider-brand__title">{PLATFORM_NAME}</span>
+              <span className="sider-brand__subtitle">{getSiderDutySubtitle()}</span>
+            </div>
+          </div>
+        ) : (
+          <div className="flex justify-center py-1.5">
+            <AppBrandMark collapsed />
+          </div>
         )}
       </div>
 
-      {/* 导航区域 */}
-      <nav className="flex-1 py-3 overflow-y-auto">
+      <nav className="sider-nav flex-1 overflow-y-auto">
         {PRIMARY_NAV.map((item) => (
           <div key={item.key}>
-            {item.children ? (
-              <div
-                className={`sider-nav-item ${isActive(item) ? "text-primary-deep font-medium" : ""}`}
-                onClick={() => toggleGroup(item.key)}
-              >
-                <span className="text-[16px]">{item.icon}</span>
-                {!collapsed && (
-                  <>
-                    <span className="flex-1 text-[13px]">{item.label}</span>
-                    <span className="text-[10px] text-text-weak transition-transform duration-200" style={{
-                      transform: expandedGroups.includes(item.key) ? "rotate(90deg)" : "rotate(0deg)"
-                    }}>▶</span>
-                  </>
-                )}
-              </div>
+            {item.children || item.moreChildren ? (
+              renderGroup(item)
             ) : (
               <div
-                className={`sider-nav-item ${isActive(item) ? "sider-nav-item-active" : ""}`}
+                className={`sider-nav-item sider-nav-item--l1 ${isActive(item) ? "sider-nav-item-active" : ""}`}
                 onClick={() => handleNavClick(item.path)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    handleNavClick(item.path);
+                  }
+                }}
+                role="button"
+                tabIndex={0}
+                aria-current={isActive(item) ? "page" : undefined}
               >
-                <span className="text-[16px]">{item.icon}</span>
-                {!collapsed && (
-                  <>
-                    <span className="flex-1 text-[13px]">{item.label}</span>
-                    {item.badge ? <Badge count={item.badge} size="small" /> : null}
-                  </>
+                {item.badge != null ? (
+                  <Badge count={item.badge} size="small" className="sider-nav-badge">
+                    <span className="sider-nav-item__icon inline-flex">{item.icon}</span>
+                  </Badge>
+                ) : (
+                  <span className="sider-nav-item__icon inline-flex">{item.icon}</span>
                 )}
-              </div>
-            )}
-
-            {item.children && expandedGroups.includes(item.key) && !collapsed && (
-              <div className="ml-4 mt-0.5 space-y-0.5">
-                {item.children.map((child) => (
-                  <div
-                    key={child.key}
-                    className={`sider-nav-item py-2 ${isChildActive(child) ? "sider-nav-item-active" : ""}`}
-                    onClick={() => handleNavClick(child.path)}
-                  >
-                    <span className="text-[14px]">{child.icon ?? <span className="inline-block w-3.5" />}</span>
-                    <span className="flex-1 text-[12px]">{child.label}</span>
-                    {child.badge ? <Badge count={child.badge} size="small" /> : null}
-                  </div>
-                ))}
+                {!collapsed ? <span className="sider-nav-item__text">{item.label}</span> : null}
               </div>
             )}
           </div>
         ))}
       </nav>
 
-      {/* 折叠按钮 */}
       <div
-        className="flex items-center justify-center h-11 border-t border-black/[0.06] cursor-pointer hover:bg-black/[0.03] transition-colors"
+        className="sider-collapse-trigger shrink-0"
         onClick={() => setCollapsed(!collapsed)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            setCollapsed((c) => !c);
+          }
+        }}
+        role="button"
+        tabIndex={0}
+        aria-label={collapsed ? "展开侧栏" : "收起侧栏"}
       >
-        {collapsed ? (
-          <MenuUnfoldOutlined className="text-text-secondary text-[14px]" />
-        ) : (
-          <MenuFoldOutlined className="text-text-secondary text-[14px]" />
-        )}
+        {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
       </div>
     </aside>
   );

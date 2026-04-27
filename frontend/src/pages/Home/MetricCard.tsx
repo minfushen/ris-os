@@ -7,10 +7,10 @@ const { Text } = Typography;
 export type MetricCardStatus = "alert" | "attention" | "normal" | "over_threshold";
 
 const STATUS_STRIP: Record<MetricCardStatus, string> = {
-  alert: "var(--color-accent-danger, #c77b78)",
-  attention: "var(--color-accent-warning, #d7a85f)",
-  normal: "var(--color-accent-success, #5f9b7a)",
-  over_threshold: "#a34d4a",
+  alert: "var(--color-accent-danger)",
+  attention: "var(--color-accent-warning)",
+  normal: "var(--color-accent-success)",
+  over_threshold: "var(--color-danger)",
 };
 
 const STATUS_TAG_COLOR: Record<MetricCardStatus, "error" | "warning" | "success" | "magenta"> = {
@@ -21,17 +21,17 @@ const STATUS_TAG_COLOR: Record<MetricCardStatus, "error" | "warning" | "success"
 };
 
 const STATUS_VALUE_COLOR: Record<MetricCardStatus, string> = {
-  alert: "var(--color-accent-danger, #c77b78)",
-  attention: "var(--color-text-primary, #1f2a30)",
-  normal: "var(--color-accent-success, #5f9b7a)",
-  over_threshold: "#a34d4a",
+  alert: "var(--color-accent-danger)",
+  attention: "var(--color-text-primary)",
+  normal: "var(--color-accent-success)",
+  over_threshold: "var(--color-danger)",
 };
 
-const BAR_TINT: Record<MetricCardStatus, [string, string]> = {
-  alert: ["rgba(199, 123, 120, 0.35)", "rgba(199, 123, 120, 0.9)"],
-  attention: ["rgba(215, 168, 95, 0.35)", "rgba(215, 168, 95, 0.9)"],
-  normal: ["rgba(95, 155, 122, 0.35)", "rgba(95, 155, 122, 0.9)"],
-  over_threshold: ["rgba(163, 77, 74, 0.35)", "rgba(163, 77, 74, 0.95)"],
+const BAR_HI: Record<MetricCardStatus, string> = {
+  alert: "color-mix(in srgb, var(--color-danger-light) 90%, transparent)",
+  attention: "color-mix(in srgb, var(--color-warning-light) 90%, transparent)",
+  normal: "color-mix(in srgb, var(--color-success-light) 90%, transparent)",
+  over_threshold: "color-mix(in srgb, var(--color-danger) 92%, transparent)",
 };
 
 function defaultTrendBars(status: MetricCardStatus): number[] {
@@ -58,7 +58,7 @@ function normalizeToSeven(raw?: number[]): number[] {
 }
 
 function MiniTrendBars({ heights, status }: { heights: number[]; status: MetricCardStatus }) {
-  const [, hi] = BAR_TINT[status];
+  const hi = BAR_HI[status];
   return (
     <div className="flex h-8 items-end gap-0.5 pt-1">
       {heights.map((h, i) => (
@@ -168,7 +168,7 @@ export default function MetricCard({
 
   return (
     <div
-      className="relative layout-pl-md overflow-hidden rounded-lg border border-border-soft bg-white shadow-[0_1px_4px_rgba(0,0,0,0.06)] text-left transition-shadow hover:shadow-[0_4px_12px_rgba(0,0,0,0.08)]"
+      className="relative layout-pl-md overflow-hidden rounded-lg border border-border-soft bg-[var(--color-bg-container)] shadow-[var(--shadow-card)] text-left transition-shadow hover:shadow-[var(--shadow-card-hover)]"
     >
       <div
         className="absolute left-0 top-0 bottom-0 w-1 rounded-l-[inherit]"

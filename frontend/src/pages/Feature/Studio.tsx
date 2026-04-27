@@ -156,7 +156,7 @@ export default function FeatureStudio() {
     <ModulePageShell
       title="贷后特征工作室"
       subtitle="数据来自 GET /api/scenario/post-loan/feature-studio（与 /scenario/post-loan 并存）；PSI 按产品线分面，阈值可本地调整"
-      breadcrumb={["特征与数据", "贷后特征工作室"]}
+      breadcrumb={["数据与特征", "贷后特征工作室"]}
       actions={
         <Space>
           <Button icon={<SyncOutlined />} loading={loading} onClick={() => void load()}>

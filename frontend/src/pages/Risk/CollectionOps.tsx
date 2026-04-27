@@ -90,7 +90,7 @@ export default function CollectionOps() {
     <ModulePageShell
       title="催收作业管理"
       subtitle="M1 / M2 / M3+ 客户池、策略匹配、触达与承诺还款记录；承诺 SLA 跟踪；可跳转话术库（演示）"
-      breadcrumb={["案件处置", "催收作业管理"]}
+      breadcrumb={["处置闭环", "催收作业管理"]}
       actions={
         <Link to="/knowledge/scripts">
           <Button type="default" size="small">催收话术库</Button>

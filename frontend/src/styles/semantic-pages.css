@@ -1,0 +1,621 @@
+/**
+ * 页面级语义表面：壳层、首页区块、卡片、工作台、环境标签。
+ * 颜色与尺寸一律引用 tokens.css，不在此写 hex。
+ */
+
+/* —— 应用壳 —— */
+.page-shell-root {
+  min-height: 100vh;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.5) 0%, rgba(244, 247, 248, 0) 220px),
+    var(--color-bg-layout);
+}
+
+.page-shell-body-row {
+  display: flex;
+  min-height: calc(100vh - var(--header-height));
+}
+
+.page-shell-main {
+  flex: 1;
+  min-width: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: var(--content-padding-y) var(--content-padding-x);
+}
+
+.page-shell-main-inner {
+  width: 100%;
+  max-width: min(100%, var(--content-max-width));
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* —— 贷后首页 —— */
+.pl-home-page-header {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-sticky);
+  max-height: 20vh;
+  overflow: auto;
+  border-radius: var(--radius-panel);
+  border: 0.5px solid var(--color-card-border);
+  padding: var(--spacing-md) var(--spacing-lg);
+  background-color: rgba(255, 255, 255, 0.98);
+  box-shadow: var(--shadow-sm);
+}
+
+.pl-home-kpi-shell {
+  border-radius: var(--radius-panel);
+  border: 0.5px solid var(--color-card-border);
+  background-color: var(--color-primary-bg);
+  padding: var(--spacing-lg);
+}
+
+/* —— 通用卡片 / 图表容器 / 表格外壳 —— */
+.card-surface {
+  border-radius: var(--radius-lg);
+  border: 0.5px solid var(--color-card-border);
+  background-color: var(--color-bg-container);
+  box-shadow: var(--shadow-card);
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast),
+    background-color var(--transition-fast);
+}
+
+.card-surface:hover {
+  border-color: var(--color-primary-border);
+  box-shadow: var(--shadow-card-hover);
+}
+
+.chart-card {
+  border-radius: var(--radius-panel);
+  border: 0.5px solid var(--color-card-border);
+  background-color: var(--color-bg-container);
+  box-shadow: var(--shadow-surface);
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.chart-card:hover {
+  border-color: var(--color-primary-border);
+  box-shadow: var(--shadow-card-hover);
+}
+
+.chart-card-body {
+  padding: var(--spacing-md);
+  min-height: 0;
+}
+
+.table-shell {
+  border-radius: var(--radius-lg);
+  border: 0.5px solid var(--color-card-border);
+  overflow: hidden;
+  background-color: var(--color-bg-container);
+  box-shadow: var(--shadow-sm);
+}
+
+/* —— KPI 监控页大数卡 —— */
+.kpi-stat-card {
+  border-radius: var(--radius-lg);
+  border: 0.5px solid var(--color-card-border);
+  background-color: var(--color-bg-container);
+  padding: var(--spacing-lg);
+  box-shadow: var(--shadow-sm);
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast),
+    background-color var(--transition-fast);
+}
+
+.kpi-stat-card:hover {
+  border-color: var(--color-primary-border);
+  background-color: #ffffff;
+  box-shadow: var(--shadow-card-hover);
+}
+
+.kpi-stat-card__label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-normal);
+  color: var(--color-text-tertiary);
+  display: block;
+}
+
+.kpi-stat-card__value {
+  font-size: var(--font-size-kpi-max);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-tight);
+  display: block;
+  margin-top: var(--spacing-xs);
+}
+
+/* —— 顶栏环境标签 —— */
+.env-tag--uat {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-normal);
+  line-height: 1.2;
+  border: none !important;
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--color-warning-light) 18%, transparent) 0%,
+    color-mix(in srgb, var(--color-warning-light) 8%, transparent) 100%
+  ) !important;
+  color: var(--color-warning) !important;
+}
+
+@supports not (background: color-mix(in srgb, red 50%, blue)) {
+  .env-tag--uat {
+    background: linear-gradient(
+      135deg,
+      rgba(239, 159, 39, 0.14) 0%,
+      rgba(239, 159, 39, 0.06) 100%
+    ) !important;
+  }
+}
+
+/* —— 工作台双栏 —— */
+.workbench-layout {
+  display: flex;
+  flex-direction: column;
+  gap: var(--layout-workbench-gap);
+  min-height: calc(100vh - var(--header-height) - var(--workbench-page-header-offset));
+}
+
+@media (min-width: 1024px) {
+  .workbench-layout {
+    flex-direction: row;
+  }
+}
+
+.workbench-pane {
+  border-radius: var(--radius-panel);
+  border: 0.5px solid var(--color-card-border);
+  background-color: var(--color-bg-container);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.workbench-pane:hover {
+  box-shadow: var(--shadow-surface);
+}
+
+.workbench-pane--queue {
+  width: 100%;
+  flex-shrink: 0;
+}
+
+@media (min-width: 1024px) {
+  .workbench-pane--queue {
+    width: var(--layout-workbench-left-width);
+  }
+}
+
+.workbench-pane--detail {
+  flex: 1;
+  min-width: 0;
+}
+
+.workbench-pane__head {
+  flex-shrink: 0;
+  border-bottom: 0.5px solid var(--color-border-light);
+  padding: var(--spacing-sm) var(--spacing-md);
+}
+
+.workbench-pane__scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: var(--spacing-md);
+}
+
+/** 结论区正上方：知识闭环等（设计稿顺序：历史 → 知识提示 → 固定结论） */
+.workbench-pane__prefoot {
+  flex-shrink: 0;
+  border-top: 0.5px solid var(--color-border-light);
+  background-color: var(--color-bg-layout);
+  padding: var(--spacing-md);
+}
+
+.workbench-pane__foot {
+  flex-shrink: 0;
+  border-top: 0.5px solid var(--color-card-border);
+  background-color: var(--color-bg-layout);
+  padding: var(--spacing-md);
+}
+
+.workbench-filter-toolbar {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-xs);
+  max-width: 100%;
+}
+
+.workbench-filter-toolbar__q {
+  width: 180px;
+  min-width: 140px;
+}
+
+.workbench-filter-toolbar .ant-select {
+  min-width: 100px;
+}
+
+/** 客户快照 3×2（设计稿基础信息栅格） */
+.workbench-snapshot-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--spacing-sm);
+}
+
+@media (max-width: 900px) {
+  .workbench-snapshot-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.workbench-snapshot-cell {
+  min-width: 0;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--radius-lg);
+  border: 0.5px solid var(--color-border-soft);
+  background-color: var(--color-bg-container);
+  transition:
+    border-color var(--transition-fast),
+    background-color var(--transition-fast);
+}
+
+.workbench-snapshot-cell:hover {
+  border-color: var(--color-primary-border);
+  background-color: var(--color-primary-bg);
+}
+
+.workbench-snapshot-cell__label {
+  display: block;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-normal);
+  color: var(--color-text-tertiary);
+  margin-bottom: 2px;
+}
+
+.workbench-snapshot-cell__value {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+  line-height: var(--line-height-tight);
+}
+
+/** 在贷摘要：单层弱边容器，避免再套一层「卡片感」 */
+.workbench-inset-panel {
+  padding: var(--spacing-md);
+  border-radius: var(--radius-lg);
+  border: 0.5px solid var(--color-border-soft);
+  background-color: var(--color-primary-bg);
+}
+
+.workbench-inset-panel__title {
+  margin: 0 0 var(--spacing-xs);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+}
+
+.workbench-inset-panel__body {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-normal);
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-base);
+}
+
+/** 触发信号：按严重度色条（红 / 琥珀 / 蓝） */
+.workbench-signal-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.workbench-signal {
+  margin: 0;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--radius-lg);
+  border: 0.5px solid var(--color-border-soft);
+  border-inline-start-width: 4px;
+  border-inline-start-style: solid;
+  background-color: var(--color-bg-container);
+}
+
+.workbench-signal--high {
+  border-inline-start-color: var(--color-danger-light);
+}
+
+.workbench-signal--medium {
+  border-inline-start-color: var(--color-warning-light);
+}
+
+.workbench-signal--low {
+  border-inline-start-color: var(--color-info);
+}
+
+.workbench-signal__title {
+  margin: 0 0 2px;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+}
+
+.workbench-signal__desc {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-normal);
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-base);
+}
+
+.text-sla-emphasis {
+  color: var(--color-sla-warning);
+}
+
+/**
+ * 探照灯式业务提示（全站复用）：一律引用 tokens，勿用 Tailwind 调色板色阶。
+ *
+ * 行内条：`searchlight-callout-inline` + 其一
+ *   `--locked` 中性 · `--success` 成功绿 · `--info` 信息蓝 · `--danger` 危险红
+ *
+ * 块级「影响量化」类面板：`searchlight-callout-impact`（默认=警告琥珀语义）
+ *   由 `Searchlight.tsx` 按 `RealtimeAlert.type` 自动叠加：
+ *   `false_reject`（误杀/规则误杀）→ `--info`；`throughput_drop`（策略熔断）→ `--danger`
+ */
+.searchlight-callout-inline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  padding: var(--spacing-compact) var(--spacing-sm);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.searchlight-callout-inline--locked {
+  border: 1px solid var(--color-border);
+  background-color: var(--color-bg-layout);
+  color: var(--color-text-secondary);
+}
+
+.searchlight-callout-inline--locked .anticon {
+  color: var(--color-text-tertiary);
+}
+
+.searchlight-callout-inline--success {
+  border: 1px solid var(--color-success-border);
+  background-color: var(--color-success-bg);
+  color: var(--color-success);
+}
+
+.searchlight-callout-inline--info {
+  border: 1px solid var(--color-info-border);
+  background-color: var(--color-info-bg);
+  color: var(--color-info);
+}
+
+.searchlight-callout-inline--info .anticon {
+  color: var(--color-info-light);
+}
+
+.searchlight-callout-inline--danger {
+  border: 1px solid var(--color-error-border);
+  background-color: var(--color-error-bg);
+  color: var(--color-danger);
+}
+
+.searchlight-callout-inline--danger .anticon {
+  color: var(--color-danger-light);
+}
+
+.searchlight-callout-impact {
+  margin-top: var(--spacing-sm);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-warning-border);
+  background-color: var(--color-warning-bg-strong);
+  padding: 10px var(--spacing-md);
+}
+
+.searchlight-callout-impact__title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-warning);
+  margin: 0;
+}
+
+.searchlight-callout-impact.searchlight-callout-impact--info {
+  border-color: var(--color-info-border);
+  background-color: var(--color-info-bg);
+}
+
+.searchlight-callout-impact.searchlight-callout-impact--info .searchlight-callout-impact__title {
+  color: var(--color-info);
+}
+
+.searchlight-callout-impact.searchlight-callout-impact--danger {
+  border-color: var(--color-error-border);
+  background-color: var(--color-error-bg-strong);
+}
+
+.searchlight-callout-impact.searchlight-callout-impact--danger .searchlight-callout-impact__title {
+  color: var(--color-danger);
+}
+
+button.searchlight-btn-claimed-disabled.ant-btn.ant-btn-default.ant-btn-disabled,
+button.searchlight-btn-claimed-disabled.ant-btn.ant-btn-default:disabled {
+  border-color: var(--color-success-border) !important;
+  color: var(--color-success) !important;
+  opacity: 1;
+}
+
+/* —— 策略 / 产品线策略集：轻量分组面 + 单层卡片边，避免「框套框」噪感 —— */
+.strategy-products-toolbar {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-xs);
+  margin-bottom: var(--spacing-md);
+  max-width: 100%;
+}
+
+.strategy-products-toolbar__label {
+  flex-shrink: 0;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-normal);
+  color: var(--color-text-tertiary);
+  line-height: var(--line-height-tight);
+}
+
+.strategy-products-toolbar__search {
+  flex: 1;
+  min-width: 200px;
+  max-width: 360px;
+}
+
+.strategy-products-toolbar__filter {
+  min-width: 108px;
+  width: 120px;
+}
+
+.strategy-product-column {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 12rem;
+  padding: var(--spacing-lg);
+  border-radius: var(--radius-lg);
+  background-color: var(--color-bg-layout);
+  border: 0.5px solid var(--color-border-soft);
+  border-inline-start-width: 4px;
+  border-inline-start-style: solid;
+  border-inline-start-color: var(--strategy-column-accent, var(--color-primary));
+  box-sizing: border-box;
+}
+
+.strategy-product-column__header {
+  margin-bottom: var(--spacing-md);
+  flex-shrink: 0;
+}
+
+.strategy-product-column__title {
+  margin: 0;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-tight);
+}
+
+/** 产品线特征维度：Primary BG 衬底的 11px 胶囊，强化与策略卡的归属关系 */
+.strategy-product-dims {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-xs);
+  margin-top: var(--spacing-sm);
+}
+
+.strategy-product-dim-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px var(--spacing-sm);
+  border-radius: var(--radius-pill);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-normal);
+  line-height: 1.45;
+  color: var(--color-text-secondary);
+  background-color: var(--color-primary-bg);
+  border: 0.5px solid var(--color-primary-border);
+}
+
+/** 有效率 / 误报率下的 8px 健康度微条（非 Sparkline 曲线，为比例条） */
+.strategy-mini-spark {
+  margin-top: var(--spacing-xs);
+  height: 8px;
+  border-radius: var(--radius-tag);
+  background-color: var(--color-progress-trail);
+  overflow: hidden;
+}
+
+.strategy-mini-spark__fill {
+  height: 100%;
+  min-width: 0;
+  border-radius: inherit;
+  transition: width var(--transition-base);
+}
+
+.strategy-mini-spark__fill--success {
+  background-color: var(--color-success-light);
+}
+
+.strategy-mini-spark__fill--warning {
+  background-color: var(--color-warning-light);
+}
+
+.strategy-product-column__list {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  min-height: 0;
+}
+
+.strategy-mini-card {
+  background-color: var(--color-bg-container);
+  border: 0.5px solid var(--color-card-border);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-md);
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.strategy-mini-card:hover {
+  border-color: var(--color-primary-border);
+  box-shadow: var(--shadow-card);
+}
+
+.strategy-mini-card__title {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+}
+
+.strategy-mini-card__id {
+  display: inline-block;
+  margin-top: 2px;
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+}
+
+.strategy-mini-card__metric-label {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+}
+
+.strategy-mini-card__metric-value {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.strategy-mini-card__footer {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-quaternary);
+}
+
+.strategy-products-empty {
+  text-align: center;
+  padding: var(--spacing-3xl) var(--spacing-md);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-tertiary);
+}

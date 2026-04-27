@@ -48,13 +48,13 @@ export default function MyDisposalQueue({ onOpenItem }: MyDisposalQueueProps) {
       <div className="section-body">
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
           <div className="pl-solid-card flex min-h-[280px] flex-col overflow-hidden">
-            <div className="flex items-center justify-between border-b border-black/[0.06] bg-white px-4 py-3">
-              <Text strong className="text-[15px] text-[#262626]">
+            <div className="flex items-center justify-between border-b border-[var(--color-border-light)] bg-[var(--color-bg-container)] px-4 py-3">
+              <Text strong className="text-[15px] text-text-primary">
                 待核查工单
               </Text>
               <StatusHighlight tone="warning">12 待办</StatusHighlight>
             </div>
-            <div className="flex flex-1 flex-col gap-2 bg-[#fafafa] p-3">
+            <div className="flex flex-1 flex-col gap-2 bg-[var(--color-bg-layout)] p-3">
               <List
                 size="small"
                 split={false}
@@ -69,7 +69,7 @@ export default function MyDisposalQueue({ onOpenItem }: MyDisposalQueueProps) {
                       <RiskStrip variant={stripForPendingLevel(item.slaLevel)} />
                       <div className="flex min-w-0 flex-1 items-start justify-between gap-2 px-3 py-2.5">
                         <div className="min-w-0 flex-1">
-                          <Text strong className="block text-[15px] text-[#262626]">
+                          <Text strong className="block text-[15px] text-text-primary">
                             {item.name}
                           </Text>
                           <span className="pl-aux-text mt-0.5 block">{item.sub}</span>
@@ -92,22 +92,22 @@ export default function MyDisposalQueue({ onOpenItem }: MyDisposalQueueProps) {
                 )}
               />
             </div>
-            <Text className="pl-aux-text border-t border-black/[0.06] bg-white px-4 py-2">
+            <Text className="pl-aux-text border-t border-[var(--color-border-light)] bg-[var(--color-bg-container)] px-4 py-2">
               点击卡片进入预警核查工作台
             </Text>
           </div>
 
           <div className="pl-solid-card flex min-h-[280px] flex-col overflow-hidden">
-            <div className="flex items-center justify-between border-b border-black/[0.06] bg-white px-4 py-3">
-              <Text strong className="text-[15px] text-[#262626]">
+            <div className="flex items-center justify-between border-b border-[var(--color-border-light)] bg-[var(--color-bg-container)] px-4 py-3">
+              <Text strong className="text-[15px] text-text-primary">
                 本周完成
               </Text>
               <span className="pl-aux-text inline-flex items-center gap-1">
-                <CheckCircleOutlined className="text-[#8c8c8c]" />
-                <Text className="!text-[12px] !text-[#8c8c8c]">28 笔</Text>
+                <CheckCircleOutlined className="text-text-muted" />
+                <Text className="!text-[12px] text-text-muted">28 笔</Text>
               </span>
             </div>
-            <div className="flex flex-1 flex-col gap-2 bg-[#fafafa] p-3">
+            <div className="flex flex-1 flex-col gap-2 bg-[var(--color-bg-layout)] p-3">
               <List
                 size="small"
                 split={false}
@@ -121,7 +121,7 @@ export default function MyDisposalQueue({ onOpenItem }: MyDisposalQueueProps) {
                         }
                       />
                       <div className="flex min-w-0 flex-1 items-start justify-between gap-2 px-3 py-2.5">
-                        <Text className="flex-1 text-[14px] font-medium leading-snug text-[#262626]">{item.summary}</Text>
+                        <Text className="flex-1 text-[14px] font-medium leading-snug text-text-primary">{item.summary}</Text>
                         <StatusHighlight tone={RESULT_HIGHLIGHT[item.result]}>{item.result}</StatusHighlight>
                       </div>
                     </div>
@@ -129,7 +129,7 @@ export default function MyDisposalQueue({ onOpenItem }: MyDisposalQueueProps) {
                 )}
               />
             </div>
-            <Text className="pl-aux-text border-t border-black/[0.06] bg-white px-4 py-2">
+            <Text className="pl-aux-text border-t border-[var(--color-border-light)] bg-[var(--color-bg-container)] px-4 py-2">
               结果分布用于复盘质检与规则调优输入
             </Text>
           </div>

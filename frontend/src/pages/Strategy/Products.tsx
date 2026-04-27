@@ -1,10 +1,9 @@
-import { Typography, Tag, Button, Space, Modal, Form, Input, Select, Row, Col, Card } from "antd";
-import { PlusOutlined, EditOutlined, HistoryOutlined, WarningOutlined } from "@ant-design/icons";
-import { useState } from "react";
+import { Tag, Button, Space, Modal, Form, Input, Select, Row, Col } from "antd";
+import { PlusOutlined, EditOutlined, HistoryOutlined, WarningOutlined, SearchOutlined } from "@ant-design/icons";
+import type { CSSProperties } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ModulePageShell, { ModuleSectionCard } from "@/components/ModulePageShell";
-
-const { Text } = Typography;
 
 type StrategyHealth = "active" | "optimize";
 
@@ -68,6 +67,28 @@ const PRODUCT_GROUPS: ProductLineGroup[] = [
   },
 ];
 
+function parseDimensionLabels(subtitle: string): string[] {
+  return subtitle
+    .split(/[·•・]/)
+    .map((s) => s.trim())
+    .filter(Boolean);
+}
+
+function MetricSpark({ pct, tone }: { pct: number; tone: "success" | "warning" }) {
+  const w = Math.min(100, Math.max(0, pct));
+  return (
+    <div className="strategy-mini-spark" aria-hidden>
+      <div
+        className={`strategy-mini-spark__fill strategy-mini-spark__fill--${tone}`}
+        style={{
+          width: `${w}%`,
+          minWidth: w > 0 ? 2 : 0,
+        }}
+      />
+    </div>
+  );
+}
+
 function StrategyMiniCard({
   s,
   accent,
@@ -79,94 +100,153 @@ function StrategyMiniCard({
 }) {
   const needOpt = s.health === "optimize";
   return (
-    <Card
-      size="small"
-      className="rounded-lg border border-black/[0.08] shadow-sm"
-      styles={{ body: { padding: 12 } }}
-    >
+    <article className="strategy-mini-card">
       <div className="flex items-start justify-between gap-2 mb-2">
         <div className="min-w-0">
-          <Text strong className="text-[13px] block truncate">{s.name}</Text>
-          <Text code className="text-[11px] text-text-muted">{s.id}</Text>
+          <div className="strategy-mini-card__title truncate">{s.name}</div>
+          <code className="strategy-mini-card__id">{s.id}</code>
         </div>
         {needOpt ? (
           <Tag icon={<WarningOutlined />} color="warning" className="!m-0 shrink-0 text-[11px]">
             误报偏高/需优化
           </Tag>
         ) : (
-          <Tag color="success" className="!m-0 shrink-0 text-[11px]">生效中</Tag>
+          <Tag color="success" className="!m-0 shrink-0 text-[11px]">
+            生效中
+          </Tag>
         )}
       </div>
       <Row gutter={[8, 8]} className="mb-2">
         <Col span={8}>
-          <Text type="secondary" className="text-[11px] block">触发量</Text>
-          <Text strong className="text-[15px] tabular-nums">{s.triggers.toLocaleString()}</Text>
+          <span className="strategy-mini-card__metric-label block">触发量</span>
+          <span className="strategy-mini-card__metric-value block">{s.triggers.toLocaleString()}</span>
         </Col>
         <Col span={8}>
-          <Text type="secondary" className="text-[11px] block">有效率</Text>
-          <Text strong className="text-[15px] tabular-nums" style={{ color: accent }}>{s.effectivenessPct}%</Text>
+          <span className="strategy-mini-card__metric-label block">有效率</span>
+          <span className="strategy-mini-card__metric-value block" style={{ color: accent }}>
+            {s.effectivenessPct}%
+          </span>
+          <MetricSpark pct={s.effectivenessPct} tone="success" />
         </Col>
         <Col span={8}>
-          <Text type="secondary" className="text-[11px] block">误报率</Text>
-          <Text strong className="text-[15px] tabular-nums text-[#d46b08]">{s.falsePositivePct}%</Text>
+          <span className="strategy-mini-card__metric-label block">误报率</span>
+          <span className="strategy-mini-card__metric-value block text-accent-warning">{s.falsePositivePct}%</span>
+          <MetricSpark pct={s.falsePositivePct} tone="warning" />
         </Col>
       </Row>
-      <div className="flex justify-between items-center text-[11px] text-text-muted">
+      <div className="strategy-mini-card__footer flex justify-between items-center">
         <span>v{s.version}</span>
         <span>{s.updateTime}</span>
       </div>
       <Space className="mt-2">
-        <Button type="link" size="small" className="!px-0" icon={<EditOutlined />} onClick={onEdit}>编辑</Button>
-        <Button type="link" size="small" className="!px-0" icon={<HistoryOutlined />}>历史</Button>
+        <Button type="link" size="small" className="!px-0" icon={<EditOutlined />} onClick={onEdit}>
+          编辑
+        </Button>
+        <Button type="link" size="small" className="!px-0" icon={<HistoryOutlined />}>
+          历史
+        </Button>
       </Space>
-    </Card>
+    </article>
   );
 }
 
 export default function Products() {
   const navigate = useNavigate();
   const [modalOpen, setModalOpen] = useState(false);
+  const [query, setQuery] = useState("");
+  const [health, setHealth] = useState<"all" | StrategyHealth>("all");
+
+  const filteredGroups = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return PRODUCT_GROUPS.map((g) => ({
+      ...g,
+      strategies: g.strategies.filter((s) => {
+        if (health !== "all" && s.health !== health) return false;
+        if (!q) return true;
+        return s.name.toLowerCase().includes(q) || s.id.toLowerCase().includes(q);
+      }),
+    })).filter((g) => g.strategies.length > 0);
+  }, [query, health]);
 
   return (
     <ModulePageShell
       title="产品线策略集"
-      subtitle="按产品线聚合贷后预警策略包；一眼识别触发量、有效率与误报率，快速发现「掉队」策略（演示数据）"
-      breadcrumb={["预警策略", "产品线策略集"]}
+      subtitle="按产品线聚合策略包，关注触发与误报（演示）"
+      breadcrumb={["策略与模型", "产品线策略集"]}
       actions={
-        <Space>
-          <Button size="small" onClick={() => navigate("/strategy/rules")}>规则引擎</Button>
-          <Button type="primary" icon={<PlusOutlined />} size="small" onClick={() => setModalOpen(true)}>
-            新建策略集
-          </Button>
-        </Space>
+        <>
+          <Input
+            className="module-header-search"
+            allowClear
+            prefix={<SearchOutlined className="text-text-weak" />}
+            placeholder="搜索策略名称或编号"
+            aria-label="搜索策略名称或编号"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+          />
+          <Space>
+            <Button size="small" onClick={() => navigate("/strategy/rules")}>
+              规则引擎
+            </Button>
+            <Button type="primary" icon={<PlusOutlined />} size="small" onClick={() => setModalOpen(true)}>
+              新建策略集
+            </Button>
+          </Space>
+        </>
       }
     >
       <ModuleSectionCard>
-        <Row gutter={[16, 24]}>
-          {PRODUCT_GROUPS.map((g) => (
-            <Col xs={24} lg={12} key={g.key}>
-              <div
-                className="rounded-lg border border-black/[0.08] p-4 h-full"
-                style={{ borderLeftWidth: 4, borderLeftColor: g.accent }}
-              >
-                <div className="mb-3">
-                  <Text strong className="text-[15px] block" style={{ color: g.accent }}>{g.title}</Text>
-                  <Text type="secondary" className="text-[12px]">{g.subtitle}</Text>
+        <div className="strategy-products-toolbar">
+          <span className="strategy-products-toolbar__label">状态</span>
+          <Select
+            className="strategy-products-toolbar__filter"
+            value={health}
+            onChange={(v) => setHealth(v)}
+            options={[
+              { value: "all", label: "全部状态" },
+              { value: "active", label: "生效中" },
+              { value: "optimize", label: "需优化" },
+            ]}
+          />
+        </div>
+
+        {filteredGroups.length === 0 ? (
+          <div className="strategy-products-empty">没有符合筛选条件的策略包，请调整关键词或状态。</div>
+        ) : (
+          <Row gutter={[16, 24]} align="stretch">
+            {filteredGroups.map((g) => (
+              <Col xs={24} lg={12} key={g.key} className="h-full">
+                <div
+                  className="strategy-product-column"
+                  style={{ "--strategy-column-accent": g.accent } as CSSProperties}
+                >
+                  <header className="strategy-product-column__header">
+                    <h2 className="strategy-product-column__title" style={{ color: g.accent }}>
+                      {g.title}
+                    </h2>
+                    <div className="strategy-product-dims">
+                      {parseDimensionLabels(g.subtitle).map((label, i) => (
+                        <span key={`${g.key}-dim-${i}`} className="strategy-product-dim-pill">
+                          {label}
+                        </span>
+                      ))}
+                    </div>
+                  </header>
+                  <div className="strategy-product-column__list">
+                    {g.strategies.map((s) => (
+                      <StrategyMiniCard
+                        key={s.id}
+                        s={s}
+                        accent={g.accent}
+                        onEdit={() => navigate("/strategy/rules")}
+                      />
+                    ))}
+                  </div>
                 </div>
-                <Space direction="vertical" className="w-full" size={12}>
-                  {g.strategies.map((s) => (
-                    <StrategyMiniCard
-                      key={s.id}
-                      s={s}
-                      accent={g.accent}
-                      onEdit={() => navigate("/strategy/rules")}
-                    />
-                  ))}
-                </Space>
-              </div>
-            </Col>
-          ))}
-        </Row>
+              </Col>
+            ))}
+          </Row>
+        )}
       </ModuleSectionCard>
 
       <Modal title="新建策略集" open={modalOpen} onCancel={() => setModalOpen(false)} onOk={() => setModalOpen(false)}>

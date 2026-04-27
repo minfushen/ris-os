@@ -81,11 +81,9 @@ function AlertCard({ alert }: { alert: PostLoanAlertCard }) {
               <Text strong className="pl-entity-name">{alert.entityName}</Text>
               <div
                 className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-sm"
-                style={{ 
-                  background: alert.riskColor === "red" 
-                    ? "rgba(207, 19, 34, 0.1)" 
-                    : "rgba(212, 136, 6, 0.1)", 
-                  color: alert.riskColor === "red" ? "#cf1322" : "#d48806" 
+                style={{
+                  background: alert.riskColor === "red" ? "var(--color-error-bg)" : "var(--color-warning-bg)",
+                  color: alert.riskColor === "red" ? "var(--color-danger)" : "var(--color-warning)",
                 }}
               >
                 {alert.icon === "trade" ? <TeamOutlined /> : <BankOutlined />}
@@ -100,7 +98,7 @@ function AlertCard({ alert }: { alert: PostLoanAlertCard }) {
             <SoftTag variant={riskSoft}>{alert.riskTag}</SoftTag>
             <SoftTag variant="info">{alert.categoryTag}</SoftTag>
             <StatusHighlight tone={slaToneFromLabel(alert.slaText, alert.slaUrgent)}>
-              <ClockCircleOutlined className="text-[10px]" />
+              <ClockCircleOutlined className="text-[11px]" />
               {alert.slaText}
             </StatusHighlight>
           </div>
@@ -143,7 +141,7 @@ export default function PostLoanSearchlight({ onClaimVerify, onViewDetail, onJoi
   return (
     <section className="section-shell" id="searchlight-anchor">
       <div className="section-header">
-        <Text className="section-title">今日预警探照灯</Text>
+        <Text className="section-title">今日预警大盘</Text>
         <Text type="secondary" className="section-subtitle ml-2">
           贷后预警信息优先展示，支持认领与下钻核查
         </Text>

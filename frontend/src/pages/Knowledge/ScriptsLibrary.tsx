@@ -14,7 +14,7 @@ export default function ScriptsLibrary() {
     <ModulePageShell
       title="催收话术库"
       subtitle="按行业与逾期分档组织话术，可在催收作业与预警核查工作台引用（演示）"
-      breadcrumb={["知识沉淀", "催收话术库"]}
+      breadcrumb={["处置闭环", "催收话术库"]}
     >
       <ModuleSectionCard title="话术片段" subtitle="合规话术仅供参考，生产环境需法务审核版本号">
         <List

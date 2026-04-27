@@ -37,7 +37,7 @@ export default function PublishPage() {
       <ModulePageShell
         title="策略发布进度与灰度闭环"
         subtitle="流程可视、灰度指标对比、全量/回滚决策与审计留痕（演示）"
-        breadcrumb={["预警策略", "策略发布审批"]}
+        breadcrumb={["策略与模型", "策略发布审批"]}
         actions={
           <Space>
             <Button
@@ -63,7 +63,7 @@ export default function PublishPage() {
     <ModulePageShell
       title="策略变更发布申请"
       subtitle="Diff → 护盾 → 提交；提交后进入流程与灰度跟踪"
-      breadcrumb={["预警策略", "策略发布审批"]}
+      breadcrumb={["策略与模型", "策略发布审批"]}
       actions={
         <Space>
           <Button onClick={() => navigate("/strategy/products")}>取消</Button>
@@ -129,7 +129,7 @@ export default function PublishPage() {
           <div className="bg-[#fafafa] layout-p-md layout-mb-md">
             <Space direction="vertical" size={4}>
               <Text style={{ fontSize: 12 }}>
-                • 预警规则包: 经营贷包 V2.4 → V2.5
+                • 预警规则包: 经营贷包 V3.1 → V3.2
               </Text>
               <Text style={{ fontSize: 12 }}>
                 • 变更内容: 制造业多头阈值 35%→38%；税报断档天数 45→30

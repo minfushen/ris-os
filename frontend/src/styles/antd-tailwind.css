@@ -14,19 +14,31 @@
 .ant-modal-content,
 .ant-drawer-content-wrapper .ant-drawer-content {
   border: 1px solid var(--color-border, rgba(130, 150, 160, 0.22));
-  background-color: #ffffff;
+  background-color: var(--color-bg-container);
   box-shadow: var(--shadow-lg, 0 4px 16px rgba(0, 0, 0, 0.08));
 }
 
 /* —— 卡片 —— */
 .ant-card {
-  border: 1px solid rgba(130, 150, 160, 0.18);
-  background-color: #ffffff;
+  border: 0.5px solid var(--color-card-border);
+  background-color: var(--color-bg-container);
   box-shadow: var(--shadow-surface);
 }
 
 .ant-card-bordered {
-  border-color: rgba(130, 150, 160, 0.18);
+  border-color: var(--color-card-border);
+}
+
+.ant-card-hoverable {
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast),
+    background-color var(--transition-fast);
+}
+
+.ant-card-hoverable:hover {
+  border-color: var(--color-primary-border);
+  box-shadow: var(--shadow-card-hover);
 }
 
 /* —— 表格 —— */
@@ -38,6 +50,18 @@
 .ant-table-thead > tr > th {
   font-weight: 600;
   letter-spacing: 0.01em;
+  background: var(--color-table-footer-surface) !important;
+  border-bottom: 0.5px solid var(--color-border-light) !important;
+  color: var(--color-text-tertiary) !important;
+  font-size: var(--font-size-sm);
+}
+
+.ant-table-tbody > tr > td {
+  border-bottom: 0.5px solid var(--color-border-light) !important;
+}
+
+.ant-table-tbody > tr.ant-table-row:hover > td {
+  background: var(--color-bg-interactive-hover) !important;
 }
 
 .ant-table-cell-scrollbar {
@@ -46,14 +70,23 @@
 
 /* —— 默认按钮：玻璃次按钮 —— */
 .ant-btn-default {
-  background-color: #ffffff;
-  border-color: rgba(130, 150, 160, 0.22);
+  background-color: var(--color-bg-container);
+  border-color: var(--color-card-border);
+  box-shadow: none;
 }
 
 .ant-btn-default:not(:disabled):hover {
-  background-color: var(--color-bg-layout, #f6f8fb);
-  border-color: rgba(111, 143, 149, 0.28);
-  color: var(--color-text-primary, #1f2a30);
+  background-color: var(--color-bg-layout);
+  border-color: var(--color-primary-border);
+  color: var(--color-text-primary);
+}
+
+.ant-btn-primary {
+  box-shadow: none;
+}
+
+.ant-btn-primary:not(:disabled):hover {
+  box-shadow: 0 2px 6px rgba(79, 105, 112, 0.18);
 }
 
 .ant-btn-primary:disabled {
@@ -65,7 +98,8 @@
 .ant-input-affix-wrapper,
 .ant-select-selector,
 .ant-picker {
-  background-color: #ffffff !important;
+  background-color: var(--color-bg-container) !important;
+  border-color: var(--color-card-border) !important;
 }
 
 .ant-input-affix-wrapper-focused,
@@ -82,13 +116,48 @@
 .ant-picker-dropdown,
 .ant-popover .ant-popover-inner {
   border: 1px solid rgba(130, 150, 160, 0.16);
-  background-color: #ffffff;
+  background-color: var(--color-bg-container);
   box-shadow: var(--shadow-float, 0 6px 24px rgba(12, 22, 32, 0.08));
 }
 
 /* —— 分页 —— */
 .ant-pagination .ant-pagination-item-active {
   border-color: rgba(111, 143, 149, 0.45);
+}
+
+/* —— Tag：截图里的小号、低饱和风险标签 —— */
+.ant-tag {
+  border-radius: var(--radius-tag) !important;
+  font-size: var(--font-size-xs) !important;
+  line-height: 18px !important;
+  padding-inline: 6px !important;
+  font-weight: var(--font-weight-medium);
+}
+
+.ant-tag-red {
+  color: var(--color-danger) !important;
+  background: var(--color-error-bg) !important;
+  border-color: var(--color-error-border) !important;
+}
+
+.ant-tag-orange,
+.ant-tag-gold {
+  color: var(--color-warning) !important;
+  background: var(--color-warning-bg) !important;
+  border-color: var(--color-warning-border) !important;
+}
+
+.ant-tag-green {
+  color: var(--color-success) !important;
+  background: var(--color-success-bg) !important;
+  border-color: var(--color-success-border) !important;
+}
+
+.ant-tag-blue,
+.ant-tag-cyan {
+  color: var(--color-info) !important;
+  background: var(--color-info-bg) !important;
+  border-color: var(--color-info-border) !important;
 }
 
 /* —— Tabs 下划线区域 —— */

@@ -63,19 +63,20 @@ function ProgressBar({ value, max, color, showLabel = true }: ProgressBarProps) 
       <div className="flex items-center justify-between mb-1">
         {showLabel && (
           <>
-            <Text className="text-[10px] text-gray-500">进度</Text>
-            <Text className="text-[10px] font-semibold" style={{ color }}>
+            <Text className="text-[11px] font-normal text-[var(--color-text-quaternary)]">进度</Text>
+            <Text className="text-[11px] font-medium" style={{ color }}>
               {value}/{max}
             </Text>
           </>
         )}
       </div>
-      <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
-        <div 
-          className="h-full rounded-full transition-all duration-500"
-          style={{ 
+      <div className="h-1.5 bg-[rgba(31,42,48,0.06)] overflow-hidden" style={{ borderRadius: "var(--radius-progress, 2px)" }}>
+        <div
+          className="h-full transition-all duration-500"
+          style={{
+            borderRadius: "var(--radius-progress, 2px)",
             width: `${percentage}%`,
-            background: `linear-gradient(90deg, ${color} 0%, ${color}dd 100%)`
+            background: color,
           }}
         />
       </div>
@@ -85,15 +86,16 @@ function ProgressBar({ value, max, color, showLabel = true }: ProgressBarProps) 
 
 function Trend({ text, semantic }: { text: string; semantic: "good" | "bad" | "neutral" }) {
   const Icon = semantic === "good" ? RiseOutlined : semantic === "bad" ? FallOutlined : MinusOutlined;
-  const bgColor = semantic === "good" ? "rgba(82, 196, 26, 0.1)" : semantic === "bad" ? "rgba(245, 34, 45, 0.1)" : "rgba(0, 0, 0, 0.04)";
-  const color = semantic === "good" ? "#52c41a" : semantic === "bad" ? "#f5222d" : "#7a7a7a";
-  
+  const bgColor =
+    semantic === "good" ? "var(--color-success-bg)" : semantic === "bad" ? "var(--color-error-bg)" : "var(--color-bg-interactive-hover)";
+  const color = semantic === "good" ? "var(--color-success)" : semantic === "bad" ? "var(--color-danger)" : "var(--color-text-tertiary)";
+
   return (
-    <span 
-      className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium"
+    <span
+      className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[4px] text-[12px] font-medium"
       style={{ background: bgColor, color }}
     >
-      <Icon className="text-[10px]" />
+      <Icon className="text-[11px]" />
       <span>{text}</span>
     </span>
   );
@@ -124,15 +126,11 @@ function KpiCard({ label, value, valueColor, trend, sparkline, progress, footer,
       <div className="flex min-w-0 flex-1 flex-col p-5">
         <div className="flex items-center justify-between mb-3">
           <Text className="pl-kpi-label">{label}</Text>
-          <RightOutlined className="text-[10px] text-gray-300 opacity-0 group-hover:opacity-100 transition-opacity" />
+          <RightOutlined className="text-[11px] text-[var(--color-text-quaternary)] opacity-0 group-hover:opacity-100 transition-opacity" />
         </div>
         
         <div className="flex items-end gap-3 mb-3">
-          <Title 
-            level={2} 
-            className="!m-0 pl-kpi-value"
-            style={{ color: valueColor, fontSize: "2.25rem" }}
-          >
+          <Title level={2} className="!m-0 pl-kpi-value" style={{ color: valueColor }}>
             {value}
           </Title>
           {sparkline && (
@@ -167,9 +165,9 @@ export default function PostLoanCoreKpis({ onDrill }: PostLoanCoreKpisProps) {
     {
       label: "M1+ 逾期率",
       value: "3.42%",
-      valueColor: "#f5222d",
+      valueColor: "var(--color-danger-light)",
       trend: { text: "较上月 +0.18%", semantic: "bad" },
-      sparkline: { data: [2.8, 2.9, 3.1, 3.2, 3.3, 3.35, 3.42], color: "#f5222d" },
+      sparkline: { data: [2.8, 2.9, 3.1, 3.2, 3.3, 3.35, 3.42], color: "var(--color-danger-light)" },
       footer: "经营贷 · 本月 · 点击下钻",
       stripVariant: KPI_STRIP.m1,
       onClick: () => onDrill?.("m1"),
@@ -177,9 +175,9 @@ export default function PostLoanCoreKpis({ onDrill }: PostLoanCoreKpisProps) {
     {
       label: "新增预警客户",
       value: "23",
-      valueColor: "#fa8c16",
+      valueColor: "var(--color-warning-light)",
       trend: { text: "较昨日 +8", semantic: "bad" },
-      sparkline: { data: [12, 15, 18, 14, 16, 20, 23], color: "#fa8c16" },
+      sparkline: { data: [12, 15, 18, 14, 16, 20, 23], color: "var(--color-warning-light)" },
       footer: "全产品线 · 今日 · 点击处置",
       stripVariant: KPI_STRIP.newAlert,
       onClick: () => onDrill?.("newAlert"),
@@ -187,8 +185,8 @@ export default function PostLoanCoreKpis({ onDrill }: PostLoanCoreKpisProps) {
     {
       label: "超时未处置工单",
       value: "8",
-      valueColor: "#fa8c16",
-      sparkline: { data: [5, 6, 4, 7, 8, 6, 8], color: "#fa8c16" },
+      valueColor: "var(--color-warning-light)",
+      sparkline: { data: [5, 6, 4, 7, 8, 6, 8], color: "var(--color-warning-light)" },
       progress: { value: 8, max: 15 },
       footer: "我的队列 · 最长超时 38h · 点击认领",
       stripVariant: KPI_STRIP.timeout,
@@ -197,9 +195,9 @@ export default function PostLoanCoreKpis({ onDrill }: PostLoanCoreKpisProps) {
     {
       label: "本月预警有效率",
       value: "68%",
-      valueColor: "#52c41a",
+      valueColor: "var(--color-success-light)",
       trend: { text: "较上月 +5%", semantic: "good" },
-      sparkline: { data: [58, 60, 62, 64, 65, 67, 68], color: "#52c41a" },
+      sparkline: { data: [58, 60, 62, 64, 65, 67, 68], color: "var(--color-success-light)" },
       progress: { value: 68, max: 100 },
       footer: "司法涉诉规则最高 83%",
       stripVariant: KPI_STRIP.effectiveness,
@@ -216,7 +214,7 @@ export default function PostLoanCoreKpis({ onDrill }: PostLoanCoreKpisProps) {
         </Text>
       </div>
       <div className="section-body">
-        <Row gutter={[20, 20]}>
+        <Row gutter={[12, 12]}>
           {kpiData.map((kpi, index) => (
             <Col xs={24} sm={12} lg={6} key={index}>
               <div style={{ animationDelay: `${index * 0.05}s` }} className="pl-fade-in-up">

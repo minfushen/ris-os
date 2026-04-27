@@ -264,7 +264,7 @@ export default function LabelingFlywheel({ onLabel }: LabelingFlywheelProps) {
     <ModulePageShell
       title="标注飞轮"
       subtitle="贷后建模闭环：以「预警触发 → 核查结论 → 是否逾期」替代授信期的线过/线拒偏差标注；下方面板为二级支撑能力。"
-      breadcrumb={["资产监控", "标注飞轮"]}
+      breadcrumb={["预警监控", "标注飞轮"]}
       actions={
         <Space wrap size={8}>
           <button type="button" className={secondaryPillClass} onClick={() => setActiveTab("mlops")}>

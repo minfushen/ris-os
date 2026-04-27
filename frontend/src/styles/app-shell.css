@@ -43,8 +43,8 @@
 
   /* 布局尺寸 */
   --header-height: 44px;
-  --sider-width: 200px;
-  --sider-collapsed-width: 64px;
+  --sider-width: 196px;
+  --sider-collapsed-width: 52px;
   --content-max-width: 1440px;
 }
 

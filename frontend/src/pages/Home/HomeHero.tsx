@@ -1,5 +1,6 @@
 import { Typography, Button, Tag } from "antd";
 import { ThunderboltOutlined, ExperimentOutlined, InboxOutlined } from "@ant-design/icons";
+import { PLATFORM_NAME, PLATFORM_SUBTITLE } from "@/config/brand";
 
 const { Text, Title } = Typography;
 
@@ -30,12 +31,12 @@ export default function HomeHero({
         <div>
           <div className="flex items-center gap-3 mb-2">
             <Title level={3} className="!mb-0 text-text-primary">
-              风控 OS
+              {PLATFORM_NAME}
             </Title>
             <Tag className="glass-tag-warning text-xs">UAT 环境</Tag>
           </div>
           <Text className="text-text-secondary text-sm">
-            实时监控 · 智能归因 · 策略闭环 · 人机共智
+            {PLATFORM_SUBTITLE}
           </Text>
           <div className="mt-3 flex flex-wrap items-center gap-2 text-xs text-text-secondary">
             <Tag icon={<InboxOutlined />} color="processing" className="m-0 text-xs">

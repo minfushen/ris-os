@@ -83,10 +83,10 @@ interface GrayscaleMetricRow {
 }
 
 const GRAYSCALE_METRICS: GrayscaleMetricRow[] = [
-  { key: "1", metric: "通过率", baseline: "72.1%", canary: "74.0%", delta: "+1.9ppt", flag: "ok" },
-  { key: "2", metric: "首逾 FPD7", baseline: "2.81%", canary: "2.76%", delta: "-0.05ppt", flag: "ok" },
-  { key: "3", metric: "件均授信(万)", baseline: "3.18", canary: "3.22", delta: "+0.04", flag: "warn" },
-  { key: "4", metric: "欺诈拦截率", baseline: "3.05%", canary: "3.42%", delta: "+0.37ppt", flag: "warn" },
+  { key: "1", metric: "预警触发率", baseline: "4.2%", canary: "4.9%", delta: "+0.7ppt", flag: "warn" },
+  { key: "2", metric: "有效率(核实转实)", baseline: "68.2%", canary: "67.4%", delta: "-0.8ppt", flag: "ok" },
+  { key: "3", metric: "误报率", baseline: "22.4%", canary: "24.3%", delta: "+1.9ppt", flag: "warn" },
+  { key: "4", metric: "预警提前天数 P50", baseline: "18 天", canary: "20 天", delta: "+2 天", flag: "ok" },
   { key: "5", metric: "规则耗时 P99(ms)", baseline: "118", canary: "124", delta: "+6", flag: "ok" },
 ];
 
@@ -268,7 +268,7 @@ export default function PublishWorkflowPanel({ changeId }: PublishWorkflowPanelP
           </>
         ) : (
           <Text type="secondary" className="text-sm">
-            灰度流量生效后，此处展示通过率/逾期/欺诈/耗时的并排对比，并支持一键全量或回滚闭环。
+            灰度流量生效后，此处展示预警触发率、核实有效率、误报率、提前天数和规则耗时的并排对比，并支持一键全量或回滚闭环。
           </Text>
         )}
       </ModuleSectionCard>

@@ -5,12 +5,10 @@
 
 /* ========== 基础卡片 ========== */
 .pl-solid-card {
-  border-radius: 12px;
-  background: #ffffff;
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  box-shadow:
-    0 1px 3px rgba(0, 0, 0, 0.04),
-    0 2px 8px rgba(0, 0, 0, 0.04);
+  border-radius: var(--radius-lg, 8px);
+  background: var(--color-bg-container);
+  border: 0.5px solid var(--color-card-border);
+  box-shadow: var(--shadow-card);
   transition: 
     box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1),
     border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
@@ -22,19 +20,14 @@
 }
 
 .pl-solid-card--interactive:hover {
-  border-color: rgba(59, 107, 125, 0.15);
-  box-shadow:
-    0 2px 6px rgba(0, 0, 0, 0.06),
-    0 4px 16px rgba(0, 0, 0, 0.06),
-    0 0 0 1px rgba(59, 107, 125, 0.08);
+  border-color: var(--color-primary-border);
+  box-shadow: var(--shadow-card-hover);
   transform: translateY(-2px);
 }
 
 .pl-solid-card--interactive:active {
   transform: translateY(0) scale(0.99);
-  box-shadow:
-    0 1px 2px rgba(0, 0, 0, 0.04),
-    0 2px 6px rgba(0, 0, 0, 0.04);
+  box-shadow: var(--shadow-sm);
 }
 
 /* ========== 左侧风险指示条 ========== */
@@ -42,7 +35,7 @@
   width: 4px;
   min-width: 4px;
   align-self: stretch;
-  border-radius: 12px 0 0 12px;
+  border-radius: var(--radius-lg, 8px) 0 0 var(--radius-lg, 8px);
   transition: width 0.2s ease;
 }
 
@@ -50,124 +43,134 @@
   width: 5px;
 }
 
+/* 条带渐变：端点一律引用 tokens，不在此写 hex */
 .pl-risk-strip--danger {
-  background: linear-gradient(180deg, #f5222d 0%, #ff4d4f 100%);
+  background: linear-gradient(180deg, var(--color-danger) 0%, var(--color-danger-light) 100%);
 }
 
 .pl-risk-strip--warning {
-  background: linear-gradient(180deg, #fa8c16 0%, #ffa940 100%);
+  background: linear-gradient(180deg, var(--color-warning) 0%, var(--color-warning-light) 100%);
 }
 
 .pl-risk-strip--warning-soft {
-  background: linear-gradient(180deg, #ffa940 0%, #ffc53d 100%);
+  background: linear-gradient(180deg, var(--color-warning-light) 0%, var(--color-warning-light) 100%);
+}
+
+@supports (color: color-mix(in srgb, red 1%, white)) {
+  .pl-risk-strip--warning-soft {
+    background: linear-gradient(
+      180deg,
+      var(--color-warning-light) 0%,
+      color-mix(in srgb, var(--color-warning-light) 58%, var(--color-bg-container)) 100%
+    );
+  }
 }
 
 .pl-risk-strip--success {
-  background: linear-gradient(180deg, #52c41a 0%, #73d13d 100%);
+  background: linear-gradient(180deg, var(--color-success) 0%, var(--color-success-light) 100%);
 }
 
 .pl-risk-strip--info {
-  background: linear-gradient(180deg, #1677ff 0%, #4096ff 100%);
+  background: linear-gradient(180deg, var(--color-info) 0%, var(--color-info-light) 100%);
 }
 
 .pl-risk-strip--neutral {
-  background: linear-gradient(180deg, #8c8c8c 0%, #bfbfbf 100%);
+  background: linear-gradient(180deg, var(--color-text-tertiary) 0%, var(--color-text-quaternary) 100%);
 }
 
 /* ========== 文字层级 ========== */
 .pl-aux-text {
   font-size: 11px;
+  font-weight: 400;
   line-height: 1.6;
-  color: #8c8c8c;
+  color: var(--color-text-quaternary, #95a2a9);
   letter-spacing: 0.01em;
 }
 
 .pl-card-title {
-  font-size: 15px;
-  font-weight: 600;
-  color: #1a1a1a;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text-primary, #1f2a30);
   line-height: 1.4;
   letter-spacing: -0.01em;
 }
 
 .pl-entity-name {
-  font-size: 16px;
-  font-weight: 600;
-  color: #1a1a1a;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text-primary, #1f2a30);
   line-height: 1.35;
   letter-spacing: -0.01em;
 }
 
-/* ========== 状态高亮块 ========== */
+/* ========== 状态高亮块（与 SoftTag / tokens 语义一致，不写 hex）========== */
 .pl-status-highlight {
   display: inline-flex;
   align-items: center;
   gap: 6px;
   padding: 5px 11px;
-  border-radius: 6px;
-  font-size: 11px;
-  font-weight: 600;
+  border-radius: var(--radius-sm, 6px);
+  font-size: var(--font-size-xs, 11px);
+  font-weight: var(--font-weight-semibold, 600);
   line-height: 1.25;
   flex-shrink: 0;
   letter-spacing: 0.02em;
 }
 
 .pl-status-highlight--danger {
-  background: linear-gradient(135deg, rgba(245, 34, 45, 0.1) 0%, rgba(255, 77, 79, 0.08) 100%);
-  color: #f5222d;
-  border: 1px solid rgba(245, 34, 45, 0.2);
+  background: linear-gradient(135deg, var(--color-error-bg-strong) 0%, var(--color-error-bg) 100%);
+  color: var(--color-danger);
+  border: 1px solid var(--color-error-border);
 }
 
 .pl-status-highlight--warning {
-  background: linear-gradient(135deg, rgba(250, 140, 22, 0.12) 0%, rgba(255, 169, 64, 0.08) 100%);
-  color: #fa8c16;
-  border: 1px solid rgba(250, 140, 22, 0.25);
+  background: linear-gradient(135deg, var(--color-warning-bg-strong) 0%, var(--color-warning-bg) 100%);
+  color: var(--color-warning);
+  border: 1px solid var(--color-warning-border);
 }
 
 .pl-status-highlight--warning-soft {
-  background: rgba(255, 169, 64, 0.08);
-  color: #fa8c16;
-  border: 1px solid rgba(255, 169, 64, 0.2);
+  background: var(--color-warning-bg);
+  color: var(--color-warning);
+  border: 1px solid var(--color-warning-border);
 }
 
 .pl-status-highlight--success {
-  background: linear-gradient(135deg, rgba(82, 196, 26, 0.1) 0%, rgba(115, 209, 61, 0.08) 100%);
-  color: #52c41a;
-  border: 1px solid rgba(82, 196, 26, 0.2);
+  background: linear-gradient(135deg, var(--color-success-bg-strong) 0%, var(--color-success-bg) 100%);
+  color: var(--color-success);
+  border: 1px solid var(--color-success-border);
 }
 
 .pl-status-highlight--neutral {
-  background: #f5f5f5;
-  color: #595959;
-  border: 1px solid rgba(0, 0, 0, 0.06);
+  background: var(--color-bg-interactive-hover);
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border-light);
 }
 
-/* ========== 队列行 ========== */
+/* ========== 队列行（背景/描边/脉冲一律引用 tokens，不写 hex）========== */
 .pl-queue-row {
   display: flex;
   width: 100%;
   overflow: hidden;
-  border-radius: 10px;
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  background: #ffffff;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  border-radius: var(--radius-panel, 10px);
+  border: 1px solid var(--color-border-light);
+  background: var(--color-bg-container);
+  box-shadow: var(--shadow-sm);
   text-align: left;
   cursor: pointer;
-  transition: 
+  transition:
     box-shadow 0.2s ease,
     border-color 0.2s ease,
     transform 0.2s ease;
 }
 
 .pl-queue-row:focus-visible {
-  outline: 2px solid rgba(59, 107, 125, 0.3);
+  outline: 2px solid var(--color-border-focus);
   outline-offset: 1px;
 }
 
 .pl-queue-row:hover {
-  box-shadow:
-    0 2px 6px rgba(0, 0, 0, 0.06),
-    0 4px 12px rgba(0, 0, 0, 0.04);
+  box-shadow: var(--shadow-md);
   transform: translateY(-1px);
 }
 
@@ -176,44 +179,99 @@
 }
 
 .pl-queue-row--sla-danger {
-  background: linear-gradient(90deg, rgba(245, 34, 45, 0.08) 0px, rgba(245, 34, 45, 0.03) 48px, #ffffff 100%);
-  border-color: rgba(245, 34, 45, 0.2);
+  background: linear-gradient(
+    90deg,
+    var(--color-error-bg-strong) 0,
+    var(--color-error-bg) 48px,
+    var(--color-bg-container) 100%
+  );
+  border-color: var(--color-error-border);
   animation: pulse-danger 2s ease-in-out infinite;
 }
 
 @keyframes pulse-danger {
-  0%, 100% {
-    box-shadow: 0 1px 3px rgba(245, 34, 45, 0.1);
+  0%,
+  100% {
+    box-shadow: var(--shadow-sm), 0 0 0 1px var(--color-error-border);
   }
   50% {
-    box-shadow: 0 1px 3px rgba(245, 34, 45, 0.2), 0 0 0 2px rgba(245, 34, 45, 0.1);
+    box-shadow: var(--shadow-sm), 0 0 0 2px var(--color-error-bg-strong);
   }
 }
 
 .pl-queue-row--sla-danger:hover {
-  background: linear-gradient(90deg, rgba(245, 34, 45, 0.1) 0px, rgba(245, 34, 45, 0.04) 48px, #ffffff 100%);
+  background: linear-gradient(
+    90deg,
+    var(--color-error-bg-strong) 0,
+    color-mix(in srgb, var(--color-error-bg-strong) 70%, var(--color-bg-container)) 48px,
+    var(--color-bg-container) 100%
+  );
   animation: none;
 }
 
+@supports not (color: color-mix(in srgb, red 1%, white)) {
+  .pl-queue-row--sla-danger:hover {
+    background: linear-gradient(
+      90deg,
+      var(--color-error-bg-strong) 0,
+      var(--color-error-bg) 48px,
+      var(--color-bg-container) 100%
+    );
+  }
+}
+
 .pl-queue-row--sla-warning {
-  background: linear-gradient(90deg, rgba(250, 140, 22, 0.1) 0px, rgba(250, 140, 22, 0.04) 48px, #ffffff 100%);
-  border-color: rgba(250, 140, 22, 0.2);
+  background: linear-gradient(
+    90deg,
+    var(--color-warning-bg-strong) 0,
+    var(--color-warning-bg) 48px,
+    var(--color-bg-container) 100%
+  );
+  border-color: var(--color-warning-border);
 }
 
 .pl-queue-row--sla-warning:hover {
-  background: linear-gradient(90deg, rgba(250, 140, 22, 0.12) 0px, rgba(250, 140, 22, 0.05) 48px, #ffffff 100%);
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--color-warning-bg-strong) 85%, var(--color-bg-container)) 0,
+    var(--color-warning-bg) 48px,
+    var(--color-bg-container) 100%
+  );
+}
+
+@supports not (color: color-mix(in srgb, red 1%, white)) {
+  .pl-queue-row--sla-warning:hover {
+    background: linear-gradient(
+      90deg,
+      var(--color-warning-bg-strong) 0,
+      var(--color-warning-bg) 48px,
+      var(--color-bg-container) 100%
+    );
+  }
 }
 
 .pl-queue-row--sla-warning-soft {
-  background: linear-gradient(90deg, rgba(255, 169, 64, 0.06) 0px, rgba(255, 169, 64, 0.02) 40px, #ffffff 100%);
-  border-color: rgba(255, 169, 64, 0.15);
+  background: linear-gradient(
+    90deg,
+    var(--color-warning-bg) 0,
+    color-mix(in srgb, var(--color-warning-bg) 35%, var(--color-bg-container)) 40px,
+    var(--color-bg-container) 100%
+  );
+  border-color: color-mix(in srgb, var(--color-warning-light) 22%, var(--color-card-border));
+}
+
+@supports not (color: color-mix(in srgb, red 1%, white)) {
+  .pl-queue-row--sla-warning-soft {
+    background: linear-gradient(90deg, var(--color-warning-bg) 0, var(--color-bg-container) 40px);
+    border-color: var(--color-warning-border);
+  }
 }
 
 /* ========== KPI 卡片增强 ========== */
 .pl-kpi-value {
-  font-family: var(--font-family-mono, 'SF Mono', 'Fira Code', monospace);
-  font-size: 2rem;
-  font-weight: 700;
+  font-family: var(--font-family-mono, "SF Mono", "Fira Code", monospace);
+  font-size: clamp(22px, 2.4vw, 28px);
+  font-weight: 500;
   letter-spacing: -0.02em;
   line-height: 1.1;
   transition: transform 0.2s ease;
@@ -225,8 +283,8 @@
 
 .pl-kpi-label {
   font-size: 12px;
-  font-weight: 500;
-  color: #7a7a7a;
+  font-weight: 400;
+  color: var(--color-text-tertiary, #6e7c84);
   letter-spacing: 0.02em;
   text-transform: uppercase;
 }
@@ -248,18 +306,18 @@
 }
 
 .pl-trend-indicator--up {
-  background: rgba(82, 196, 26, 0.1);
-  color: #52c41a;
+  background: var(--color-success-bg);
+  color: var(--color-success);
 }
 
 .pl-trend-indicator--down {
-  background: rgba(245, 34, 45, 0.1);
-  color: #f5222d;
+  background: var(--color-error-bg);
+  color: var(--color-danger);
 }
 
 .pl-trend-indicator--neutral {
-  background: rgba(0, 0, 0, 0.04);
-  color: #7a7a7a;
+  background: var(--color-border-light);
+  color: var(--color-text-tertiary);
 }
 
 /* ========== 加载动画 ========== */
@@ -276,9 +334,9 @@
   animation: shimmer 2s infinite linear;
   background: linear-gradient(
     90deg,
-    #f0f0f0 0%,
-    #f8f8f8 50%,
-    #f0f0f0 100%
+    var(--color-skeleton-shimmer-a) 0%,
+    var(--color-skeleton-shimmer-b) 50%,
+    var(--color-skeleton-shimmer-a) 100%
   );
   background-size: 1000px 100%;
 }
