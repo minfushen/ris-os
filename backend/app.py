@@ -7,6 +7,10 @@ from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Optional
 
+# 加载环境变量
+from dotenv import load_dotenv
+load_dotenv()
+
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -30,6 +34,7 @@ from store import (
 from services.review import process_review
 from services.analysis import process_analysis
 from scenario_post_loan import router as post_loan_scenario_router
+from routers.qcc_assessment import router as qcc_assessment_router
 
 UPLOAD_ROOT = Path(__file__).resolve().parent / "uploads"
 
@@ -45,6 +50,9 @@ app = FastAPI(title="风控管理 OS", version="1.0.0", lifespan=lifespan)
 app.include_router(post_loan_scenario_router)
 # 网关常只转发 /api/*：与无前缀路由并存，避免 404
 app.include_router(post_loan_scenario_router, prefix="/api")
+
+# 企查查风险评估路由
+app.include_router(qcc_assessment_router)
 
 app.add_middleware(
     CORSMiddleware,

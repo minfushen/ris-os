@@ -32,7 +32,13 @@ function BulletList({ items }: { items: string[] }) {
   );
 }
 
-export default function AgentPageShell({ spec }: { spec: AgentPageSpec }) {
+export default function AgentPageShell({
+  spec,
+  children,
+}: {
+  spec: AgentPageSpec;
+  children?: React.ReactNode;
+}) {
   return (
     <ModulePageShell
       title={spec.title}
@@ -109,6 +115,9 @@ export default function AgentPageShell({ spec }: { spec: AgentPageSpec }) {
           </Space>
         </div>
       </ModuleSectionCard>
+
+      {/* 渲染 children（交互式功能） */}
+      {children}
     </ModulePageShell>
   );
 }

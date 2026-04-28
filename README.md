@@ -37,7 +37,7 @@ git switch scenario/post-loan
 | **处置闭环** | 预警核查工作台（含**监控报告**生成/预览/下载/审计留档）、催收作业（M1/M2/M3 分池）、复盘与质检 |
 | **策略与模型** | 产品线策略集、规则配置、发布审批与护栏 |
 | **仿真回溯** | 规则仿真回测、压力测试与护栏 |
-| **智能体协同** | 智能体目录、运行与观测占位 |
+| **智能体协同** | **企业风险评估 Agent**（企查查 MCP 集成）、预警归因 Agent、处置建议 Agent、策略调优 Agent、话术合规 Agent、复盘质检 Agent |
 | **能力与架构** | 集成架构说明（数据源/模型服务/MCP 等） |
 | **知识沉淀** | 话术库、规则调优案例、风险模式库 |
 | **特征与数据** | **贷后特征工作室**、**数据源管理**，数据来自 **`GET /api/scenario/post-loan/*`** |
@@ -147,6 +147,52 @@ npm run dev
 | `npm run build` | 类型检查 + 生产构建 |
 | `npm run test` | Vitest 单测 |
 | `npm run preview` | 预览构建产物 |
+
+---
+
+## 🆕 企业风险评估 Agent（企查查 MCP 集成）
+
+### 功能特性
+
+- ✅ **9 维度风险评估**：基础 6 维 + 供应链特有 3 维
+- ✅ **18 类风险排查**：CRITICAL/HIGH/MEDIUM/LOW 四级分类
+- ✅ **结构化证据链**：数据来源、更新时间、可信度
+- ✅ **处置建议生成**：响应时间、责任人、行动清单
+- ✅ **企查查 MCP 实时数据**：65 个工具，4 个服务
+- ✅ **动态进度展示**：实时推理过程可视化
+
+### 访问地址
+
+```
+http://localhost:5173/agents/vendor-risk-assessment
+```
+
+### API 端点
+
+```
+POST /api/qcc/assess-vendor-risk    # 企业风险评估
+GET  /api/qcc/company/{name}        # 获取企业工商信息
+GET  /api/qcc/risk/{name}           # 获取企业风险信息
+GET  /api/qcc/operation/{name}      # 获取企业经营信息
+GET  /api/qcc/health                # 健康检查
+```
+
+### 配置要求
+
+在 `backend/.env` 文件中配置企查查 API Key：
+
+```bash
+QCC_MCP_API_KEY=your_api_key_here
+QCC_MCP_BASE_URL=https://agent.qcc.com/mcp
+```
+
+### 设计文档
+
+- [PRD-企业风险评估Agent.md](./docs/prd/PRD-企业风险评估Agent.md)
+- [架构设计-企业风险评估Agent.md](./docs/architecture/架构设计-企业风险评估Agent.md)
+- [技术方案-企查查MCP集成.md](./docs/technical/技术方案-企查查MCP集成.md)
+- [API文档-企业风险评估.md](./docs/api/API文档-企业风险评估.md)
+- [用户手册-企业风险评估Agent.md](./docs/user-guide/用户手册-企业风险评估Agent.md)
 
 ---
 

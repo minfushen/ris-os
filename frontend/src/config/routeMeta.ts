@@ -178,6 +178,13 @@ export const ROUTE_META: Record<string, RouteMeta> = {
     navKey: "agent-attribution",
     parentNavKey: "agent",
   },
+  "/agents/vendor-risk-assessment": {
+    title: "企业风险评估 Agent",
+    subtitle: "基于企查查 MCP 的 9 维度风险评估，18 类风险分级",
+    breadcrumb: ["智能体协同", "企业风险评估 Agent"],
+    navKey: "agent-vendor-risk-assessment",
+    parentNavKey: "agent",
+  },
   "/agents/disposition": {
     title: "处置建议 Agent",
     subtitle: "基于客户画像、预警等级与 SOP 推荐下一步处置动作",

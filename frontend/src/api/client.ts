@@ -10,6 +10,13 @@ import type {
   DataDictionaryVariableRow,
   PostLoanFeatureStudioResponse,
 } from "@/types/scenarioPostLoan";
+import type {
+  VendorRiskAssessment,
+  QccCompanyInfo,
+  QccRiskInfo,
+  QccOperationInfo,
+  AssessVendorRiskRequest,
+} from "@/types/qcc";
 
 /** 后端根地址。注意：若 .env 里把 VITE_API_BASE_URL 设成空字符串，相对路径会打到 Vite 同源并 404，这里按「未配置」处理。 */
 function resolveApiBaseUrl(): string {
@@ -148,5 +155,37 @@ export const api = {
   /** GET …/data-dictionary/sources — 数据源列表 */
   listPostLoanDataDictionarySources(): Promise<DataDictionarySourceRow[]> {
     return request<DataDictionarySourceRow[]>(`${POST_LOAN_API_PREFIX}/data-dictionary/sources`);
+  },
+
+  // ─── 企查查风险评估：`/api/qcc/*` ─────────────────────────────
+
+  /** POST /api/qcc/assess-vendor-risk — 企业风险评估 */
+  assessVendorRisk(companyName: string, dimensions?: string[]): Promise<VendorRiskAssessment> {
+    const payload: AssessVendorRiskRequest = {
+      company_name: companyName,
+      dimensions,
+    };
+    return request<VendorRiskAssessment>("/api/qcc/assess-vendor-risk", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+  },
+
+  /** GET /api/qcc/company/{company_name} — 获取企业工商信息 */
+  getQccCompanyInfo(companyName: string): Promise<QccCompanyInfo> {
+    return request<QccCompanyInfo>(`/api/qcc/company/${encodeURIComponent(companyName)}`);
+  },
+
+  /** GET /api/qcc/risk/{company_name} — 获取企业风险信息 */
+  getQccRiskInfo(companyName: string): Promise<QccRiskInfo> {
+    return request<QccRiskInfo>(`/api/qcc/risk/${encodeURIComponent(companyName)}`);
+  },
+
+  /** GET /api/qcc/operation/{company_name} — 获取企业经营信息 */
+  getQccOperationInfo(companyName: string): Promise<QccOperationInfo> {
+    return request<QccOperationInfo>(`/api/qcc/operation/${encodeURIComponent(companyName)}`);
   },
 };

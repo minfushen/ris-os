@@ -46,6 +46,7 @@ const AgentStrategyTuning = lazy(() => import("@/pages/Agents/StrategyTuningAgen
 const AgentScriptCompliance = lazy(() => import("@/pages/Agents/ScriptComplianceAgent"));
 const AgentReviewQa = lazy(() => import("@/pages/Agents/ReviewQaAgent"));
 const AgentOpsMonitor = lazy(() => import("@/pages/Agents/OpsMonitor"));
+const AgentVendorRiskAssessment = lazy(() => import("@/pages/Agents/VendorRiskAssessmentAgent"));
 
 // 系统架构说明
 const IntegrationArchitecture = lazy(() => import("@/pages/Architecture/Integration"));
@@ -104,6 +105,7 @@ const router = createBrowserRouter([
       { path: "agents/script-compliance", element: withSuspense(<AgentScriptCompliance />) },
       { path: "agents/review-qa", element: withSuspense(<AgentReviewQa />) },
       { path: "agents/ops-monitor", element: withSuspense(<AgentOpsMonitor />) },
+      { path: "agents/vendor-risk-assessment", element: withSuspense(<AgentVendorRiskAssessment />) },
 
       { path: "architecture/integration", element: withSuspense(<IntegrationArchitecture />) },
 

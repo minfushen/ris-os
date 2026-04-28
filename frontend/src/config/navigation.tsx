@@ -28,6 +28,7 @@ import {
   RobotOutlined,
   BulbOutlined,
   CheckCircleOutlined,
+  SafetyCertificateOutlined,
 } from "@ant-design/icons";
 import { PLATFORM_SUBTITLE } from "@/config/brand";
 
@@ -245,6 +246,13 @@ export const PRIMARY_NAV: NavItem[] = [
         icon: <AlertOutlined />,
         path: "/agents/attribution",
         description: "聚合多源信号，解释预警主因与证据链",
+      },
+      {
+        key: "agent-vendor-risk-assessment",
+        label: "企业风险评估 Agent",
+        icon: <SafetyCertificateOutlined />,
+        path: "/agents/vendor-risk-assessment",
+        description: "基于企查查 MCP 的 9 维度风险评估，18 类风险分级",
       },
       {
         key: "agent-disposition",
