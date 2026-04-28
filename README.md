@@ -74,7 +74,7 @@ git switch scenario/post-loan
 ├── backend/              FastAPI：任务 API + 贷后场景 REST（scenario_post_loan）
 ├── frontend/             Vite + React 工作台与模块路由
 ├── docs/                 信息架构清单、视觉与规格说明等
-├── sampledata/           示例数据
+├── sampledata/           示例数据（含 `post-loan/watchlist-demo-2rows.csv`）
 └── 线框图原型/            产品方向说明
 ```
 
