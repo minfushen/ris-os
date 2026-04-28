@@ -29,6 +29,7 @@ import {
   BulbOutlined,
   CheckCircleOutlined,
   SafetyCertificateOutlined,
+  UploadOutlined,
 } from "@ant-design/icons";
 import { PLATFORM_SUBTITLE } from "@/config/brand";
 
@@ -66,6 +67,13 @@ export const PRIMARY_NAV: NavItem[] = [
         path: "/monitor/dashboard",
         badge: 23,
         description: "面试主看板：预警态势、模型效果与待处置队列",
+      },
+      {
+        key: "monitor-watchlist-upload",
+        label: "监控名单上传",
+        icon: <UploadOutlined />,
+        path: "/monitor/watchlist-upload",
+        description: "批量上传贷后监控名单并自动评估入预警队列",
       },
       {
         key: "monitor-asset-quality",

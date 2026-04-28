@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Badge } from "antd";
 import {
   MenuFoldOutlined,
@@ -9,6 +9,7 @@ import AppBrandMark from "@/components/AppBrandMark";
 import { PLATFORM_NAME } from "@/config/brand";
 import { getSiderDutySubtitle } from "@/config/demoSession";
 import { PRIMARY_NAV, type NavItem } from "@/config/navigation";
+import { api } from "@/api/client";
 
 function toPathname(path?: string): string | undefined {
   return path?.split(/[?#]/)[0];
@@ -41,6 +42,7 @@ export default function AppSider() {
   const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(false);
   const [collapsedGroups, setCollapsedGroups] = useState<string[]>([]);
+  const [dynamicBadges, setDynamicBadges] = useState<Record<string, number>>({});
 
   const currentPath = location.pathname;
 
@@ -72,6 +74,32 @@ export default function AppSider() {
 
   const isGroupOpen = (item: NavItem) => isActive(item) || !collapsedGroups.includes(item.key);
 
+  useEffect(() => {
+    let mounted = true;
+    const loadBadgeStats = async () => {
+      try {
+        const stats = await api.getDashboardStats();
+        if (!mounted) return;
+        setDynamicBadges({
+          home: stats.high_risk_enterprises || 0,
+          "monitor-dashboard": stats.pending_alerts || 0,
+          "risk-workbench": (stats.critical_alerts || 0) + (stats.high_alerts || 0),
+        });
+      } catch {
+        // 侧栏角标不阻断页面渲染，失败时保持配置默认值
+      }
+    };
+    void loadBadgeStats();
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  const resolveBadge = (item: NavItem): number | string | undefined => {
+    const dynamic = dynamicBadges[item.key];
+    return dynamic !== undefined ? dynamic : item.badge;
+  };
+
   const toggleGroup = (item: NavItem) => {
     if (isActive(item)) return;
     setCollapsedGroups((prev) =>
@@ -96,7 +124,9 @@ export default function AppSider() {
     >
       <span className="sider-nav-item__icon inline-flex">{child.icon ?? <span className="inline-block w-3.5" />}</span>
       <span className="sider-nav-item__text truncate">{child.label}</span>
-      {child.badge != null ? <Badge count={child.badge} size="small" className="sider-nav-badge shrink-0" /> : null}
+      {resolveBadge(child) != null ? (
+        <Badge count={resolveBadge(child)} size="small" className="sider-nav-badge shrink-0" />
+      ) : null}
     </div>
   );
 
@@ -194,8 +224,8 @@ export default function AppSider() {
                 tabIndex={0}
                 aria-current={isActive(item) ? "page" : undefined}
               >
-                {item.badge != null ? (
-                  <Badge count={item.badge} size="small" className="sider-nav-badge">
+                {resolveBadge(item) != null ? (
+                  <Badge count={resolveBadge(item)} size="small" className="sider-nav-badge">
                     <span className="sider-nav-item__icon inline-flex">{item.icon}</span>
                   </Badge>
                 ) : (

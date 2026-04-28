@@ -1,4 +1,4 @@
-import { Typography, Button, Space } from "antd";
+import { Typography, Button, Space, Spin } from "antd";
 import { BankOutlined, TeamOutlined, ClockCircleOutlined } from "@ant-design/icons";
 import {
   RiskStrip,
@@ -8,6 +8,10 @@ import {
   slaToneFromLabel,
   type RiskStripVariant,
 } from "./uiPrimitives";
+import { useState, useEffect } from "react";
+import { api } from "@/api/client";
+import type { Alert } from "@/types/enterprise";
+import { RISK_LEVEL_TEXT } from "@/types/qcc";
 
 const { Text } = Typography;
 
@@ -28,41 +32,8 @@ export interface PostLoanAlertCard {
   icon?: "corp" | "trade";
 }
 
-const SEED_ALERTS: Omit<PostLoanAlertCard, "onPrimary" | "onSecondary" | "auxiliaryText">[] = [
-  {
-    id: "pl-sl-1",
-    entityName: "张三科技",
-    headline: "新增被执行 85万",
-    riskTag: "高危",
-    riskColor: "red",
-    categoryTag: "司法涉诉",
-    slaText: "剩 4h",
-    slaUrgent: true,
-    primaryLabel: "认领核查",
-    icon: "corp",
-  },
-  {
-    id: "pl-sl-2",
-    entityName: "李四贸易",
-    headline: "多头借贷余额增幅 52%",
-    riskTag: "警告",
-    riskColor: "gold",
-    categoryTag: "多头借贷",
-    slaText: "剩 2天",
-    primaryLabel: "查看详情",
-    secondaryLabel: "加入队列",
-    icon: "trade",
-  },
-];
-
-const AUXILIARY: Record<string, string> = {
-  "pl-sl-1": "经营贷 · 借据 CL20240312 · 在贷余额 320万 · 制造业",
-  "pl-sl-2": "税金贷 · 借据 CL20231220 · 在贷余额 150万 · 批发零售",
-};
-
 interface PostLoanSearchlightProps {
   onClaimVerify: (id: string) => void;
-  onViewDetail: (id: string) => void;
   onJoinQueue?: (id: string) => void;
 }
 
@@ -130,11 +101,51 @@ function AlertCard({ alert }: { alert: PostLoanAlertCard }) {
   );
 }
 
-export default function PostLoanSearchlight({ onClaimVerify, onViewDetail, onJoinQueue }: PostLoanSearchlightProps) {
-  const alerts: PostLoanAlertCard[] = SEED_ALERTS.map((a) => ({
+export default function PostLoanSearchlight({ onClaimVerify, onJoinQueue }: PostLoanSearchlightProps) {
+  const [alerts, setAlerts] = useState<Alert[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    loadAlerts();
+  }, []);
+
+  const loadAlerts = async () => {
+    setLoading(true);
+    try {
+      const alertData = await api.getAlertList({ status: "active", limit: 2 });
+      setAlerts(alertData);
+    } catch (error) {
+      console.error("加载预警列表失败", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 将真实预警数据转换为卡片格式
+  const alertCards: PostLoanAlertCard[] = alerts.map((alert) => {
+    const riskColor = alert.alert_level === "CRITICAL" ? "red" :
+                      alert.alert_level === "HIGH" ? "orange" :
+                      alert.alert_level === "MEDIUM" ? "gold" : "blue";
+
+    return {
+      id: String(alert.id),
+      entityName: alert.company_name || "未知企业",
+      headline: alert.alert_type,
+      auxiliaryText: `企业ID: ${alert.enterprise_id} · 触发时间: ${new Date(alert.triggered_at).toLocaleDateString("zh-CN")}`,
+      riskTag: RISK_LEVEL_TEXT[alert.alert_level] || "未知",
+      riskColor: riskColor as "red" | "orange" | "gold" | "blue",
+      categoryTag: alert.alert_source || "系统预警",
+      slaText: "待处置",
+      slaUrgent: alert.alert_level === "CRITICAL",
+      primaryLabel: "认领核查",
+      secondaryLabel: "加入队列",
+      icon: "corp",
+    };
+  });
+
+  const displayCards = alertCards.map((a) => ({
     ...a,
-    auxiliaryText: AUXILIARY[a.id] ?? "",
-    onPrimary: () => (a.id === "pl-sl-1" ? onClaimVerify(a.id) : onViewDetail(a.id)),
+    onPrimary: () => onClaimVerify(a.id),
     onSecondary: a.secondaryLabel ? () => onJoinQueue?.(a.id) : undefined,
   }));
 
@@ -143,15 +154,23 @@ export default function PostLoanSearchlight({ onClaimVerify, onViewDetail, onJoi
       <div className="section-header">
         <Text className="section-title">今日预警大盘</Text>
         <Text type="secondary" className="section-subtitle ml-2">
-          贷后预警信息优先展示，支持认领与下钻核查
+          企查查实时预警数据，支持认领与下钻核查
         </Text>
       </div>
       <div className="section-body">
-        <div className="flex flex-col lg:flex-row gap-4">
-          {alerts.map((alert) => (
-            <AlertCard key={alert.id} alert={alert} />
-          ))}
-        </div>
+        <Spin spinning={loading}>
+          {displayCards.length > 0 ? (
+            <div className="flex flex-col lg:flex-row gap-4">
+              {displayCards.map((alert) => (
+                <AlertCard key={alert.id} alert={alert} />
+              ))}
+            </div>
+          ) : (
+            <div className="pl-solid-card p-6 text-center text-[13px] text-gray-500">
+              暂无可展示的预警数据
+            </div>
+          )}
+        </Spin>
       </div>
     </section>
   );

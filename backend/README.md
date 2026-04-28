@@ -22,6 +22,17 @@
 | `GET` | `/api/scenario/post-loan/data-dictionary/variables` | `/scenario/post-loan/data-dictionary/variables` |
 | `GET` | `/api/scenario/post-loan/data-dictionary/sources` | `/scenario/post-loan/data-dictionary/sources` |
 
+### 企业风险与驾驶舱 API（新增）
+
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| `GET` | `/api/dashboard/stats` | 首页驾驶舱统计（在贷资产、状态占比、客户经理分布、经理趋势） |
+| `POST` | `/api/enterprises/watchlist/precheck` | 监控名单批量入池前额度预检（企查查积分） |
+| `POST` | `/api/enterprises/watchlist/batch-onboard` | 批量入池并触发风险评估 |
+| `POST` | `/api/enterprises/watchlist/import-csv` | CSV 企业档案导入并自动入池 |
+| `POST` | `/api/enterprises/{enterprise_id}/assess` | 单企业风险评估（`qcc-risk`） |
+| `GET` | `/api/alerts` | 预警列表查询 |
+
 **变量字典查询参数（`GET .../variables`）：**
 
 | 参数 | 说明 |

@@ -11,6 +11,7 @@ import type { TaskType, TaskResponse } from "@/types";
 import type { AnalysisFormValues } from "./AnalysisForm";
 import type { ReviewFormValues } from "./ReviewForm";
 import PostLoanCoreKpis, { type PostLoanKpiKey } from "./postLoan/PostLoanCoreKpis";
+import PostLoanAssetCockpit from "./postLoan/PostLoanAssetCockpit";
 import PostLoanSearchlight from "./postLoan/PostLoanSearchlight";
 import MyDisposalQueue from "./postLoan/MyDisposalQueue";
 import PostLoanQuickActions, { type PostLoanQuickActionDef } from "./postLoan/PostLoanQuickActions";
@@ -75,17 +76,14 @@ export default function Home() {
   );
 
   const handleClaimVerify = useCallback(
-    (_id: string) => {
+    (id: string) => {
       void message.success("已认领核查（演示），跳转预警核查工作台");
-      navigate("/risk/workbench");
-    },
-    [message, navigate],
-  );
-
-  const handleViewAlertDetail = useCallback(
-    (_id: string) => {
-      void message.info("打开预警详情（演示）：可下钻至客户借据与外部数据源");
-      navigate("/risk/workbench");
+      if (id.startsWith("loan-")) {
+        const loanId = id.replace("loan-", "");
+        navigate(`/risk/workbench?source=loan-overdue&loan_id=${encodeURIComponent(loanId)}`);
+        return;
+      }
+      navigate(`/risk/workbench?alert_id=${encodeURIComponent(id)}`);
     },
     [message, navigate],
   );
@@ -195,10 +193,13 @@ export default function Home() {
         <PostLoanCoreKpis onDrill={handleKpiDrill} />
       </div>
 
+      <div className="pl-fade-in-up" style={{ animationDelay: "0.05s" }}>
+        <PostLoanAssetCockpit />
+      </div>
+
       <div className="pl-fade-in-up" style={{ animationDelay: "0.1s" }}>
         <PostLoanSearchlight
           onClaimVerify={handleClaimVerify}
-          onViewDetail={handleViewAlertDetail}
           onJoinQueue={handleJoinQueue}
         />
       </div>

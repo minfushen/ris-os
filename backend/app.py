@@ -35,6 +35,9 @@ from services.review import process_review
 from services.analysis import process_analysis
 from scenario_post_loan import router as post_loan_scenario_router
 from routers.qcc_assessment import router as qcc_assessment_router
+from routers.enterprises import router as enterprises_router
+from routers.alerts import router as alerts_router
+from routers.dashboard import router as dashboard_router
 
 UPLOAD_ROOT = Path(__file__).resolve().parent / "uploads"
 
@@ -42,6 +45,9 @@ UPLOAD_ROOT = Path(__file__).resolve().parent / "uploads"
 @asynccontextmanager
 async def lifespan(app: FastAPI):  # noqa: ARG001
     init_db()
+    # 初始化企业数据中心数据库
+    from enterprise_db import init_enterprise_db
+    init_enterprise_db()
     yield
 
 
@@ -53,6 +59,15 @@ app.include_router(post_loan_scenario_router, prefix="/api")
 
 # 企查查风险评估路由
 app.include_router(qcc_assessment_router)
+
+# 企业管理路由
+app.include_router(enterprises_router)
+
+# 预警管理路由
+app.include_router(alerts_router)
+
+# 大盘统计路由
+app.include_router(dashboard_router)
 
 app.add_middleware(
     CORSMiddleware,

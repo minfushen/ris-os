@@ -33,6 +33,13 @@ export const ROUTE_META: Record<string, RouteMeta> = {
     navKey: "monitor-dashboard",
     parentNavKey: "monitor",
   },
+  "/monitor/watchlist-upload": {
+    title: "监控名单批量上传",
+    subtitle: "批量入池监控企业并自动评估入预警队列",
+    breadcrumb: ["预警监控", "监控名单批量上传"],
+    navKey: "monitor-watchlist-upload",
+    parentNavKey: "monitor",
+  },
   "/monitor/o2o": {
     title: "策略效果追踪",
     subtitle: "策略上线后效果与漂移（原 O2O 一致性）",

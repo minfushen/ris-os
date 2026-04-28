@@ -112,7 +112,7 @@ export interface QccOperationInfo {
 }
 
 // 风险等级颜色映射
-export const RISK_LEVEL_COLORS: Record<RiskLevel, string> = {
+export const RISK_LEVEL_COLORS: Record<RiskLevel, string> & Record<string, string> = {
   CRITICAL: "#ff4d4f",
   HIGH: "#ff7a45",
   MEDIUM: "#faad14",
@@ -120,7 +120,7 @@ export const RISK_LEVEL_COLORS: Record<RiskLevel, string> = {
 };
 
 // 风险等级文本映射
-export const RISK_LEVEL_TEXT: Record<RiskLevel, string> = {
+export const RISK_LEVEL_TEXT: Record<RiskLevel, string> & Record<string, string> = {
   CRITICAL: "关键风险",
   HIGH: "高风险",
   MEDIUM: "中等风险",

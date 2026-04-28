@@ -8,6 +8,7 @@ const Home = lazy(() => import("@/pages/Home"));
 
 // 监控分析模块
 const Dashboard = lazy(() => import("@/pages/Monitor/Dashboard"));
+const WatchlistUpload = lazy(() => import("@/pages/Monitor/WatchlistUpload"));
 const Reports = lazy(() => import("@/pages/Monitor/Reports"));
 const O2OMonitor = lazy(() => import("@/pages/Monitor/O2OMonitor"));
 const LabelingFlywheel = lazy(() => import("@/pages/Monitor/LabelingFlywheel"));
@@ -72,6 +73,7 @@ const router = createBrowserRouter([
 
       { path: "monitor/asset-quality", element: withSuspense(<AssetQuality />) },
       { path: "monitor/dashboard", element: withSuspense(<Dashboard />) },
+      { path: "monitor/watchlist-upload", element: withSuspense(<WatchlistUpload />) },
       { path: "monitor/o2o", element: withSuspense(<O2OMonitor />) },
       { path: "monitor/labeling", element: withSuspense(<LabelingFlywheel />) },
       { path: "monitor/reports", element: withSuspense(<Reports />) },

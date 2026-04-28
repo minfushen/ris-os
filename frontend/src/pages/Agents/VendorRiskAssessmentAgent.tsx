@@ -9,13 +9,12 @@
  * - 展示证据链和处置建议
  */
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   Button,
   Input,
   Space,
   Alert,
-  Spin,
   Card,
   Tag,
   Descriptions,
@@ -28,12 +27,11 @@ import {
   SearchOutlined,
   WarningOutlined,
   CheckCircleOutlined,
-  LoadingOutlined,
   SyncOutlined,
 } from "@ant-design/icons";
 import ModulePageShell, { ModuleSectionCard } from "@/components/ModulePageShell";
 import { api } from "@/api/client";
-import type { VendorRiskAssessment, RiskLevel } from "@/types/qcc";
+import type { VendorRiskAssessment } from "@/types/qcc";
 import { RISK_LEVEL_COLORS, RISK_LEVEL_TEXT, DIMENSION_NAMES } from "@/types/qcc";
 
 const { Text } = Typography;

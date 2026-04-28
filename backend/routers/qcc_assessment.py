@@ -3,7 +3,7 @@
 """
 
 from fastapi import APIRouter, HTTPException, Query
-from typing import Optional, List
+from typing import Optional
 from models.qcc_models import (
     AssessVendorRiskRequest,
     VendorRiskAssessment,
@@ -12,7 +12,6 @@ from models.qcc_models import (
     QccOperationInfo
 )
 from services.qcc_mcp_client import QccMcpClient
-import os
 
 router = APIRouter(prefix="/api/qcc", tags=["企查查风险评估"])
 
@@ -45,7 +44,10 @@ async def assess_vendor_risk(request: AssessVendorRiskRequest):
     执行 9 维度风险评估和 18 类风险排查
     """
     try:
-        assessment = await mcp_client.assess_vendor_risk(request.company_name)
+        assessment = await mcp_client.assess_vendor_risk_risk_only(
+            request.company_name,
+            low_cost=False,
+        )
         return assessment
     except Exception as e:
         raise HTTPException(
@@ -70,12 +72,7 @@ async def get_company_info(
     - **company_name**: 企业名称或统一社会信用代码
     """
     try:
-        result = await mcp_client.call_tool(
-            "company",
-            "get_company_registration_info",
-            {"searchKey": search_key or company_name}
-        )
-        return QccCompanyInfo(**result)
+        return await mcp_client._get_company_info(search_key or company_name)
     except Exception as e:
         raise HTTPException(
             status_code=500,
@@ -115,7 +112,7 @@ async def get_risk_info(company_name: str):
     """
     try:
         result = await mcp_client._batch_get_risks(company_name)
-        return QccRiskInfo(**result)
+        return result
     except Exception as e:
         raise HTTPException(
             status_code=500,
@@ -145,7 +142,7 @@ async def get_operation_info(company_name: str):
     """
     try:
         result = await mcp_client._get_operation_info(company_name)
-        return QccOperationInfo(**result)
+        return result
     except Exception as e:
         raise HTTPException(
             status_code=500,

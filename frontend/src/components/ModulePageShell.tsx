@@ -74,6 +74,7 @@ interface ModuleSectionCardProps {
   extra?: ReactNode;
   children: ReactNode;
   noPadding?: boolean;
+  className?: string;
 }
 
 export function ModuleSectionCard({
@@ -82,9 +83,10 @@ export function ModuleSectionCard({
   extra,
   children,
   noPadding = false,
+  className,
 }: ModuleSectionCardProps) {
   return (
-    <section className="section-shell">
+    <section className={`section-shell ${className || ""}`.trim()}>
       {title && (
         <div className="section-header">
           <div className="flex items-center gap-2">
