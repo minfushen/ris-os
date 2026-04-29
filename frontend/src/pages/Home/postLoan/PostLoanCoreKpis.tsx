@@ -196,7 +196,7 @@ export default function PostLoanCoreKpis({ onDrill }: PostLoanCoreKpisProps) {
         data: [2, 3, 4, 5, stats?.high_risk_enterprises || 0],
         color: "var(--color-danger-light)"
       },
-      footer: "企查查实时数据 · 点击查看详情",
+      footer: "企查查实时数据 · 点击查看资产详情",
       stripVariant: KPI_STRIP.m1,
       onClick: () => onDrill?.("m1"),
     },
@@ -211,7 +211,7 @@ export default function PostLoanCoreKpis({ onDrill }: PostLoanCoreKpisProps) {
         data: [8, 10, 12, stats?.pending_alerts || 0, stats?.pending_alerts || 0],
         color: "var(--color-warning-light)"
       },
-      footer: "全产品线 · 今日 · 点击处置",
+      footer: "全产品线 · 今日 · 点击进入预警大盘",
       stripVariant: KPI_STRIP.newAlert,
       onClick: () => onDrill?.("newAlert"),
     },
@@ -224,7 +224,7 @@ export default function PostLoanCoreKpis({ onDrill }: PostLoanCoreKpisProps) {
         color: "var(--color-danger-light)"
       },
       progress: { value: stats?.critical_alerts || 0, max: 10 },
-      footer: "需立即处置 · 点击认领",
+      footer: "需立即处置 · 点击进入核查工作台",
       stripVariant: KPI_STRIP.timeout,
       onClick: () => onDrill?.("timeout"),
     },

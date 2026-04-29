@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Typography, Button, Space, Steps, App } from "antd";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import ModulePageShell, { ModuleSectionCard } from "@/components/ModulePageShell";
+import DemoFlowNav from "@/components/DemoFlowNav";
 import StrategyDiff from "./StrategyDiff";
 import SafeGuardConfig from "./SafeGuardConfig";
 import PublishWorkflowPanel from "./PublishWorkflowPanel";
@@ -129,10 +130,10 @@ export default function PublishPage() {
           <div className="bg-[#fafafa] layout-p-md layout-mb-md">
             <Space direction="vertical" size={4}>
               <Text style={{ fontSize: 12 }}>
-                • 预警规则包: 经营贷包 V3.1 → V3.2
+                • 预警规则包: 经营贷预警包 V2.4.0 → V2.5.0（覆盖 FP-01/FP-03）
               </Text>
               <Text style={{ fontSize: 12 }}>
-                • 变更内容: 制造业多头阈值 35%→38%；税报断档天数 45→30
+                • 变更内容: 制造业多头阈值 35%→38%（RC-02）；税报断档天数 45→30（RC-01）
               </Text>
               <Text style={{ fontSize: 12 }}>
                 • 灰度流量: {(safeGuardConfig.canaryPercentage as number) || 10}%
@@ -157,6 +158,8 @@ export default function PublishPage() {
           </div>
         </ModuleSectionCard>
       )}
+
+      <DemoFlowNav />
     </ModulePageShell>
   );
 }

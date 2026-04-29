@@ -2,6 +2,7 @@ import { lazy, Suspense, type ReactNode } from "react";
 import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom";
 import { Skeleton } from "antd";
 import AppLayout from "@/components/AppLayout";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 
 // 路由级懒加载
 const Home = lazy(() => import("@/pages/Home"));
@@ -40,17 +41,11 @@ const FeatureStudio = lazy(() => import("@/pages/Feature/Studio"));
 // 数据资产模块
 const Dictionary = lazy(() => import("@/pages/Data/Dictionary"));
 
-// 智能体协同模块
-const AgentAttribution = lazy(() => import("@/pages/Agents/AttributionAgent"));
-const AgentDisposition = lazy(() => import("@/pages/Agents/DispositionAgent"));
-const AgentStrategyTuning = lazy(() => import("@/pages/Agents/StrategyTuningAgent"));
-const AgentScriptCompliance = lazy(() => import("@/pages/Agents/ScriptComplianceAgent"));
-const AgentReviewQa = lazy(() => import("@/pages/Agents/ReviewQaAgent"));
-const AgentOpsMonitor = lazy(() => import("@/pages/Agents/OpsMonitor"));
-const AgentVendorRiskAssessment = lazy(() => import("@/pages/Agents/VendorRiskAssessmentAgent"));
-
 // 系统架构说明
 const IntegrationArchitecture = lazy(() => import("@/pages/Architecture/Integration"));
+
+// 404
+const NotFound = lazy(() => import("@/pages/NotFound"));
 
 function PageFallback() {
   return (
@@ -64,10 +59,14 @@ function withSuspense(element: ReactNode) {
   return <Suspense fallback={<PageFallback />}>{element}</Suspense>;
 }
 
+function withErrorBoundary(element: ReactNode) {
+  return <ErrorBoundary>{element}</ErrorBoundary>;
+}
+
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <AppLayout />,
+    element: withErrorBoundary(<AppLayout />),
     children: [
       { index: true, element: withSuspense(<Home />) },
 
@@ -101,17 +100,9 @@ const router = createBrowserRouter([
 
       { path: "data/dictionary", element: withSuspense(<Dictionary />) },
 
-      { path: "agents/attribution", element: withSuspense(<AgentAttribution />) },
-      { path: "agents/disposition", element: withSuspense(<AgentDisposition />) },
-      { path: "agents/strategy-tuning", element: withSuspense(<AgentStrategyTuning />) },
-      { path: "agents/script-compliance", element: withSuspense(<AgentScriptCompliance />) },
-      { path: "agents/review-qa", element: withSuspense(<AgentReviewQa />) },
-      { path: "agents/ops-monitor", element: withSuspense(<AgentOpsMonitor />) },
-      { path: "agents/vendor-risk-assessment", element: withSuspense(<AgentVendorRiskAssessment />) },
-
       { path: "architecture/integration", element: withSuspense(<IntegrationArchitecture />) },
 
-      { path: "*", element: <Navigate to="/" replace /> },
+      { path: "*", element: withSuspense(<NotFound />) },
     ],
   },
 ]);

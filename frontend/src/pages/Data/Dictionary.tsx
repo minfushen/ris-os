@@ -2,6 +2,7 @@ import { Typography, Table, Tag, Button, Space, Input, Select, Tabs, Alert, Spin
 import { PlusOutlined, SearchOutlined, EditOutlined } from "@ant-design/icons";
 import { useCallback, useEffect, useRef, useState } from "react";
 import ModulePageShell, { ModuleSectionCard } from "@/components/ModulePageShell";
+import DemoFlowNav from "@/components/DemoFlowNav";
 import { api, formatApiError } from "@/api/client";
 import type { DataDictionarySourceRow, DataDictionaryVariableRow } from "@/types/scenarioPostLoan";
 
@@ -298,6 +299,8 @@ export default function Dictionary() {
           className="layout-px-lg layout-pb-sm"
         />
       </ModuleSectionCard>
+
+      <DemoFlowNav />
     </ModulePageShell>
   );
 }

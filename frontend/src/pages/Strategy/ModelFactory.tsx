@@ -1,6 +1,7 @@
 import { Button, Col, Progress, Row, Space, Table, Tag, Typography } from "antd";
 import { ExperimentOutlined, PlayCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import ModulePageShell, { ModuleSectionCard } from "@/components/ModulePageShell";
+import DemoFlowNav from "@/components/DemoFlowNav";
 
 const { Text } = Typography;
 
@@ -21,6 +22,7 @@ const EXPERIMENTS = [
     recall: "72.8%",
     lift: "2.6x",
     status: "候选模型",
+    targetFP: "FP-01 资金挪用 · FP-03 税报粉饰 · FP-05 经营空心化",
   },
   {
     id: "EXP-PL-2411",
@@ -31,6 +33,7 @@ const EXPERIMENTS = [
     recall: "68.4%",
     lift: "2.2x",
     status: "训练中",
+    targetFP: "FP-03 税报粉饰",
   },
   {
     id: "EXP-PL-2414",
@@ -41,6 +44,7 @@ const EXPERIMENTS = [
     recall: "64.9%",
     lift: "1.9x",
     status: "待复核",
+    targetFP: "FP-02 团伙共债",
   },
 ];
 
@@ -97,6 +101,12 @@ export default function ModelFactory() {
             { title: "召回率", dataIndex: "recall", width: 90 },
             { title: "Lift", dataIndex: "lift", width: 80 },
             {
+              title: "目标欺诈模式",
+              dataIndex: "targetFP",
+              width: 200,
+              render: (v: string) => <Text className="text-[11px]">{v}</Text>,
+            },
+            {
               title: "状态",
               dataIndex: "status",
               width: 100,
@@ -126,6 +136,8 @@ export default function ModelFactory() {
           </Space>
         </div>
       </ModuleSectionCard>
+
+      <DemoFlowNav />
     </ModulePageShell>
   );
 }

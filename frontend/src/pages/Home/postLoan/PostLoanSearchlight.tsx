@@ -112,7 +112,7 @@ export default function PostLoanSearchlight({ onClaimVerify, onJoinQueue }: Post
   const loadAlerts = async () => {
     setLoading(true);
     try {
-      const alertData = await api.getAlertList({ status: "active", limit: 2 });
+      const alertData = await api.getAlertList({ status: "active", limit: 4 });
       setAlerts(alertData);
     } catch (error) {
       console.error("加载预警列表失败", error);
@@ -154,7 +154,7 @@ export default function PostLoanSearchlight({ onClaimVerify, onJoinQueue }: Post
       <div className="section-header">
         <Text className="section-title">今日预警大盘</Text>
         <Text type="secondary" className="section-subtitle ml-2">
-          企查查实时预警数据，支持认领与下钻核查
+          企查查实时预警数据，点击「认领核查」进入工作台处置
         </Text>
       </div>
       <div className="section-body">

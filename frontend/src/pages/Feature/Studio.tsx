@@ -7,6 +7,7 @@ import {
 } from "@ant-design/icons";
 import { useCallback, useEffect, useState } from "react";
 import ModulePageShell, { ModuleSectionCard } from "@/components/ModulePageShell";
+import DemoFlowNav from "@/components/DemoFlowNav";
 import { api, formatApiError } from "@/api/client";
 import type { PostLoanFeatureStudioResponse, PostLoanPsiByProductRow, PostLoanFeatureRow } from "@/types/scenarioPostLoan";
 
@@ -221,7 +222,7 @@ export default function FeatureStudio() {
           />
         </ModuleSectionCard>
 
-        <ModuleSectionCard title="特征列表" subtitle="含分产品线 PSI 列" noPadding>
+        <ModuleSectionCard title="特征列表" subtitle="含分产品线 PSI 列；以下特征被模型工厂 EXP-PL-2408/2411/2414 三组实验引用" noPadding>
           <Table
             dataSource={features}
             columns={columns}
@@ -232,6 +233,8 @@ export default function FeatureStudio() {
           />
         </ModuleSectionCard>
       </Spin>
+
+      <DemoFlowNav />
     </ModulePageShell>
   );
 }

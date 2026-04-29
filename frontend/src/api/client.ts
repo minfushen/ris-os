@@ -3,7 +3,6 @@ import {
   type CreateTaskPayload,
   type TaskResponse,
   type TaskListItem,
-  type TaskDetail,
 } from "@/types";
 import type {
   DataDictionarySourceRow,
@@ -11,19 +10,9 @@ import type {
   PostLoanFeatureStudioResponse,
 } from "@/types/scenarioPostLoan";
 import type {
-  VendorRiskAssessment,
-  QccCompanyInfo,
-  QccRiskInfo,
-  QccOperationInfo,
-  AssessVendorRiskRequest,
-} from "@/types/qcc";
-import type {
-  Enterprise,
   RiskAssessment,
   Alert,
-  OverdueLoanAlertCandidate,
   DashboardStats,
-  AssessEnterpriseRiskResponse,
   BatchOnboardWatchlistResponse,
   WatchlistPrecheckResponse,
 } from "@/types/enterprise";
@@ -112,31 +101,12 @@ export const api = {
     return this.createAnalysisTask(formData);
   },
 
-  /** 创建任务（含文件） */
-  createTaskWithFiles(formData: FormData): Promise<TaskResponse> {
-    const taskType = formData.get("task_type") as string;
-    if (taskType === "review") {
-      return this.createReviewTask(formData);
-    }
-    return this.createAnalysisTask(formData);
-  },
-
   /** GET /tasks — 任务列表 */
   listTasks(filters?: { task_type?: string; status?: string }, limit = 50): Promise<TaskListItem[]> {
     const params = new URLSearchParams({ limit: String(limit) });
     if (filters?.task_type) params.set("task_type", filters.task_type);
     if (filters?.status) params.set("status", filters.status);
     return request<TaskListItem[]>(`/tasks?${params.toString()}`);
-  },
-
-  /** GET /tasks/{id} — 任务详情 */
-  getTask(taskId: string): Promise<TaskDetail> {
-    return request<TaskDetail>(`/tasks/${encodeURIComponent(taskId)}`);
-  },
-
-  /** GET /tasks/{id}/result — 任务结果 */
-  getResult(taskId: string): Promise<Record<string, unknown>> {
-    return request<Record<string, unknown>>(`/tasks/${encodeURIComponent(taskId)}/result`);
   },
 
   // ─── 贷后场景 REST：`/scenario/post-loan/*` ─────────────────────────────
@@ -167,67 +137,7 @@ export const api = {
     return request<DataDictionarySourceRow[]>(`${POST_LOAN_API_PREFIX}/data-dictionary/sources`);
   },
 
-  // ─── 企查查风险评估：`/api/qcc/*` ─────────────────────────────
-
-  /** POST /api/qcc/assess-vendor-risk — 企业风险评估 */
-  assessVendorRisk(companyName: string, dimensions?: string[]): Promise<VendorRiskAssessment> {
-    const payload: AssessVendorRiskRequest = {
-      company_name: companyName,
-      dimensions,
-    };
-    return request<VendorRiskAssessment>("/api/qcc/assess-vendor-risk", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
-    });
-  },
-
-  /** GET /api/qcc/company/{company_name} — 获取企业工商信息 */
-  getQccCompanyInfo(companyName: string): Promise<QccCompanyInfo> {
-    return request<QccCompanyInfo>(`/api/qcc/company/${encodeURIComponent(companyName)}`);
-  },
-
-  /** GET /api/qcc/risk/{company_name} — 获取企业风险信息 */
-  getQccRiskInfo(companyName: string): Promise<QccRiskInfo> {
-    return request<QccRiskInfo>(`/api/qcc/risk/${encodeURIComponent(companyName)}`);
-  },
-
-  /** GET /api/qcc/operation/{company_name} — 获取企业经营信息 */
-  getQccOperationInfo(companyName: string): Promise<QccOperationInfo> {
-    return request<QccOperationInfo>(`/api/qcc/operation/${encodeURIComponent(companyName)}`);
-  },
-
   // ─── 企业数据中心：`/api/enterprises/*` ─────────────────────────────
-
-  /** POST /api/enterprises/register — 注册企业 */
-  registerEnterprise(companyName: string): Promise<Enterprise> {
-    return request<Enterprise>("/api/enterprises/register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ company_name: companyName }),
-    });
-  },
-
-  /** GET /api/enterprises/{id} — 获取企业档案 */
-  getEnterprise(enterpriseId: number): Promise<Enterprise> {
-    return request<Enterprise>(`/api/enterprises/${enterpriseId}`);
-  },
-
-  /** GET /api/enterprises — 获取企业列表 */
-  listEnterprises(limit = 50): Promise<Enterprise[]> {
-    return request<Enterprise[]>(`/api/enterprises?limit=${limit}`);
-  },
-
-  /** POST /api/enterprises/{id}/assess — 评估企业风险 */
-  assessEnterpriseRisk(enterpriseId: number): Promise<AssessEnterpriseRiskResponse> {
-    return request<AssessEnterpriseRiskResponse>(`/api/enterprises/${enterpriseId}/assess`, {
-      method: "POST",
-    });
-  },
 
   /** POST /api/enterprises/watchlist/batch-onboard — 批量入池并评估名单 */
   batchOnboardWatchlist(
@@ -262,11 +172,6 @@ export const api = {
     return request<RiskAssessment>(`/api/enterprises/${enterpriseId}/assessments/latest`);
   },
 
-  /** GET /api/enterprises/{id}/assessments/history — 获取评估历史 */
-  getAssessmentHistory(enterpriseId: number, limit = 10): Promise<RiskAssessment[]> {
-    return request<RiskAssessment[]>(`/api/enterprises/${enterpriseId}/assessments/history?limit=${limit}`);
-  },
-
   // ─── 预警管理：`/api/alerts/*` ─────────────────────────────
 
   /** GET /api/alerts — 获取预警列表 */
@@ -283,11 +188,6 @@ export const api = {
     return request<Alert[]>(`/api/alerts${qs ? `?${qs}` : ""}`);
   },
 
-  /** GET /api/alerts/loan-overdue — 获取逾期贷款候选 */
-  getOverdueLoanAlertCandidates(limit = 20): Promise<OverdueLoanAlertCandidate[]> {
-    return request<OverdueLoanAlertCandidate[]>(`/api/alerts/loan-overdue?limit=${limit}`);
-  },
-
   /** POST /api/alerts/{id}/resolve — 解决预警 */
   resolveAlert(alertId: number): Promise<Alert> {
     return request<Alert>(`/api/alerts/${alertId}/resolve`, {
@@ -301,4 +201,5 @@ export const api = {
   getDashboardStats(): Promise<DashboardStats> {
     return request<DashboardStats>("/api/dashboard/stats");
   },
+
 };

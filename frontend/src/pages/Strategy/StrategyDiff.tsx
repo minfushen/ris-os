@@ -49,8 +49,8 @@ function countChanges(lines: StrategyLine[]) {
 }
 
 export default function StrategyDiff({
-  oldVersion = "V3.1",
-  newVersion = "V3.2",
+  oldVersion = "V2.4.0",
+  newVersion = "V2.5.0",
   oldLines = DEFAULT_OLD_LINES,
   newLines = DEFAULT_NEW_LINES,
 }: StrategyDiffProps) {

@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useTaskStore } from "@/store/taskStore";
 import { api, API_BASE_URL } from "@/api/client";
 import { PLATFORM_NAME, PLATFORM_SUBTITLE } from "@/config/brand";
+import { useDemoRoleStore } from "@/store/demoRoleStore";
 import type { TaskType, TaskResponse } from "@/types";
 import type { AnalysisFormValues } from "./AnalysisForm";
 import type { ReviewFormValues } from "./ReviewForm";
@@ -15,6 +16,8 @@ import PostLoanAssetCockpit from "./postLoan/PostLoanAssetCockpit";
 import PostLoanSearchlight from "./postLoan/PostLoanSearchlight";
 import MyDisposalQueue from "./postLoan/MyDisposalQueue";
 import PostLoanQuickActions, { type PostLoanQuickActionDef } from "./postLoan/PostLoanQuickActions";
+import ModelerWorkbench from "./postLoan/ModelerWorkbench";
+import ApproverWorkbench from "./postLoan/ApproverWorkbench";
 import TaskDrawer from "./TaskDrawer";
 import {
   PlusOutlined,
@@ -40,6 +43,7 @@ export default function Home() {
   const navigate = useNavigate();
   const taskError = useTaskStore((s) => s.error);
   const fetchTasks = useTaskStore((s) => s.fetchTasks);
+  const { role } = useDemoRoleStore();
 
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [drawerType, setDrawerType] = useState<TaskType | null>(null);
@@ -60,10 +64,10 @@ export default function Home() {
           navigate("/monitor/asset-quality");
           break;
         case "newAlert":
-          document.getElementById("searchlight-anchor")?.scrollIntoView({ behavior: "smooth", block: "start" });
+          navigate("/monitor/dashboard");
           break;
         case "timeout":
-          document.getElementById("work-queue")?.scrollIntoView({ behavior: "smooth", block: "start" });
+          navigate("/risk/workbench");
           break;
         case "effectiveness":
           navigate("/strategy/rules");
@@ -163,9 +167,13 @@ export default function Home() {
     },
   ];
 
+  const isManager = role === "relationship_manager";
+  const isModeler = role === "risk_modeler";
+  const isApprover = role === "strategy_approver";
+
   return (
     <div className="flex flex-col gap-3">
-      {taskError && (
+      {isManager && taskError && (
         <details
           aria-label="任务服务调试信息（任务服务连接失败）"
           className="max-w-full self-start rounded-md border border-border-soft bg-white/70 px-2.5 py-1 text-[12px] text-text-muted shadow-sm"
@@ -189,38 +197,45 @@ export default function Home() {
         </Text>
       </div>
 
-      <div className="pl-home-kpi-shell pl-fade-in-up">
-        <PostLoanCoreKpis onDrill={handleKpiDrill} />
-      </div>
+      {isManager && (
+        <>
+          <div className="pl-home-kpi-shell pl-fade-in-up">
+            <PostLoanCoreKpis onDrill={handleKpiDrill} />
+          </div>
 
-      <div className="pl-fade-in-up" style={{ animationDelay: "0.05s" }}>
-        <PostLoanAssetCockpit />
-      </div>
+          <div className="pl-fade-in-up" style={{ animationDelay: "0.05s" }}>
+            <PostLoanAssetCockpit />
+          </div>
 
-      <div className="pl-fade-in-up" style={{ animationDelay: "0.1s" }}>
-        <PostLoanSearchlight
-          onClaimVerify={handleClaimVerify}
-          onJoinQueue={handleJoinQueue}
-        />
-      </div>
+          <div className="pl-fade-in-up" style={{ animationDelay: "0.1s" }}>
+            <PostLoanSearchlight
+              onClaimVerify={handleClaimVerify}
+              onJoinQueue={handleJoinQueue}
+            />
+          </div>
 
-      <div className="pl-fade-in-up" style={{ animationDelay: "0.2s" }}>
-        <MyDisposalQueue onOpenItem={() => navigate("/risk/workbench")} />
-      </div>
+          <div className="pl-fade-in-up" style={{ animationDelay: "0.2s" }}>
+            <MyDisposalQueue onOpenItem={() => navigate("/risk/workbench")} />
+          </div>
 
-      <div className="pl-fade-in-up" style={{ animationDelay: "0.3s" }}>
-        <PostLoanQuickActions actions={quickActions} />
-      </div>
+          <div className="pl-fade-in-up" style={{ animationDelay: "0.3s" }}>
+            <PostLoanQuickActions actions={quickActions} />
+          </div>
 
-      <TaskDrawer
-        open={drawerOpen}
-        taskType={drawerType}
-        onClose={() => {
-          setDrawerOpen(false);
-          setDrawerType(null);
-        }}
-        onSubmit={handleSubmitTask}
-      />
+          <TaskDrawer
+            open={drawerOpen}
+            taskType={drawerType}
+            onClose={() => {
+              setDrawerOpen(false);
+              setDrawerType(null);
+            }}
+            onSubmit={handleSubmitTask}
+          />
+        </>
+      )}
+
+      {isModeler && <ModelerWorkbench />}
+      {isApprover && <ApproverWorkbench />}
     </div>
   );
 }

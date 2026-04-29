@@ -39,6 +39,8 @@ export interface Alert {
   // 关联字段
   company_name?: string;
   credit_code?: string;
+  manager_id?: string;
+  manager_name?: string;
 }
 
 export interface OverdueLoanAlertCandidate {

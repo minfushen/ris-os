@@ -4,6 +4,7 @@ import type { CSSProperties } from "react";
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ModulePageShell, { ModuleSectionCard } from "@/components/ModulePageShell";
+import DemoFlowNav from "@/components/DemoFlowNav";
 
 type StrategyHealth = "active" | "optimize";
 
@@ -30,20 +31,20 @@ const PRODUCT_GROUPS: ProductLineGroup[] = [
   {
     key: "biz",
     title: "经营贷",
-    subtitle: "经营异常 · 资金流 · 司法",
+    subtitle: "FP-01 资金挪用 · FP-03 税报粉饰 · FP-04 担保链",
     accent: "#4f6970",
     strategies: [
-      { id: "PL-B-01", name: "经营预警包 A", triggers: 1280, effectivenessPct: 71, falsePositivePct: 22, health: "active", version: "2.4.0", updateTime: "2026-04-17" },
-      { id: "PL-B-02", name: "司法与被执行联动", triggers: 420, effectivenessPct: 83, falsePositivePct: 11, health: "active", version: "1.2.1", updateTime: "2026-04-15" },
+      { id: "PL-B-01", name: "经营预警包 A（覆盖 FP-01/FP-03）", triggers: 1280, effectivenessPct: 71, falsePositivePct: 22, health: "active", version: "2.4.0", updateTime: "2026-04-17" },
+      { id: "PL-B-02", name: "司法与被执行联动（关联 RC-05）", triggers: 420, effectivenessPct: 83, falsePositivePct: 11, health: "active", version: "1.2.1", updateTime: "2026-04-15" },
     ],
   },
   {
     key: "tax",
     title: "税易贷 / 税金贷",
-    subtitle: "税报连续性 · 税负偏离",
+    subtitle: "FP-03 税报粉饰 · RC-01 断档天数调优",
     accent: "#5f9b7a",
     strategies: [
-      { id: "PL-T-01", name: "税报断档预警", triggers: 890, effectivenessPct: 58, falsePositivePct: 34, health: "optimize", version: "1.8.0", updateTime: "2026-04-16" },
+      { id: "PL-T-01", name: "税报断档预警（关联 RC-01）", triggers: 890, effectivenessPct: 58, falsePositivePct: 34, health: "optimize", version: "1.8.0", updateTime: "2026-04-16" },
       { id: "PL-T-02", name: "税负率行业分层", triggers: 560, effectivenessPct: 65, falsePositivePct: 19, health: "active", version: "1.1.2", updateTime: "2026-04-12" },
     ],
   },
@@ -62,7 +63,7 @@ const PRODUCT_GROUPS: ProductLineGroup[] = [
     subtitle: "多头 · 设备簇 · 行为异常",
     accent: "#c77b78",
     strategies: [
-      { id: "PL-C-01", name: "多头共债跳升", triggers: 2410, effectivenessPct: 62, falsePositivePct: 28, health: "optimize", version: "3.0.1", updateTime: "2026-04-17" },
+      { id: "PL-C-01", name: "多头共债跳升（关联 FP-02 / RC-02）", triggers: 2410, effectivenessPct: 62, falsePositivePct: 28, health: "optimize", version: "3.0.1", updateTime: "2026-04-17" },
     ],
   },
 ];
@@ -269,6 +270,8 @@ export default function Products() {
           </Form.Item>
         </Form>
       </Modal>
+
+      <DemoFlowNav />
     </ModulePageShell>
   );
 }

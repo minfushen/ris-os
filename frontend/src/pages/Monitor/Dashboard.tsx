@@ -24,6 +24,7 @@ import {
 } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import ModulePageShell, { ModuleSectionCard } from "@/components/ModulePageShell";
+import DemoFlowNav from "@/components/DemoFlowNav";
 import { api } from "@/api/client";
 import type { Alert, DashboardStats } from "@/types/enterprise";
 import { RISK_LEVEL_COLORS, RISK_LEVEL_TEXT } from "@/types/qcc";
@@ -223,6 +224,8 @@ export default function Dashboard() {
           />
         </ModuleSectionCard>
       </Spin>
+
+      <DemoFlowNav />
     </ModulePageShell>
   );
 }

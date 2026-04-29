@@ -38,7 +38,6 @@ from routers.qcc_assessment import router as qcc_assessment_router
 from routers.enterprises import router as enterprises_router
 from routers.alerts import router as alerts_router
 from routers.dashboard import router as dashboard_router
-
 UPLOAD_ROOT = Path(__file__).resolve().parent / "uploads"
 
 

@@ -1,9 +1,23 @@
-import { Typography, Tree, Button, Space, Form, Input, InputNumber, Table, Alert, Divider, Card, Slider } from "antd";
+import { Typography, Tree, Button, Space, Form, Input, InputNumber, Table, Alert, Divider, Card, Slider, Tag } from "antd";
 import { PlusOutlined, ThunderboltOutlined } from "@ant-design/icons";
 import { useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import ModulePageShell, { ModuleSectionCard } from "@/components/ModulePageShell";
+import DemoFlowNav from "@/components/DemoFlowNav";
+import { mockAlerts } from "@/mock/data";
+import { RISK_LEVEL_COLORS, RISK_LEVEL_TEXT } from "@/types/qcc";
 
 const { Text } = Typography;
+
+const RULE_ALERT_MAP: Record<string, string[]> = {
+  "rule-tax-gap": ["税报断档"],
+  "rule-energy": ["经营空心化"],
+  "rule-executed": ["司法风险"],
+  "rule-lawsuit": ["司法风险"],
+  "rule-multi-balance": ["多头共债", "多头", "共债"],
+  "rule-repay-pattern": ["资金挪用", "资金"],
+  "rule-biz-change": ["经营异常"],
+};
 
 /** 贷后预警规则树 */
 const RULE_TREE = [
@@ -64,6 +78,12 @@ export default function Rules() {
     const base = 1840;
     return Math.max(200, Math.round(base + simBoost * 42 - matrixBase * 4));
   }, [simBoost, matrixBase]);
+
+  const matchedAlerts = useMemo(() => {
+    const keywords = RULE_ALERT_MAP[selectedRule] ?? [];
+    if (keywords.length === 0) return [];
+    return mockAlerts.filter((a) => keywords.some((kw) => a.alert_type.includes(kw))).slice(0, 5);
+  }, [selectedRule]);
 
   return (
     <ModulePageShell
@@ -161,6 +181,54 @@ export default function Rules() {
               </div>
             </Card>
 
+            {/* 最近命中预警 — 串联规则 → 预警工作台 */}
+            {matchedAlerts.length > 0 && (
+              <>
+                <Divider className="!my-2" />
+                <div>
+                  <Text strong className="text-[13px] block mb-2">最近命中预警</Text>
+                  <Table
+                    size="small"
+                    pagination={false}
+                    rowKey="id"
+                    dataSource={matchedAlerts}
+                    columns={[
+                      {
+                        title: "企业名称",
+                        dataIndex: "company_name",
+                        render: (name: string, record: import("@/types/enterprise").Alert) => (
+                          <Link to={`/risk/workbench?alert_id=${record.id}`} className="text-blue-600 text-xs">
+                            {name}
+                          </Link>
+                        ),
+                      },
+                      {
+                        title: "预警等级",
+                        dataIndex: "alert_level",
+                        width: 90,
+                        render: (level: string) => (
+                          <Tag color={RISK_LEVEL_COLORS[level]} className="text-[10px]">{RISK_LEVEL_TEXT[level]}</Tag>
+                        ),
+                      },
+                      {
+                        title: "预警类型",
+                        dataIndex: "alert_type",
+                        width: 100,
+                        className: "text-xs",
+                      },
+                      {
+                        title: "触发时间",
+                        dataIndex: "triggered_at",
+                        width: 110,
+                        render: (t: string) => new Date(t).toLocaleDateString("zh-CN"),
+                        className: "text-xs",
+                      },
+                    ]}
+                  />
+                </div>
+              </>
+            )}
+
             <Divider className="!my-2" />
 
             <Form layout="vertical" size="small">
@@ -175,6 +243,8 @@ export default function Rules() {
           </div>
         </div>
       </ModuleSectionCard>
+
+      <DemoFlowNav />
     </ModulePageShell>
   );
 }

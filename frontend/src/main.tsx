@@ -8,12 +8,22 @@ import App from "./App";
 const rootEl = document.getElementById("root");
 if (!rootEl) throw new Error("Root element #root not found");
 
-createRoot(rootEl).render(
-  <StrictMode>
-    <ConfigProvider theme={theme} locale={zhCN}>
-      <AntApp>
-        <App />
-      </AntApp>
-    </ConfigProvider>
-  </StrictMode>
-);
+async function bootstrap() {
+  // 开发/演示模式：VITE_USE_MOCKS 未显式设为 false 时启动 MSW mock 层
+  if (import.meta.env.VITE_USE_MOCKS !== "false") {
+    const { startMockService } = await import("./mock/browser");
+    await startMockService();
+  }
+
+  createRoot(rootEl).render(
+    <StrictMode>
+      <ConfigProvider theme={theme} locale={zhCN}>
+        <AntApp>
+          <App />
+        </AntApp>
+      </ConfigProvider>
+    </StrictMode>,
+  );
+}
+
+bootstrap();

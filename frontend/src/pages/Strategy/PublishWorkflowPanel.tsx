@@ -55,7 +55,7 @@ const INITIAL_AUDIT: AuditLogRow[] = [
     at: "2026-04-18 09:12:03",
     actor: "张三(策略)",
     action: "提交发布申请",
-    detail: "版本 V3.1→V3.2，灰度 10%，熔断开启",
+    detail: "版本 V2.4.0→V2.5.0（覆盖 FP-01/FP-03），灰度 10%，熔断开启",
   },
   {
     id: "2",
@@ -168,7 +168,7 @@ export default function PublishWorkflowPanel({ changeId }: PublishWorkflowPanelP
           })
         );
         setCanaryActive(false);
-        pushAudit("当前用户", "灰度回滚", `变更单 ${changeId} 已回滚至 V3.1`);
+        pushAudit("当前用户", "灰度回滚", `变更单 ${changeId} 已回滚至 V2.4.0`);
       },
     });
   };

@@ -1,6 +1,7 @@
 import { Typography, Table, Tag, Button, Space, Progress, Select, DatePicker, Tabs, Row, Col, App } from "antd";
 import { PlusOutlined, EyeOutlined, DownloadOutlined, ThunderboltOutlined } from "@ant-design/icons";
 import ModulePageShell, { ModuleSectionCard } from "@/components/ModulePageShell";
+import DemoFlowNav from "@/components/DemoFlowNav";
 
 const { Text } = Typography;
 
@@ -16,6 +17,7 @@ const BACKTEST_TASKS = [
     advanceDaysP80: 18,
     conversionPct: 19.2,
     createTime: "2026-04-15",
+    relatedCase: "RC-05 司法权重 0.15→0.22",
   },
   {
     id: "BT-P-02",
@@ -28,6 +30,7 @@ const BACKTEST_TASKS = [
     advanceDaysP80: null,
     conversionPct: null,
     createTime: "2026-04-17",
+    relatedCase: "RC-01 断档天数 45→30天",
   },
   {
     id: "BT-P-03",
@@ -40,6 +43,7 @@ const BACKTEST_TASKS = [
     advanceDaysP80: null,
     conversionPct: null,
     createTime: "2026-04-17",
+    relatedCase: "RC-02 制造业多头阈值 35%→38%",
   },
 ];
 
@@ -74,6 +78,12 @@ export default function Backtest() {
     { title: "任务ID", dataIndex: "id", width: 88, render: (v: string) => <Text code className="text-[13px]">{v}</Text> },
     { title: "回测名称", dataIndex: "name", width: 200, render: (v: string) => <Text strong className="text-[13px]">{v}</Text> },
     { title: "对象", dataIndex: "target", width: 180, ellipsis: true, render: (v: string) => <Text className="text-[12px]">{v}</Text> },
+    {
+      title: "关联调优案例",
+      dataIndex: "relatedCase",
+      width: 180,
+      render: (v: string) => <Tag color="blue" className="text-[11px]">{v}</Tag>,
+    },
     { title: "切片", dataIndex: "slice", width: 88, render: (v: string) => <Tag className="!m-0 text-[11px]">{v}</Tag> },
     {
       title: "状态",
@@ -213,6 +223,8 @@ export default function Backtest() {
           ]}
         />
       </ModuleSectionCard>
+
+      <DemoFlowNav />
     </ModulePageShell>
   );
 }

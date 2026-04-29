@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Badge } from "antd";
 import {
   MenuFoldOutlined,
@@ -9,6 +9,7 @@ import AppBrandMark from "@/components/AppBrandMark";
 import { PLATFORM_NAME } from "@/config/brand";
 import { getSiderDutySubtitle } from "@/config/demoSession";
 import { PRIMARY_NAV, type NavItem } from "@/config/navigation";
+import { useDemoRoleStore, type DemoRole } from "@/store/demoRoleStore";
 import { api } from "@/api/client";
 
 function toPathname(path?: string): string | undefined {
@@ -37,17 +38,68 @@ function isSameNavTarget(path: string | undefined, location: ReturnType<typeof u
   return toPathname(path) === currentPath;
 }
 
+const ROLE_NAV_KEYS: Record<DemoRole, Set<string>> = {
+  relationship_manager: new Set([
+    "home",
+    "monitor-dashboard", "monitor-watchlist-upload", "monitor-asset-quality",
+    "monitor-o2o", "monitor-labeling", "monitor-reports",
+    "risk-workbench", "risk-collection", "knowledge-scripts", "risk-inspection",
+    "knowledge-fraud-patterns",
+    "demo", "architecture-integration", "architecture-data-flow",
+    "architecture-closed-loop", "architecture-p2-boundary",
+  ]),
+  risk_modeler: new Set([
+    "home",
+    "feature-studio", "data-dictionary", "knowledge-home",
+    "strategy-model-factory", "strategy-model-registry",
+    "strategy-decision-flow", "strategy-backtest",
+    "demo", "architecture-integration", "architecture-data-flow",
+    "architecture-closed-loop", "architecture-p2-boundary",
+  ]),
+  strategy_approver: new Set([
+    "home",
+    "strategy-backtest", "strategy-publish", "strategy-products",
+    "strategy-rules", "knowledge-rule-cases",
+    "demo", "architecture-integration", "architecture-data-flow",
+    "architecture-closed-loop", "architecture-p2-boundary",
+  ]),
+};
+
+function filterNavByRole(nav: NavItem[], allowedKeys: Set<string>): NavItem[] {
+  return nav
+    .map((item) => {
+      if (item.children || item.moreChildren) {
+        const filteredChildren = (item.children ?? []).filter((c) => allowedKeys.has(c.key));
+        const filteredMore = (item.moreChildren ?? []).filter((c) => allowedKeys.has(c.key));
+        if (filteredChildren.length === 0 && filteredMore.length === 0) return null;
+        return {
+          ...item,
+          children: filteredChildren,
+          moreChildren: filteredMore.length > 0 ? filteredMore : undefined,
+        };
+      }
+      return allowedKeys.has(item.key) ? item : null;
+    })
+    .filter((item): item is NavItem => item !== null);
+}
+
 export default function AppSider() {
   const location = useLocation();
   const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(false);
   const [collapsedGroups, setCollapsedGroups] = useState<string[]>([]);
   const [dynamicBadges, setDynamicBadges] = useState<Record<string, number>>({});
+  const { role } = useDemoRoleStore();
 
   const currentPath = location.pathname;
 
+  const navByRole = useMemo(
+    () => filterNavByRole(PRIMARY_NAV, ROLE_NAV_KEYS[role]),
+    [role],
+  );
+
   const isLeafActive = (child: NavItem) => {
-    const hashEntryIsActive = PRIMARY_NAV.some(
+    const hashEntryIsActive = navByRole.some(
       (item) =>
         item.children?.some((c) => isSameNavTarget(c.path, location) && c.path?.includes("#")) ||
         item.moreChildren?.some((c) => isSameNavTarget(c.path, location) && c.path?.includes("#")),
@@ -206,7 +258,7 @@ export default function AppSider() {
       </div>
 
       <nav className="sider-nav flex-1 overflow-y-auto">
-        {PRIMARY_NAV.map((item) => (
+        {navByRole.map((item) => (
           <div key={item.key}>
             {item.children || item.moreChildren ? (
               renderGroup(item)

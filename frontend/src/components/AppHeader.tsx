@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { InputRef } from "antd";
-import { Space, Typography, Badge, Avatar, Dropdown, Tag, Input, Tooltip } from "antd";
-import { BellOutlined, UserOutlined, SettingOutlined, LogoutOutlined, SearchOutlined, QuestionCircleOutlined } from "@ant-design/icons";
+import { Space, Typography, Badge, Avatar, Dropdown, Tag, Input, Tooltip, Select } from "antd";
+import { BellOutlined, UserOutlined, SettingOutlined, LogoutOutlined, SearchOutlined, QuestionCircleOutlined, SwapOutlined } from "@ant-design/icons";
+import { useDemoRoleStore, DEMO_ROLES, type DemoRole } from "@/store/demoRoleStore";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getRouteMeta } from "@/config/routeMeta";
 import WorkbenchHomeLink from "@/components/WorkbenchHomeLink";
@@ -26,6 +27,7 @@ export default function AppHeader() {
   const routeMeta = getRouteMeta(location.pathname);
   const searchInputRef = useRef<InputRef>(null);
   const [searchDraft, setSearchDraft] = useState("");
+  const { role, setRole } = useDemoRoleStore();
 
   const syncDraftFromUrl = useCallback(() => {
     if (location.pathname !== "/") {
@@ -115,9 +117,27 @@ export default function AppHeader() {
           />
         </Tooltip>
 
+        {/* 角色切换器（演示专用） */}
+        <Select<DemoRole>
+          size="small"
+          value={role}
+          onChange={setRole}
+          popupMatchSelectWidth={false}
+          className="w-[130px]"
+          options={DEMO_ROLES.map((r) => ({
+            value: r.key,
+            label: (
+              <Space size={4}>
+                <span className="inline-block w-2 h-2 rounded-full" style={{ background: r.color }} />
+                <span>{r.label}</span>
+              </Space>
+            ),
+          }))}
+        />
+
         {/* 通知 */}
         <Tooltip title="通知中心">
-          <Badge count={3} size="small" offset={[-2, 2]}>
+          <Badge count={role === "relationship_manager" ? 5 : role === "risk_modeler" ? 2 : 0} size="small" offset={[-2, 2]}>
             <div className="flex items-center justify-center w-8 h-8 rounded-lg hover:bg-black/[0.04] transition-colors cursor-pointer">
               <BellOutlined className="text-[15px] text-text-secondary" />
             </div>
