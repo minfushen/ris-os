@@ -9,7 +9,7 @@ import { Typography, Tag, Input, Space, Select, Card, Collapse, Alert, Table } f
 import { SearchOutlined, BookOutlined } from "@ant-design/icons";
 import ModulePageShell, { ModuleSectionCard } from "@/components/ModulePageShell";
 
-const { Text, Title } = Typography;
+const { Text } = Typography;
 
 interface ScriptTemplate {
   id: string;

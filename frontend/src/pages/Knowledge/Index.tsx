@@ -4,12 +4,12 @@
  * 对应招标交付：知识库建设（话术、案例、风险模式三大资产）
  */
 
-import { Typography, Row, Col, Card, Statistic, Table, Tag, Timeline } from "antd";
-import { BookOutlined, FileTextOutlined, SafetyCertificateOutlined, ArrowRightOutlined, RiseOutlined, FallOutlined } from "@ant-design/icons";
+import { Typography, Row, Col, Card, Statistic, Table, Tag, Timeline, Space } from "antd";
+import { BookOutlined, FileTextOutlined, SafetyCertificateOutlined, ArrowRightOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import ModulePageShell, { ModuleSectionCard } from "@/components/ModulePageShell";
 
-const { Text, Title } = Typography;
+const { Text } = Typography;
 
 const CARDS = [
   {

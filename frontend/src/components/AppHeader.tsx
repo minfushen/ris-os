@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { InputRef } from "antd";
 import { Space, Typography, Badge, Avatar, Dropdown, Tag, Input, Tooltip, Select } from "antd";
-import { BellOutlined, UserOutlined, SettingOutlined, LogoutOutlined, SearchOutlined, QuestionCircleOutlined, SwapOutlined } from "@ant-design/icons";
+import { BellOutlined, UserOutlined, SettingOutlined, LogoutOutlined, SearchOutlined, QuestionCircleOutlined } from "@ant-design/icons";
 import { useDemoRoleStore, DEMO_ROLES, type DemoRole } from "@/store/demoRoleStore";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getRouteMeta } from "@/config/routeMeta";

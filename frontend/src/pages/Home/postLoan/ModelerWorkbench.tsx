@@ -1,4 +1,4 @@
-import { Row, Col, Typography, Table, Tag, Button, Space } from "antd";
+import { Row, Col, Typography, Table, Tag, Button } from "antd";
 import { RiseOutlined, FallOutlined, MinusOutlined, RightOutlined, ExperimentOutlined, LineChartOutlined, DatabaseOutlined, PartitionOutlined, HistoryOutlined } from "@ant-design/icons";
 import { RiskStrip, type RiskStripVariant } from "./uiPrimitives";
 import { useNavigate } from "react-router-dom";
@@ -161,7 +161,7 @@ export default function ModelerWorkbench() {
             rowKey="id"
             dataSource={RECENT_EXPERIMENTS}
             pagination={false}
-            onRow={(r) => ({ onClick: () => navigate("/strategy/model-factory"), style: { cursor: "pointer" } })}
+            onRow={() => ({ onClick: () => navigate("/strategy/model-factory"), style: { cursor: "pointer" } })}
             columns={[
               { title: "实验 ID", dataIndex: "id", width: 130 },
               { title: "模型名称", dataIndex: "model" },
@@ -190,7 +190,7 @@ export default function ModelerWorkbench() {
             rowKey={(r) => `${r.id}-${r.version}`}
             dataSource={CHAMPION_VERSIONS}
             pagination={false}
-            onRow={(r) => ({ onClick: () => navigate("/strategy/model-registry"), style: { cursor: "pointer" } })}
+            onRow={() => ({ onClick: () => navigate("/strategy/model-registry"), style: { cursor: "pointer" } })}
             columns={[
               { title: "模型名称", dataIndex: "name", width: 180 },
               { title: "版本", dataIndex: "version", width: 90 },

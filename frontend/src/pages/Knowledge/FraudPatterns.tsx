@@ -5,7 +5,7 @@
  */
 
 import { useState } from "react";
-import { Typography, Tag, Card, Space, Descriptions, Collapse, Empty } from "antd";
+import { Typography, Tag, Card, Space, Descriptions } from "antd";
 import { WarningOutlined, SafetyOutlined, ThunderboltOutlined } from "@ant-design/icons";
 import ModulePageShell, { ModuleSectionCard } from "@/components/ModulePageShell";
 import DemoFlowNav from "@/components/DemoFlowNav";

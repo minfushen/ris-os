@@ -27,7 +27,6 @@ import {
   FileTextOutlined,
   DownloadOutlined,
   ArrowRightOutlined,
-  ControlOutlined,
   ExperimentOutlined,
   HistoryOutlined,
   SafetyCertificateOutlined,

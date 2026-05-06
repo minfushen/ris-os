@@ -5,7 +5,7 @@
  */
 
 import { Typography, Table, Tag, Button, Space, Progress, Row, Col, Statistic, Collapse, Alert } from "antd";
-import { PlusOutlined, WarningOutlined, CheckCircleOutlined } from "@ant-design/icons";
+import { PlusOutlined, WarningOutlined } from "@ant-design/icons";
 import ModulePageShell, { ModuleSectionCard } from "@/components/ModulePageShell";
 
 const { Text } = Typography;
