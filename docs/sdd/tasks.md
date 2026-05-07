@@ -24,9 +24,9 @@ TASK-<MILESTONE>-<编号>
 
 ---
 
-## 1. 当前迭代：M0 → M1 切换期
+## 1. 当前迭代：M1 工程债清理期（进行中）
 
-> M0 文档对齐已完成。下面是 M1 工程债清理期任务。
+> M0 文档对齐已完成。M1 工程债清理进行中。
 > **建议节奏**：2 周完成。
 
 ### 1.1 P0 阻塞任务（不做完不能进 M2）
@@ -37,18 +37,19 @@ TASK-<MILESTONE>-<编号>
 | TASK-M1-02 | 拆分 `pages/Strategy/` 大文件 | [plan-§1.2] | refactor | M | 超过 200 行的 strategy page 拆分 | ⬜ 待开始 |
 | TASK-M1-03 | 全站 5 态审计清单 | [plan-§1.2][const-§5.1] | docs | M | `docs/sdd/audit-5states.md` 列出每个 page 当前 5 态实现情况 | ⬜ 待开始 |
 | TASK-M1-04 | 移除 page 直接 import mock | [plan-§2.2] | refactor | M | `rg "from.*mock/data"` 仅 api/client 和 store 命中 | ⬜ 待开始 |
+| TASK-M1-16 | 清理无用/冗余代码 | [refactor-cleaner] | refactor | M | 删除 19 个未使用文件 + 6 个未使用依赖 | ⬜ 待开始 |
 
 ### 1.2 P1 迭代内任务
 
 | ID | 任务 | 关联 | 类型 | 预估 | 验收 | 状态 |
 |----|------|------|------|------|------|------|
 | TASK-M1-05 | 抽 `utils/logger.ts` | [plan-§1.2][const-§2.2] | feat | S | dev 环境 console，prod 收口；内置脱敏函数（mask 企业名称/法人/证件号中间字符）；替换裸 console.log | ⬜ 待开始 |
-| TASK-M1-06 | 添加全局 `<ErrorBoundary>` | [plan-§1.2] | feat | S | 顶层 + 6 大模块各一层；错误页有"刷新/返回首页" | ⬜ 待开始 |
+| TASK-M1-06 | 添加全局 `<ErrorBoundary>` | [plan-§1.2] | feat | S | 顶层 + 6 大模块各一层；错误页有"刷新/返回首页" | ✅ 已完成 |
 | TASK-M1-07 | 增加 PR 模板 `.github/PULL_REQUEST_TEMPLATE.md` | [const-§4.2] | docs | S | 必填 spec/plan 编号 | ⬜ 待开始 |
 | TASK-M1-08 | 5 态审计后修复缺漏 | [TASK-M1-03] | fix | L | 至少补全 RM 主路径的 loading/empty/error 态 | ⬜ 待开始 |
 | TASK-M1-09 | 补 `src/styles/` 下 token 使用说明 | [ADR-006] | docs | S | tokens.css 注释完整 | ⬜ 待开始 |
 | TASK-M1-12 | 为 `api/client.ts` 写 smoke test | [plan-§6.2][test-§4] | test | S | vitest 配置 + client.ts 基础测试（请求构造/错误映射/超时）≥ 3 个用例 | ⬜ 待开始 |
-| TASK-M1-13 | 为 3 个 store 写 smoke test | [plan-§6.2][test-§4] | test | M | demoRoleStore/taskStore/workbenchRoleStore 各 ≥ 2 个用例（初始化/reset/核心 action） | ⬜ 待开始 |
+| TASK-M1-13 | 为 3 个 store 写 smoke test | [plan-§6.2][test-§4] | test | M | demoRoleStore/taskStore/workbenchRoleStore 各 ≥ 2 个用例（初始化/reset/核心 action） | ✅ 已完成 |
 | TASK-M1-14 | Mock 数据类型契约校验 | [spec-§5][plan-§5.1] | test | S | mock/data.ts 导出值的 TypeScript 类型与 api/client 返回类型一致（编译时检查，`tsc -b` 通过） | ⬜ 待开始 |
 | TASK-M1-15 | 性能基线测量 | [spec-§5] | test | S | Lighthouse 跑首页得分记录；api/client.ts 关键接口响应时间埋点（console.table 输出） | ⬜ 待开始 |
 
@@ -110,3 +111,4 @@ TASK-<MILESTONE>-<编号>
 | 版本 | 日期 | 变更 |
 |------|------|------|
 | v1.0 | 2026-05-06 | 合并 6 个独立 Task，加入 M0 归档、M1 任务、M2 草案 |
+| v1.1 | 2026-05-07 | 更新 M1 进度：TASK-M1-06（ErrorBoundary）已完成、TASK-M1-13（store smoke test）已完成；新增 TASK-M1-16（清理无用代码） |

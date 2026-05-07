@@ -1,7 +1,7 @@
 # 测试策略与规范（Test Plan）
 
 > 本文是 [`plan.md`](./plan.md) §6（质量保障体系）的**展开**。
-> 当前项目处于 plan-M1 阶段，**没有任何自动化测试**。本文先**写清楚目标**，等 M3 阶段引入工具时按此文档落地。
+> **当前状态**：M1 阶段已启动 smoke test 基础设施，3 个 store 测试文件已就位。M3 阶段将全面引入自动化测试。
 
 ---
 
@@ -265,32 +265,27 @@ afterAll(() => server.close());
 ### 8.1 M1 Smoke Test 范围
 
 > 目标：建立测试基础设施和习惯，不追求覆盖率。
+> **状态**：✅ vitest 配置已就绪，3 个 store 测试文件已创建。
 
-| 测试对象 | 最低用例数 | 测什么 |
-|---------|-----------|--------|
-| `api/client.ts` | 3 | 请求构造（URL 拼接）、错误映射（status → ApiError）、超时处理 |
-| `demoRoleStore` | 2 | 初始化（默认角色）、reset（恢复默认） |
-| `taskStore` | 2 | 初始化（空列表）、fetchItems（mock 数据加载） |
-| `workbenchRoleStore` | 2 | 初始化、reset |
+| 测试对象 | 最低用例数 | 测什么 | 状态 |
+|---------|-----------|--------|------|
+| `api/client.ts` | 3 | 请求构造（URL 拼接）、错误映射（status → ApiError）、超时处理 | ⬜ 待开始 |
+| `demoRoleStore` | 2 | 初始化（默认角色）、reset（恢复默认） | ✅ 已完成 |
+| `taskStore` | 2 | 初始化（空列表）、fetchItems（mock 数据加载） | ✅ 已完成 |
+| `workbenchRoleStore` | 2 | 初始化、reset | ✅ 已完成 |
 
-**安装命令**（M1 第一天执行）：
+**已安装依赖**：
 
 ```bash
 npm i -D vitest @testing-library/react happy-dom @testing-library/jest-dom
 ```
 
-**配置文件**：`vitest.config.ts`
+**配置文件**：`vitest.config.ts` 已就绪
 
-```typescript
-import { defineConfig } from 'vitest/config';
-export default defineConfig({
-  test: {
-    environment: 'happy-dom',
-    globals: true,
-    include: ['src/**/*.{test,spec}.{ts,tsx}'],
-  },
-});
-```
+**测试文件位置**：
+- `frontend/src/store/demoRoleStore.test.ts`
+- `frontend/src/store/taskStore.test.ts`
+- `frontend/src/store/workbenchRoleStore.test.ts`
 
 ---
 
@@ -299,3 +294,4 @@ export default defineConfig({
 | 版本 | 日期 | 变更 |
 |------|------|------|
 | v1.0 | 2026-05-06 | 首版，测试金字塔 + 5 条 E2E 主旅程 + 工具链选型 + 覆盖率分阶段目标 |
+| v1.1 | 2026-05-07 | 更新 M1 smoke test 状态：3 个 store 测试已完成，vitest 配置已就绪 |

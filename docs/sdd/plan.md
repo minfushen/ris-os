@@ -23,38 +23,45 @@
 
 ## 1. 现状评估（Where We Are）
 
-### 1.1 代码资产盘点
+### 1.1 代码资产盘点（2026-05-07 更新）
 
 | 维度 | 数据 | 备注 |
 |------|------|------|
 | 前端路由页面 | 24 个（含 2 个重定向） | 6 大模块全覆盖 |
 | Zustand Stores | 3 个 | demoRoleStore / taskStore / workbenchRoleStore |
 | 后端 API 端点 | 30 个 | 7 个核心任务 + 3 个 dashboard + 3 个 alerts + 11 个 enterprises + 5 个 qcc + 3 个 post-loan |
-| Mock 文件 | 5 个 | MSW browser.ts + handlers.ts + data.ts + test/mocks |
+| Mock 文件 | 3 个 | MSW browser.ts + handlers.ts + data.ts（统一数据源） |
 | 类型定义文件 | 7 个 | types/ 下，已 export 聚合 |
-| 关键组件/页面 | 70+ 个 | pages/ + components/ |
+| UI 组件 | 7 个 | KpiCard / AlertCard / RiskTag / Skeleton / primitives / AppHeader / AppSider 等 |
 | Git 提交数 | 6 次 | feat(post-loan) 为主 |
+| Smoke Test | 3 个 | demoRoleStore.test.ts / taskStore.test.ts / workbenchRoleStore.test.ts（M1 阶段已启动） |
+| ErrorBoundary | ✅ 已引入 | 顶层 + 路由级错误边界 |
+| 路由懒加载 | ✅ 已实现 | 所有页面使用 React.lazy() 懒加载 |
 
 ### 1.2 Vibe 阶段遗留的工程债（已识别）
 
-| 债务项 | 体现 | 处置时机 |
-|--------|------|---------|
-| 无单元测试 | 无 vitest.config / `__tests__` | M3 引入 |
-| 无 CI | 无 `.github/workflows` | M2 引入 |
-| 部分页面超过 200 行 | Home/index.tsx 等大文件 | M1 拆分 |
-| 无统一 logger | 直接 `console.log` 散落 | M2 抽 `utils/logger.ts` |
-| 缺失 5 态覆盖审计 | 没有清单确认每页 loading/empty/error/disabled/hover | M1 完成审计 |
-| 无错误边界 | 没有 `<ErrorBoundary>` | M2 引入 |
-| MSW 18 个散落文件已合并 | ✅ 已解决 — 统一为 `mock/data.ts` 单一数据源 |
+| 债务项 | 体现 | 处置时机 | 状态 |
+|--------|------|---------|------|
+| 无单元测试 | 无 vitest.config / `__tests__` | M3 引入 | 🔄 M1 已启动 smoke test（3 个 store 测试已就位） |
+| 无 CI | 无 `.github/workflows` | M2 引入 | ⬜ 待开始 |
+| 部分页面超过 200 行 | Home/index.tsx 241 行 | M1 拆分 | ⬜ 待开始 |
+| 无统一 logger | 直接 `console.log` 散落 | M2 抽 `utils/logger.ts` | ⬜ 待开始 |
+| 缺失 5 态覆盖审计 | 没有清单确认每页 loading/empty/error/disabled/hover | M1 完成审计 | ⬜ 待开始 |
+| 无错误边界 | 没有 `<ErrorBoundary>` | M2 引入 | ✅ 已解决 — 顶层 + 路由级 ErrorBoundary 已实现 |
+| MSW 18 个散落文件已合并 | — | — | ✅ 已解决 — 统一为 `mock/data.ts` 单一数据源 |
+| 无用/冗余代码文件 | 19 个未使用文件 + 6 个未使用依赖 | M1 清理 | ⬜ 待开始（见 refactor-cleaner 分析报告） |
 
 ### 1.3 已沉淀的好资产（不要破坏）
 
-- ✅ **角色化 UI 体系**：`demoRoleStore` + 角色切换器 + 菜单过滤 + 首页差异化
-- ✅ **统一 Mock 层**：`mock/data.ts` 单一数据源，后端离线可完整演示
+- ✅ **角色化 UI 体系**：`demoRoleStore` + 角色切换器 + 菜单过滤 + 首页差异化（RM / Modeler / Approver 三角色完整实现）
+- ✅ **统一 Mock 层**：`mock/data.ts` 单一数据源（~47KB），后端离线可完整演示
 - ✅ **企业风险评估 Agent**：企查查 MCP 集成（65 tools），9 维度 + 18 类风险
 - ✅ **MSW 拦截层**：浏览器端请求拦截，`VITE_USE_MOCKS` 控制切换
 - ✅ **贷后场景 REST**：`/api/scenario/post-loan/*` 完整 CRUD
-- ✅ **样式 Token 体系**：`src/styles/tokens.css` + Tailwind v4
+- ✅ **样式 Token 体系**：`src/styles/tokens.css` + Tailwind v4 + 玻璃拟态风格
+- ✅ **路由懒加载**：所有页面使用 `React.lazy()` + Suspense，首屏性能优化
+- ✅ **ErrorBoundary**：顶层 + 路由级错误边界，错误页有刷新/返回首页
+- ✅ **Smoke Test 基础设施**：vitest 配置 + 3 个 store 测试文件已就位
 
 ---
 
@@ -302,20 +309,23 @@ export async function get<T>(path: string): Promise<T> {
 
 ---
 
-### M1 - 工程债清理期（建议 2 周）
+### M1 - 工程债清理期（进行中）
 
 **目标**：消除 Vibe 阶段遗留的工程债。
 
-| 任务 | 关联 | 输出 |
-|------|------|------|
-| 拆分超过 200 行的 page | [plan-§1.2] | Home/index.tsx → 多组件 |
-| 5 态审计 | [const-§5.1] | 每页 loading/empty/error/disabled/hover 清单 |
-| 引入 `<ErrorBoundary>` | [plan-§1.2] | 顶层 + 模块层错误边界 |
-| 抽 `utils/logger.ts` | [const-§2.2] | 替代裸 console.log |
+| 任务 | 关联 | 输出 | 状态 |
+|------|------|------|------|
+| 拆分超过 200 行的 page | [plan-§1.2] | Home/index.tsx → 多组件 | ⬜ 待开始 |
+| 5 态审计 | [const-§5.1] | 每页 loading/empty/error/disabled/hover 清单 | ⬜ 待开始 |
+| 引入 `<ErrorBoundary>` | [plan-§1.2] | 顶层 + 模块层错误边界 | ✅ 已完成 |
+| 抽 `utils/logger.ts` | [const-§2.2] | 替代裸 console.log | ⬜ 待开始 |
+| Smoke Test 基础设施 | [test-§8.1] | vitest 配置 + 3 个 store 测试 | ✅ 已完成 |
+| 清理无用/冗余代码 | [refactor-cleaner] | 删除 19 个未使用文件 + 6 个未使用依赖 | ⬜ 待开始 |
 
 **出口标准**：
 - 所有 pages/*/index.tsx ≤ 200 行
 - 5 态审计清单完成
+- 无用代码清理完成
 
 ---
 
@@ -491,3 +501,4 @@ M0  M1   M2     M3        M4
 | 版本 | 日期 | 变更 |
 |------|------|------|
 | v1.0 | 2026-05-06 | 合并 3 个独立 Plan，加入架构总图、模块边界矩阵、M0-M4 路线、风险登记册、7 条 ADR |
+| v1.1 | 2026-05-07 | 更新代码资产盘点（smoke test、ErrorBoundary、路由懒加载）；更新工程债状态；M1 进度更新 |
