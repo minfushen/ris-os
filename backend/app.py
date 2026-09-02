@@ -35,6 +35,7 @@ from services.review import process_review
 from services.analysis import process_analysis
 from scenario_post_loan import router as post_loan_scenario_router
 from routers.qcc_assessment import router as qcc_assessment_router
+from routers.agent_attribution import router as agent_attribution_router
 from routers.enterprises import router as enterprises_router
 from routers.alerts import router as alerts_router
 from routers.dashboard import router as dashboard_router
@@ -58,6 +59,9 @@ app.include_router(post_loan_scenario_router, prefix="/api")
 
 # 企查查风险评估路由
 app.include_router(qcc_assessment_router)
+
+# 预警归因 Agent 路由（元典司法 MCP 数据源）
+app.include_router(agent_attribution_router)
 
 # 企业管理路由
 app.include_router(enterprises_router)

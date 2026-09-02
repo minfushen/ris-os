@@ -20,6 +20,7 @@ import type {
   AssessVendorRiskRequest,
   VendorRiskAssessment,
 } from "@/types/qcc";
+import type { AttributionResult } from "@/types/attribution";
 
 /** 后端根地址。注意：若 .env 里把 VITE_API_BASE_URL 设成空字符串，相对路径会打到 Vite 同源并 404，这里按「未配置」处理。 */
 function resolveApiBaseUrl(): string {
@@ -184,6 +185,17 @@ export const api = {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(payload),
+    });
+  },
+
+  /** POST /api/agents/attribution — 预警归因 Agent（元典司法 MCP 数据源） */
+  attributeCompany(companyName: string): Promise<AttributionResult> {
+    return request<AttributionResult>("/api/agents/attribution", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ company_name: companyName }),
     });
   },
 

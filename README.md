@@ -287,6 +287,23 @@ QCC_MCP_BASE_URL=https://agent.qcc.com/mcp
 
 > **未配置 Key 时服务仍可正常启动**，仅企查查相关接口在调用时返回明确提示，其余功能不受影响。
 
+### 预警归因 Agent（元典法律智能 MCP 集成）
+
+「智能体协同 → 预警归因 Agent」支持输入任意在册企业名称，实时拉取司法涉诉统计、被执行人与失信记录，按可解释规则生成归因结论、驱动因子分解与核查方向。配置方式（Key 不入库）：
+
+```bash
+# backend/.env
+HUAYU_MCP_API_KEY=your_api_key_here
+HUAYU_MCP_BASE_URL=https://open.chineselaw.com/mcp
+```
+
+```
+POST /api/agents/attribution         # 企业司法归因（元典 MCP 数据源）
+GET  /api/agents/attribution/health  # 数据源配置健康检查
+```
+
+未配置 Key 时页面降级为内置演示工单，不影响其余功能。
+
 ### 设计文档
 
 - [PRD-企业风险评估Agent.md](./docs/prd/PRD-企业风险评估Agent.md)
