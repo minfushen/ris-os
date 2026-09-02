@@ -172,9 +172,8 @@ git switch scenario/post-loan
 .
 ├── backend/              FastAPI：任务 API + 贷后场景 REST（scenario_post_loan）
 ├── frontend/             Vite + React 工作台与模块路由
-├── docs/                 信息架构清单、视觉与规格说明等
-├── sampledata/           示例数据（含 `post-loan/watchlist-demo-2rows.csv`）
-└── 线框图原型/            产品方向说明
+├── docs/                 交付文档（PRD / 架构 / 技术 / API / 用户手册）与页面截图
+└── sampledata/           贷后演示数据（含 `post-loan/watchlist-demo-2rows.csv` 名单模板）
 ```
 
 ---
@@ -301,10 +300,7 @@ QCC_MCP_BASE_URL=https://agent.qcc.com/mcp
 ## 文档索引
 
 1. [后端 API 说明（含贷后 REST）](./backend/README.md)
-2. [线框图原型](./线框图原型)
-3. [首页信息架构改版建议清单](./docs/首页信息架构改版建议清单.md)
-4. [新首页 / 全局导航骨架视觉设计方案](./docs/superpowers/specs/2026-04-17-home-navigation-tailwind-glass-design.md)（若路径存在）
-5. [PRD-小微贷后预警平台](./docs/prd/PRD-小微贷后预警平台.md)（对齐《项目实施计划书》+ 开源项目借鉴）
+2. [PRD-小微贷后预警平台](./docs/prd/PRD-小微贷后预警平台.md)（对齐《项目实施计划书》+ 开源项目借鉴）
 
 ---
 
