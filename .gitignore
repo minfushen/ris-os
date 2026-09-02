@@ -26,3 +26,4 @@ frontend/.env.*.local
 
 # 运行时数据库
 backend/*.db
+backend/tests/*.db
