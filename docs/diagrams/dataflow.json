@@ -1,0 +1,244 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "贷后预警 · 数据流向",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "viewBox": [
+      1085,
+      640
+    ]
+  },
+  "stages": [
+    {
+      "label": "数据源"
+    },
+    {
+      "label": "数据加工"
+    },
+    {
+      "label": "特征"
+    },
+    {
+      "label": "模型与决策"
+    },
+    {
+      "label": "预警与处置"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "external-data",
+      "type": "external",
+      "label": "外部数据源",
+      "sublabel": "征信 / 工商 / 司法",
+      "stage": 0,
+      "row": 0,
+      "tag": "三方"
+    },
+    {
+      "id": "biz-data",
+      "type": "database",
+      "label": "行内业务数据",
+      "sublabel": "信贷系统业务库",
+      "stage": 0,
+      "row": 2
+    },
+    {
+      "id": "warehouse",
+      "type": "database",
+      "label": "风险数据集市",
+      "sublabel": "统一落仓 · 变量库",
+      "stage": 1,
+      "row": 1,
+      "tag": "8 大变量域"
+    },
+    {
+      "id": "features",
+      "type": "database",
+      "label": "特征宽表",
+      "sublabel": "按产品线加工",
+      "stage": 2,
+      "row": 1,
+      "tag": "IV/VIF"
+    },
+    {
+      "id": "offline",
+      "type": "backend",
+      "label": "离线训练",
+      "sublabel": "WOE 评分卡 · SMOTE",
+      "stage": 3,
+      "row": 0,
+      "tag": "KS/PSI"
+    },
+    {
+      "id": "decision",
+      "type": "backend",
+      "label": "决策引擎",
+      "sublabel": "规则 + 模型联判",
+      "stage": 3,
+      "row": 2,
+      "tag": "Champion"
+    },
+    {
+      "id": "alerts",
+      "type": "messagebus",
+      "label": "预警生成",
+      "sublabel": "红灯 / 黄灯信号",
+      "stage": 4,
+      "row": 0,
+      "tag": "5–7 天"
+    },
+    {
+      "id": "disposal",
+      "type": "frontend",
+      "label": "处置闭环",
+      "sublabel": "核查 / 催收 / 复盘",
+      "stage": 4,
+      "row": 2,
+      "tag": "SLA"
+    },
+    {
+      "id": "flywheel",
+      "type": "backend",
+      "label": "标注飞轮",
+      "sublabel": "样本回流 · 规则优化",
+      "stage": 4,
+      "row": 3,
+      "tag": "MLOps"
+    }
+  ],
+  "flows": [
+    {
+      "id": "ext-in",
+      "from": "external-data",
+      "to": "warehouse",
+      "label": "ETL 入仓",
+      "classification": "外部数据"
+    },
+    {
+      "id": "biz-in",
+      "from": "biz-data",
+      "to": "warehouse",
+      "label": "业务落仓",
+      "classification": "行内数据"
+    },
+    {
+      "id": "feat-build",
+      "from": "warehouse",
+      "to": "features",
+      "label": "按产品线加工",
+      "classification": "变量加工",
+      "variant": "emphasis",
+      "route": "straight"
+    },
+    {
+      "id": "train-sample",
+      "from": "features",
+      "to": "offline",
+      "label": "训练样本",
+      "classification": "好坏定义 · 滚动率"
+    },
+    {
+      "id": "online-feat",
+      "from": "features",
+      "to": "decision",
+      "label": "在线特征",
+      "classification": "实时取数"
+    },
+    {
+      "id": "model-deploy",
+      "from": "offline",
+      "to": "decision",
+      "label": "PMML / ONNX 模型版本",
+      "classification": "灰度 + 回滚",
+      "variant": "dashed",
+      "labelAt": [
+        745,
+        215
+      ]
+    },
+    {
+      "id": "alert-signal",
+      "from": "decision",
+      "to": "alerts",
+      "label": "红灯 / 黄灯信号",
+      "classification": "事中预警",
+      "variant": "emphasis"
+    },
+    {
+      "id": "alert-ticket",
+      "from": "alerts",
+      "to": "disposal",
+      "label": "预警工单",
+      "classification": "认领核查",
+      "labelAt": [
+        960,
+        200
+      ]
+    },
+    {
+      "id": "disposal-outcome",
+      "from": "disposal",
+      "to": "flywheel",
+      "label": "处置结论",
+      "classification": "结果反馈",
+      "labelAt": [
+        960,
+        428
+      ]
+    },
+    {
+      "id": "flywheel-back",
+      "from": "flywheel",
+      "to": "warehouse",
+      "label": "样本与规则回流",
+      "classification": "监控驱动迭代",
+      "variant": "dashed",
+      "fromSide": "bottom",
+      "toSide": "bottom",
+      "via": [
+        [
+          960,
+          545
+        ],
+        [
+          315,
+          545
+        ]
+      ],
+      "labelAt": [
+        630,
+        533
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "主数据路径",
+      "items": [
+        "外部与行内数据统一入仓，按产品线加工为特征宽表",
+        "特征同时服务离线训练与在线决策两条链路",
+        "决策引擎产出的预警信号直达处置闭环"
+      ]
+    },
+    {
+      "dot": "orange",
+      "title": "模型供给侧",
+      "items": [
+        "离线训练产出 WOE 评分卡，经 PMML/ONNX 服务化部署",
+        "模型版本走灰度发布与一键回滚，Champion/Challenger 并行"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "闭环回流",
+      "items": [
+        "处置结论经标注飞轮回写样本池与调优案例",
+        "回流驱动特征与规则迭代，形成监控驱动迭代闭环"
+      ]
+    }
+  ]
+}

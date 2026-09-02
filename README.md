@@ -64,6 +64,8 @@ flowchart LR
     QCC -->|MCP 协议| QCCLOUD["企查查开放平台<br/>（需 API Key，可选）"]
 ```
 
+> 交互式版本（可缩放 / 路径追踪 / 深浅色切换）：[系统架构图](./docs/diagrams/architecture.html) · [数据流向图](./docs/diagrams/dataflow.html)（含五段泳道：数据源 → 数据加工 → 特征 → 模型与决策 → 预警与处置，以及标注飞轮回流闭环）
+
 ---
 
 ## 系统集成与闭环设计

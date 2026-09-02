@@ -1,0 +1,173 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "贷后风险智能运营平台 · 系统架构",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "viewBox": [
+      1080,
+      620
+    ]
+  },
+  "layout": {
+    "mode": "grid",
+    "cols": 4,
+    "cellW": 170,
+    "cellH": 66,
+    "gapX": 56,
+    "gapY": 42
+  },
+  "components": [
+    {
+      "id": "frontend",
+      "type": "frontend",
+      "label": "前端工作台",
+      "sublabel": "React 18 · AntD 5",
+      "row": 0,
+      "col": 1
+    },
+    {
+      "id": "msw",
+      "type": "frontend",
+      "label": "MSW Mock 层",
+      "sublabel": "浏览器端拦截 · 离线演示",
+      "row": 0,
+      "col": 2
+    },
+    {
+      "id": "fastapi",
+      "type": "backend",
+      "label": "FastAPI 应用",
+      "sublabel": "任务 · 贷后 · 预警路由",
+      "row": 1,
+      "col": 1
+    },
+    {
+      "id": "attribution",
+      "type": "backend",
+      "label": "预警归因 Agent",
+      "sublabel": "可解释规则 · 元典司法数据",
+      "row": 2,
+      "col": 0
+    },
+    {
+      "id": "sqlite",
+      "type": "database",
+      "label": "SQLite 开发库",
+      "sublabel": "dev.db · enterprise_hub.db",
+      "row": 2,
+      "col": 1
+    },
+    {
+      "id": "qcc",
+      "type": "backend",
+      "label": "企查查风险评估",
+      "sublabel": "9 维度 · 18 类风险排查",
+      "row": 2,
+      "col": 2
+    },
+    {
+      "id": "yuandian",
+      "type": "external",
+      "label": "元典法律智能 MCP",
+      "sublabel": "涉诉 / 被执行 / 失信",
+      "row": 3,
+      "col": 0
+    },
+    {
+      "id": "qccmcp",
+      "type": "external",
+      "label": "企查查开放平台 MCP",
+      "sublabel": "工商 / 风险数据（需 Key）",
+      "row": 3,
+      "col": 2
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "浏览器",
+      "wraps": [
+        "frontend",
+        "msw"
+      ]
+    },
+    {
+      "kind": "region",
+      "label": "后端 · FastAPI 单体",
+      "wraps": [
+        "fastapi",
+        "attribution",
+        "sqlite",
+        "qcc"
+      ]
+    },
+    {
+      "kind": "region",
+      "label": "外部数据源",
+      "wraps": [
+        "yuandian",
+        "qccmcp"
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "fe-api",
+      "from": "frontend",
+      "to": "fastapi",
+      "label": "REST /api/*",
+      "variant": "emphasis",
+      "labelDy": 24
+    },
+    {
+      "id": "fe-msw",
+      "from": "frontend",
+      "to": "msw",
+      "label": "后端离线拦截降级",
+      "variant": "dashed"
+    },
+    {
+      "id": "api-sqlite",
+      "from": "fastapi",
+      "to": "sqlite",
+      "label": "sqlite3",
+      "labelDy": 24
+    },
+    {
+      "id": "api-attribution",
+      "from": "fastapi",
+      "to": "attribution",
+      "label": "挂载 /api/agents/attribution",
+      "labelAt": [
+        213,
+        262
+      ]
+    },
+    {
+      "id": "api-qcc",
+      "from": "fastapi",
+      "to": "qcc",
+      "label": "挂载 /api/qcc"
+    },
+    {
+      "id": "attr-yuandian",
+      "from": "attribution",
+      "to": "yuandian",
+      "label": "MCP",
+      "variant": "emphasis",
+      "labelAt": [
+        100,
+        372
+      ]
+    },
+    {
+      "id": "qcc-mcp",
+      "from": "qcc",
+      "to": "qccmcp",
+      "label": "MCP · 风险排查工具",
+      "labelDy": 24
+    }
+  ]
+}
