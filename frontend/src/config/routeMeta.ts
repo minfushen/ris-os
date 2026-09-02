@@ -214,13 +214,6 @@ export const ROUTE_META: Record<string, RouteMeta> = {
     navKey: "agent-strategy-tuning",
     parentNavKey: "agent",
   },
-  "/agents/script-compliance": {
-    title: "话术合规 Agent",
-    subtitle: "推荐场景化话术并检查威胁、诱导、隐私泄露等合规风险",
-    breadcrumb: ["智能体协同", "话术合规 Agent"],
-    navKey: "agent-script-compliance",
-    parentNavKey: "agent",
-  },
   "/agents/review-qa": {
     title: "复盘质检 Agent",
     subtitle: "批量预筛处置记录质量，推动样本回流与规则优化",

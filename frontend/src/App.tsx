@@ -52,7 +52,6 @@ const AgentAttribution = lazy(() => import("@/pages/Agents/Attribution"));
 const AgentVendorRiskAssessment = lazy(() => import("@/pages/Agents/VendorRiskAssessment"));
 const AgentDisposition = lazy(() => import("@/pages/Agents/Disposition"));
 const AgentStrategyTuning = lazy(() => import("@/pages/Agents/StrategyTuning"));
-const AgentScriptCompliance = lazy(() => import("@/pages/Agents/ScriptCompliance"));
 const AgentReviewQa = lazy(() => import("@/pages/Agents/ReviewQa"));
 const AgentOpsMonitor = lazy(() => import("@/pages/Agents/OpsMonitor"));
 
@@ -120,7 +119,6 @@ const router = createBrowserRouter([
       { path: "agents/vendor-risk-assessment", element: withSuspense(<AgentVendorRiskAssessment />) },
       { path: "agents/disposition", element: withSuspense(<AgentDisposition />) },
       { path: "agents/strategy-tuning", element: withSuspense(<AgentStrategyTuning />) },
-      { path: "agents/script-compliance", element: withSuspense(<AgentScriptCompliance />) },
       { path: "agents/review-qa", element: withSuspense(<AgentReviewQa />) },
       { path: "agents/ops-monitor", element: withSuspense(<AgentOpsMonitor />) },
 

@@ -36,9 +36,6 @@ describe("App routing", () => {
     expect((await screen.findAllByText("多渠道预警触达")).length).toBeGreaterThanOrEqual(1);
     expect(await screen.findByText("P2 暂缓能力边界")).toBeInTheDocument();
     expect((await screen.findAllByText("演示讲解")).length).toBeGreaterThanOrEqual(1);
-    expect((await screen.findAllByText("系统集成架构")).length).toBeGreaterThanOrEqual(1);
-    expect(await screen.findByText("数据流向说明")).toBeInTheDocument();
-    expect(await screen.findByText("闭环设计亮点")).toBeInTheDocument();
   });
 
   test("sidebar presents an interview demo information architecture", async () => {
@@ -58,13 +55,10 @@ describe("App routing", () => {
     expect(await screen.findByText("预警归因 Agent")).toBeInTheDocument();
     expect(await screen.findByText("处置建议 Agent")).toBeInTheDocument();
     expect(await screen.findByText("策略调优 Agent")).toBeInTheDocument();
-    expect(await screen.findByText("话术合规 Agent")).toBeInTheDocument();
     expect(await screen.findByText("复盘质检 Agent")).toBeInTheDocument();
     expect(await screen.findByText("Agent 运行监控")).toBeInTheDocument();
-    expect(await screen.findByText("演示讲解")).toBeInTheDocument();
     expect(await screen.findByText("预警核查工作台")).toBeInTheDocument();
     expect(await screen.findByText("产品策略")).toBeInTheDocument();
-    expect(await screen.findByText("系统集成架构")).toBeInTheDocument();
     expect(screen.queryByText("更多")).not.toBeInTheDocument();
   });
 
@@ -87,9 +81,6 @@ describe("App routing", () => {
 
     await renderAppAt("/agents/strategy-tuning");
     expect((await screen.findAllByText("策略调优 Agent")).length).toBeGreaterThanOrEqual(1);
-
-    await renderAppAt("/agents/script-compliance");
-    expect((await screen.findAllByText("话术合规 Agent")).length).toBeGreaterThanOrEqual(1);
 
     await renderAppAt("/agents/review-qa");
     expect((await screen.findAllByText("复盘质检 Agent")).length).toBeGreaterThanOrEqual(1);
@@ -157,18 +148,5 @@ describe("App routing", () => {
 
     fireEvent.click(within(sidebar).getByText("预警监控"));
     expect(within(sidebar).getByText("预警大盘")).toBeInTheDocument();
-  });
-
-  test("hash demo entries keep a single active sidebar item", async () => {
-    await renderAppAt("/architecture/integration#data-flow");
-
-    expect(await screen.findByText("系统集成与闭环说明")).toBeInTheDocument();
-    const sidebar = screen.getByRole("complementary", { name: "主导航" });
-    expect(within(sidebar).getByText("数据流向说明").closest(".sider-nav-item")).toHaveClass(
-      "sider-nav-item-active",
-    );
-    expect(within(sidebar).getByText("系统集成架构").closest(".sider-nav-item")).not.toHaveClass(
-      "sider-nav-item-active",
-    );
   });
 });

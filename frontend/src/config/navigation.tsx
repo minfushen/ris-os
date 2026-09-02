@@ -22,11 +22,8 @@ import {
   AlertOutlined,
   CustomerServiceOutlined,
   TagsOutlined,
-  ApartmentOutlined,
-  RetweetOutlined,
   HistoryOutlined,
   UploadOutlined,
-  FileDoneOutlined,
   RobotOutlined,
 } from "@ant-design/icons";
 import { PLATFORM_SUBTITLE } from "@/config/brand";
@@ -51,21 +48,6 @@ export const PRIMARY_NAV: NavItem[] = [
     path: "/",
     badge: 8,
     description: PLATFORM_SUBTITLE,
-  },
-  {
-    key: "project",
-    label: "项目实施",
-    icon: <FileDoneOutlined />,
-    description: "对照《项目实施计划书》：阶段里程碑、交付物、风险与验收",
-    children: [
-      {
-        key: "project-plan",
-        label: "项目实施全景",
-        icon: <FileDoneOutlined />,
-        path: "/project/plan",
-        description: "一页纸总览 / 阶段里程碑 / 交付物清单 / 风险与验收",
-      },
-    ],
   },
   {
     key: "monitor",
@@ -259,7 +241,7 @@ export const PRIMARY_NAV: NavItem[] = [
     key: "agents",
     label: "智能体协同",
     icon: <RobotOutlined />,
-    description: "预警归因、处置建议、策略调优、话术合规、复盘质检与运行监控",
+    description: "预警归因、处置建议、策略调优、复盘质检与运行监控",
     children: [
       {
         key: "agent-attribution",
@@ -290,13 +272,6 @@ export const PRIMARY_NAV: NavItem[] = [
         description: "发现误报、漏报和阈值优化机会，推动仿真与发布流程",
       },
       {
-        key: "agent-script-compliance",
-        label: "话术合规 Agent",
-        icon: <BookOutlined />,
-        path: "/agents/script-compliance",
-        description: "推荐场景化话术并检查威胁、诱导、隐私泄露等合规风险",
-      },
-      {
         key: "agent-review-qa",
         label: "复盘质检 Agent",
         icon: <AuditOutlined />,
@@ -309,42 +284,6 @@ export const PRIMARY_NAV: NavItem[] = [
         icon: <DashboardOutlined />,
         path: "/agents/ops-monitor",
         description: "监控任务成功率、工具调用、人工采纳与审计留痕",
-      },
-    ],
-  },
-  {
-    key: "demo",
-    label: "演示讲解",
-    icon: <ApartmentOutlined />,
-    description: "项目演示用的系统集成、数据流向与闭环设计",
-    children: [
-      {
-        key: "architecture-integration",
-        label: "系统集成架构",
-        icon: <ApiOutlined />,
-        path: "/architecture/integration",
-        description: "系统集成架构图",
-      },
-      {
-        key: "architecture-data-flow",
-        label: "数据流向说明",
-        icon: <DatabaseOutlined />,
-        path: "/architecture/integration#data-flow",
-        description: "贷后预警数据链路",
-      },
-      {
-        key: "architecture-closed-loop",
-        label: "闭环设计亮点",
-        icon: <RetweetOutlined />,
-        path: "/architecture/integration#closed-loop",
-        description: "监控驱动迭代与处置闭环",
-      },
-      {
-        key: "architecture-p2-boundary",
-        label: "P2 能力边界",
-        icon: <AuditOutlined />,
-        path: "/architecture/integration#p2-boundary",
-        description: "暂缓生产级能力说明",
       },
     ],
   },

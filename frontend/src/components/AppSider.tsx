@@ -46,9 +46,7 @@ const ROLE_NAV_KEYS: Record<DemoRole, Set<string>> = {
     "risk-workbench", "risk-collection", "knowledge-scripts", "risk-inspection",
     "knowledge-fraud-patterns",
     "agent-attribution", "agent-vendor-risk-assessment", "agent-disposition",
-    "agent-script-compliance", "agent-review-qa", "agent-ops-monitor",
-    "demo", "architecture-integration", "architecture-data-flow",
-    "architecture-closed-loop", "architecture-p2-boundary",
+    "agent-review-qa", "agent-ops-monitor",
   ]),
   risk_modeler: new Set([
     "home",
@@ -57,16 +55,12 @@ const ROLE_NAV_KEYS: Record<DemoRole, Set<string>> = {
     "strategy-decision-flow", "strategy-backtest",
     "agent-attribution", "agent-vendor-risk-assessment", "agent-strategy-tuning",
     "agent-ops-monitor",
-    "demo", "architecture-integration", "architecture-data-flow",
-    "architecture-closed-loop", "architecture-p2-boundary",
   ]),
   strategy_approver: new Set([
     "home",
     "strategy-backtest", "strategy-publish", "strategy-products",
     "strategy-rules", "knowledge-rule-cases",
     "agent-strategy-tuning", "agent-review-qa", "agent-ops-monitor",
-    "demo", "architecture-integration", "architecture-data-flow",
-    "architecture-closed-loop", "architecture-p2-boundary",
   ]),
 };
 
