@@ -14,12 +14,13 @@ import {
   Card,
   Descriptions,
   Collapse,
-  Timeline,
-  Spin,
+  Skeleton,
   message,
   Divider,
   Row,
   Col,
+  Drawer,
+  Timeline,
 } from "antd";
 import {
   WarningOutlined,
@@ -35,11 +36,41 @@ import {
 import { useSearchParams, Link } from "react-router-dom";
 import ModulePageShell, { ModuleSectionCard } from "@/components/ModulePageShell";
 import DemoFlowNav from "@/components/DemoFlowNav";
+import EvidenceChain from "@/components/EvidenceChain";
 import { api } from "@/api/client";
 import type { Alert, RiskAssessment } from "@/types/enterprise";
+import type { DimensionRisk, RiskCategory, EvidenceItem } from "@/types/qcc";
 import { RISK_LEVEL_COLORS, RISK_LEVEL_TEXT, DIMENSION_NAMES } from "@/types/qcc";
 
 const { Text, Title } = Typography;
+
+/** 演示工单（面试演示口径）：无选中预警时默认展示，全部为内置常量 */
+const DEMO_ALERT = {
+  company: "恒力机械制造有限公司",
+  product: "惠快贷 · 小微企业流水贷",
+  exposure: "480 万元",
+  manager: "张明（RM001）",
+  industry: "制造业",
+  level: "黄灯",
+  type: "多头共债",
+  rule: "RULE_023 · 多头借贷跳升",
+  ruleDetail: "近 90 天多头申请机构数环比增幅 ≥ 35%（当前 38%，阈值 35%）",
+  triggeredAt: "2026-04-29 09:12",
+  riskProfile: [
+    "近3个月涉诉3起，均为买卖合同纠纷，涉诉金额合计约 120 万元",
+    "近 90 天新增多头借贷申请 5 笔，集中于 4 月中旬",
+    "对公账户结算量环比下降 18%，下游回款周期由 45 天延长至 66 天",
+    "企业征信查询次数近 30 天 12 次，高于同行业 75 分位",
+  ],
+};
+
+const DEMO_DISPOSAL_ACTIONS = ["电话核实", "上门走访", "要求增信", "提前回收"];
+
+const DEMO_DISPOSAL_RECORDS = [
+  { time: "2026-04-29 09:13", text: "预警归因 Agent 生成归因结论（置信度 87%），处置建议已推送客户经理" },
+  { time: "2026-04-29 09:15", text: "张明 认领工单，计划 24 小时内完成电话核实" },
+  { time: "2026-04-28 16:40", text: "策略效果追踪：同规则近 30 天 FP 率 22.4%，调优建议已提交策略调优 Agent" },
+];
 
 export default function Workbench() {
   const [searchParams] = useSearchParams();
@@ -103,7 +134,88 @@ export default function Workbench() {
     }
   };
 
-  /** 按预警类型映射策略优化建议，串联操作演示与策略模型功能 */
+  /** 导出证据链为 Markdown 报告 [spec-RISK-6] */
+  const handleExportEvidence = () => {
+    if (!selectedAlert || !assessment) return;
+    const chain: EvidenceItem[] = assessment.assessment_data.evidence_chain ?? [];
+    const lines: string[] = [
+      `# 预警证据链报告`,
+      ``,
+      `- 预警ID：${selectedAlert.id}`,
+      `- 企业名称：${selectedAlert.company_name}`,
+      `- 预警类型：${selectedAlert.alert_type}`,
+      `- 预警等级：${RISK_LEVEL_TEXT[selectedAlert.alert_level]}`,
+      `- 触发时间：${new Date(selectedAlert.triggered_at).toLocaleString("zh-CN")}`,
+      ``,
+      `## 证据链（共 ${chain.length} 条）`,
+      ``,
+    ];
+    chain.forEach((ev, idx) => {
+      lines.push(`### ${idx + 1}. ${ev.data_source}`);
+      lines.push(``);
+      lines.push(`- 更新时间：${ev.update_time}`);
+      lines.push(`- 可信度：${ev.credibility}`);
+      lines.push(`- 证据内容：${ev.content}`);
+      lines.push(``);
+    });
+    const blob = new Blob([lines.join("\n")], { type: "text/markdown;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `证据链报告-${selectedAlert.company_name}-${selectedAlert.id}.md`;
+    a.click();
+    URL.revokeObjectURL(url);
+    message.success("证据链报告已导出");
+  };
+
+  /** 生成处置报告（抽屉预览 + 下载） */
+  const [reportDrawerOpen, setReportDrawerOpen] = useState(false);
+
+  const handleGenerateReport = () => {
+    if (!selectedAlert || !assessment) {
+      message.warning("请先选择预警并加载风险评估");
+      return;
+    }
+    setReportDrawerOpen(true);
+  };
+
+  const handleDownloadReport = () => {
+    if (!selectedAlert || !assessment) return;
+    const lines: string[] = [
+      `# 预警处置报告`,
+      ``,
+      `## 基本信息`,
+      `- 预警ID：${selectedAlert.id}`,
+      `- 企业名称：${selectedAlert.company_name}`,
+      `- 预警类型：${selectedAlert.alert_type}`,
+      `- 预警等级：${RISK_LEVEL_TEXT[selectedAlert.alert_level]}`,
+      `- 触发时间：${new Date(selectedAlert.triggered_at).toLocaleString("zh-CN")}`,
+      ``,
+      `## 风险评估`,
+      `- 整体风险等级：${RISK_LEVEL_TEXT[assessment.overall_risk]}`,
+      ``,
+      `## 处置建议`,
+      ...(assessment.assessment_data.disposition_suggestions || []).map(
+        (s: { action: string; sla: string; responsible_person: string }) =>
+          `- ${s.action}（SLA：${s.sla}，责任人：${s.responsible_person}）`
+      ),
+      ``,
+      `## 证据链`,
+      ...(assessment.assessment_data.evidence_chain || []).map(
+        (ev: { data_source: string; update_time: string; credibility: string; content: string }, idx: number) =>
+          `${idx + 1}. ${ev.data_source}（${ev.update_time}，可信度：${ev.credibility}）\n   ${ev.content}`
+      ),
+    ];
+    const blob = new Blob([lines.join("\n")], { type: "text/markdown;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `处置报告-${selectedAlert.company_name}-${selectedAlert.id}.md`;
+    a.click();
+    URL.revokeObjectURL(url);
+    message.success("处置报告已导出");
+    setReportDrawerOpen(false);
+  };
   function getStrategyLinks(alertType: string) {
     const map: Record<string, { pattern: string; patternId: string; rule: string; rulePath: string; tuneCase: string; tuneId: string; backtestHint: string }> = {
       "资金挪用": { pattern: "FP-01 · 资金挪用 · 对公回流个人账户", patternId: "FP-01", rule: "对公回流个人账户 · 金额阈值 30万", rulePath: "/strategy/rules", tuneCase: "RC-04 对公回流阈值 50→30万", tuneId: "RC-04", backtestHint: "建议回溯该阈值分层（按季节/行业）优化效果" },
@@ -121,11 +233,16 @@ export default function Workbench() {
 
   return (
     <ModulePageShell title="预警核查工作台" subtitle="查看预警详情、风险评估与执行处置">
-      <Spin spinning={loading}>
-        <div className="grid grid-cols-12 gap-4">
-          {/* 左侧：预警队列 */}
-          <div className="col-span-4">
-            <ModuleSectionCard title="预警队列" subtitle={`共 ${alerts.length} 条`}>
+      <div className="grid grid-cols-12 gap-4">
+        {/* 左侧：预警队列（骨架屏加载，保持可操作） */}
+        <div className="col-span-4">
+          <ModuleSectionCard
+            title="预警队列"
+            subtitle={loading ? "加载中..." : `共 ${alerts.length} 条`}
+          >
+            {loading ? (
+              <Skeleton active paragraph={{ rows: 6 }} />
+            ) : (
               <div className="space-y-2 max-h-[calc(100vh-220px)] overflow-y-auto">
                 {alerts.map((alert) => (
                   <Card
@@ -157,8 +274,9 @@ export default function Workbench() {
                   <AntdAlert type="info" message="暂无活跃预警" showIcon />
                 )}
               </div>
-            </ModuleSectionCard>
-          </div>
+            )}
+          </ModuleSectionCard>
+        </div>
 
           {/* 右侧：详情 + 处置 */}
           <div className="col-span-8">
@@ -188,9 +306,12 @@ export default function Workbench() {
                   </Descriptions>
                 </ModuleSectionCard>
 
-                {/* 风险评估详情 */}
-                <Spin spinning={assessmentLoading}>
-                  {assessment ? (
+                {/* 风险评估详情：骨架屏 → 数据到达 */}
+                {assessmentLoading ? (
+                  <ModuleSectionCard title="风险评估详情">
+                    <Skeleton active paragraph={{ rows: 10 }} />
+                  </ModuleSectionCard>
+                ) : assessment ? (
                     <ModuleSectionCard title="风险评估详情">
                       <AntdAlert
                         type={assessment.overall_risk === "CRITICAL" ? "error" : "warning"}
@@ -204,18 +325,19 @@ export default function Workbench() {
                       <Title level={5}>9 维度风险评估</Title>
                       <div className="grid grid-cols-3 gap-3 mb-4">
                         {Object.entries(assessment.assessment_data.dimensions).map(
-                          ([key, dimension]: [string, any]) => {
-                            if (!dimension) return null;
+                          ([key, dimension]) => {
+                            const dim = dimension as DimensionRisk | undefined;
+                            if (!dim) return null;
                             return (
                               <Card key={key} size="small">
                                 <div className="flex items-center justify-between mb-1">
                                   <Text className="text-xs">{DIMENSION_NAMES[key] || key}</Text>
-                                  <Tag color={RISK_LEVEL_COLORS[dimension.level]} className="text-[10px]">
-                                    {RISK_LEVEL_TEXT[dimension.level]}
+                                  <Tag color={RISK_LEVEL_COLORS[dim.level]} className="text-[10px]">
+                                    {RISK_LEVEL_TEXT[dim.level]}
                                   </Tag>
                                 </div>
                                 <Text type="secondary" className="text-xs">
-                                  分数：{dimension.score.toFixed(1)}
+                                  分数：{dim.score.toFixed(1)}
                                 </Text>
                               </Card>
                             );
@@ -226,8 +348,8 @@ export default function Workbench() {
                       {/* 风险类别 */}
                       <Title level={5}>风险类别（18 类）</Title>
                       <Collapse accordion className="mb-4">
-                        {assessment.assessment_data.risk_categories.map(
-                          (category: any, idx: number) => (
+                        {(assessment.assessment_data.risk_categories as RiskCategory[]).map(
+                          (category, idx) => (
                             <Collapse.Panel
                               key={idx}
                               header={
@@ -251,32 +373,15 @@ export default function Workbench() {
                         )}
                       </Collapse>
 
-                      {/* 证据链 */}
+                      {/* 证据链：按 8 大变量域分组 [spec-RISK-6] */}
                       <Title level={5}>证据链</Title>
-                      <Timeline>
-                        {assessment.assessment_data.evidence_chain.map(
-                          (evidence: any, idx: number) => (
-                            <Timeline.Item key={idx} color="blue">
-                              <div>
-                                <Text strong>{evidence.data_source}</Text>
-                                <br />
-                                <Text type="secondary" className="text-xs">
-                                  更新：{evidence.update_time} | 可信度：{evidence.credibility}
-                                </Text>
-                                <br />
-                                <Text className="text-sm">{evidence.content}</Text>
-                              </div>
-                            </Timeline.Item>
-                          )
-                        )}
-                      </Timeline>
+                      <EvidenceChain
+                        items={assessment.assessment_data.evidence_chain as EvidenceItem[]}
+                      />
                     </ModuleSectionCard>
                   ) : (
-                    !assessmentLoading && (
-                      <AntdAlert type="warning" message="该预警暂无风险评估数据" showIcon />
-                    )
+                    <AntdAlert type="warning" message="该预警暂无风险评估数据" showIcon />
                   )}
-                </Spin>
 
                 <Divider />
 
@@ -291,8 +396,16 @@ export default function Workbench() {
                     >
                       解决预警
                     </Button>
-                    <Button icon={<FileTextOutlined />}>生成处置报告</Button>
-                    <Button icon={<DownloadOutlined />}>导出证据链</Button>
+                    <Button icon={<FileTextOutlined />} onClick={handleGenerateReport}>
+                      生成处置报告
+                    </Button>
+                    <Button
+                      icon={<DownloadOutlined />}
+                      onClick={handleExportEvidence}
+                      disabled={!assessment}
+                    >
+                      导出证据链
+                    </Button>
                   </Space>
                 </ModuleSectionCard>
 
@@ -376,16 +489,194 @@ export default function Workbench() {
                 </ModuleSectionCard>
               </div>
             ) : (
-              <AntdAlert
-                type="info"
-                message="请从左侧预警队列中选择一条预警"
-                description="选中后将加载风险评估详情"
-                showIcon
-              />
+              <div className="space-y-4">
+                <AntdAlert
+                  type="info"
+                  showIcon
+                  message="当前为内置演示工单"
+                  description="从左侧预警队列选择预警，即可加载该客户的风险评估详情与处置操作。"
+                />
+
+                {/* 客户信息 + 预警详情 */}
+                <ModuleSectionCard title="客户信息">
+                  <Descriptions bordered column={2} size="small">
+                    <Descriptions.Item label="企业名称">{DEMO_ALERT.company}</Descriptions.Item>
+                    <Descriptions.Item label="授信产品">{DEMO_ALERT.product}</Descriptions.Item>
+                    <Descriptions.Item label="敞口余额">{DEMO_ALERT.exposure}</Descriptions.Item>
+                    <Descriptions.Item label="客户经理">{DEMO_ALERT.manager}</Descriptions.Item>
+                    <Descriptions.Item label="所属行业">{DEMO_ALERT.industry}</Descriptions.Item>
+                    <Descriptions.Item label="触发时间">{DEMO_ALERT.triggeredAt}</Descriptions.Item>
+                  </Descriptions>
+                </ModuleSectionCard>
+
+                <ModuleSectionCard title="预警详情">
+                  <Descriptions bordered column={2} size="small">
+                    <Descriptions.Item label="预警等级">
+                      <Tag color="gold">{DEMO_ALERT.level}</Tag>
+                    </Descriptions.Item>
+                    <Descriptions.Item label="预警类型">{DEMO_ALERT.type}</Descriptions.Item>
+                    <Descriptions.Item label="触发时间">{DEMO_ALERT.triggeredAt}</Descriptions.Item>
+                    <Descriptions.Item label="归因结论">多头借贷跳升（Agent 置信度 87%）</Descriptions.Item>
+                  </Descriptions>
+                </ModuleSectionCard>
+
+                {/* 命中规则 */}
+                <ModuleSectionCard title="命中规则">
+                  <Card size="small">
+                    <Text strong>{DEMO_ALERT.rule}</Text>
+                    <br />
+                    <Text type="secondary" className="text-xs">{DEMO_ALERT.ruleDetail}</Text>
+                  </Card>
+                </ModuleSectionCard>
+
+                {/* 风险画像 */}
+                <ModuleSectionCard title="风险画像">
+                  <ul className="list-disc pl-4 space-y-1 mb-0">
+                    {DEMO_ALERT.riskProfile.map((p) => (
+                      <li key={p} className="text-[13px]">{p}</li>
+                    ))}
+                  </ul>
+                </ModuleSectionCard>
+
+                <Divider />
+
+                {/* 处置操作（演示按钮） */}
+                <ModuleSectionCard title="处置操作">
+                  <Space wrap>
+                    {DEMO_DISPOSAL_ACTIONS.map((action) => (
+                      <Button
+                        key={action}
+                        type={action === "电话核实" ? "primary" : "default"}
+                        onClick={() => message.info(`演示环境：「${action}」动作已记录到处置草稿`)}
+                        size="large"
+                      >
+                        {action}
+                      </Button>
+                    ))}
+                  </Space>
+                </ModuleSectionCard>
+
+                {/* 贷后监控报告（客户级） */}
+                <ModuleSectionCard
+                  title="贷后监控报告"
+                  subtitle="基于当前客户预警、企查查 MCP、司法财报与处置记录生成报告"
+                  extra={<Tag icon={<SafetyCertificateOutlined />}>审计留档</Tag>}
+                >
+                  <Space wrap>
+                    <Button
+                      type="primary"
+                      icon={<FileTextOutlined />}
+                      onClick={() => message.info("演示环境：监控报告已生成并预览")}
+                    >
+                      生成贷后监控报告
+                    </Button>
+                    <Button
+                      icon={<FileTextOutlined />}
+                      onClick={() => message.info("演示环境：打开报告预览")}
+                    >
+                      报告预览
+                    </Button>
+                    <Button
+                      icon={<DownloadOutlined />}
+                      onClick={() => message.info("演示环境：报告 PDF 已开始下载")}
+                    >
+                      下载 PDF
+                    </Button>
+                  </Space>
+                  <p className="mt-3 mb-0 text-[12px] text-text-secondary">
+                    报告生成后自动写入监控报告库并完成审计留档，供贷后检查与验收抽查调用。
+                  </p>
+                </ModuleSectionCard>
+
+                {/* 处置记录 */}
+                <ModuleSectionCard title="处置记录">
+                  <Timeline
+                    items={DEMO_DISPOSAL_RECORDS.map((r) => ({
+                      children: (
+                        <>
+                          <Text className="text-[13px]">{r.text}</Text>
+                          <br />
+                          <Text type="secondary" className="text-xs">{r.time}</Text>
+                        </>
+                      ),
+                    }))}
+                  />
+                </ModuleSectionCard>
+              </div>
             )}
           </div>
         </div>
-      </Spin>
+
+      {/* 处置报告预览抽屉 */}
+      <Drawer
+        title="预警处置报告预览"
+        open={reportDrawerOpen}
+        onClose={() => setReportDrawerOpen(false)}
+        width={720}
+        footer={
+          <Space>
+            <Button onClick={() => setReportDrawerOpen(false)}>关闭</Button>
+            <Button type="primary" icon={<DownloadOutlined />} onClick={handleDownloadReport}>
+              下载报告
+            </Button>
+          </Space>
+        }
+      >
+        {selectedAlert && assessment && (
+          <div className="space-y-4">
+            <Card size="small" title="基本信息">
+              <Descriptions column={1} size="small">
+                <Descriptions.Item label="预警ID">{selectedAlert.id}</Descriptions.Item>
+                <Descriptions.Item label="企业名称">{selectedAlert.company_name}</Descriptions.Item>
+                <Descriptions.Item label="预警类型">{selectedAlert.alert_type}</Descriptions.Item>
+                <Descriptions.Item label="预警等级">
+                  <Tag color={RISK_LEVEL_COLORS[selectedAlert.alert_level]}>
+                    {RISK_LEVEL_TEXT[selectedAlert.alert_level]}
+                  </Tag>
+                </Descriptions.Item>
+                <Descriptions.Item label="触发时间">
+                  {new Date(selectedAlert.triggered_at).toLocaleString("zh-CN")}
+                </Descriptions.Item>
+              </Descriptions>
+            </Card>
+            <Card size="small" title="风险评估">
+              <Descriptions column={1} size="small">
+                <Descriptions.Item label="整体风险等级">
+                  <Tag color={RISK_LEVEL_COLORS[assessment.overall_risk]}>
+                    {RISK_LEVEL_TEXT[assessment.overall_risk]}
+                  </Tag>
+                </Descriptions.Item>
+              </Descriptions>
+            </Card>
+            <Card size="small" title="处置建议">
+              <ul className="list-disc pl-4 space-y-1">
+                {(assessment.assessment_data.disposition_suggestions || []).map(
+                  (s: { action: string; sla: string; responsible_person: string }, idx: number) => (
+                    <li key={idx} className="text-sm">
+                      {s.action}（SLA：{s.sla}，责任人：{s.responsible_person}）
+                    </li>
+                  )
+                )}
+              </ul>
+            </Card>
+            <Card size="small" title="证据链">
+              <ul className="list-decimal pl-4 space-y-2">
+                {(assessment.assessment_data.evidence_chain || []).map(
+                  (ev: { data_source: string; update_time: string; credibility: string; content: string }, idx: number) => (
+                    <li key={idx} className="text-sm">
+                      <Text strong>{ev.data_source}</Text>
+                      <Text type="secondary" className="text-xs ml-2">
+                        {ev.update_time} · 可信度：{ev.credibility}
+                      </Text>
+                      <div className="mt-1">{ev.content}</div>
+                    </li>
+                  )
+                )}
+              </ul>
+            </Card>
+          </div>
+        )}
+      </Drawer>
 
       <DemoFlowNav />
     </ModulePageShell>

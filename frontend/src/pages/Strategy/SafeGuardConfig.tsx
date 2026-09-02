@@ -54,7 +54,7 @@ export default function SafeGuardConfig({
         <div className="layout-mb-xl">
           <div className="layout-flex-between layout-mb-sm">
             <Space>
-              <SafetyOutlined style={{ color: "#6f8f95" }} />
+              <SafetyOutlined style={{ color: "#2563eb" }} />
               <Text strong className="text-[12px]">
                 开启自动熔断
               </Text>
@@ -139,7 +139,7 @@ export default function SafeGuardConfig({
         <div>
           <div className="layout-flex-between layout-mb-sm">
             <Space>
-              <ExperimentOutlined style={{ color: "#6f8f95" }} />
+              <ExperimentOutlined style={{ color: "#2563eb" }} />
               <Text strong className="text-[12px]">
                 灰度流量分配
               </Text>
@@ -197,7 +197,7 @@ export default function SafeGuardConfig({
         <div>
           <div className="layout-flex-between">
             <Space>
-              <ThunderboltOutlined style={{ color: "#6f8f95" }} />
+              <ThunderboltOutlined style={{ color: "#2563eb" }} />
               <Text strong className="text-[12px]">
                 回滚策略
               </Text>

@@ -2,10 +2,67 @@
 
 [![Repo](https://img.shields.io/badge/GitHub-ris--os-24292e?logo=github)](https://github.com/minfushen/ris-os)
 [![Branch](https://img.shields.io/badge/branch-scenario%2Fpost--loan-0969da)](https://github.com/minfushen/ris-os/tree/scenario/post-loan)
+[![CI](https://github.com/minfushen/ris-os/actions/workflows/ci.yml/badge.svg?branch=scenario%2Fpost-loan)](https://github.com/minfushen/ris-os/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 
 面向信贷全生命周期的 **风控工作台（Risk Intelligence System OS）** 前后端原型。本仓库 **`scenario/post-loan`（贷后场景）** 分支在导航、页面与接口上对齐 **贷后预警与处置**；产品展示名为 **贷后风险智能运营平台**（副标题：预警监控 · 处置闭环 · 策略仿真 · 智能体协同）。前端为「浅色金融玻璃台」骨架（Browser 路径路由），后端为 FastAPI 最小可运行 API，便于本地演示与二次开发。
 
+> 口径说明：本项目为**脱敏演示案例**，客户名统一以"头部农商行"指代，项目编号为演示编号，数据均为虚构演示数据。
+
 **远程仓库：** [https://github.com/minfushen/ris-os](https://github.com/minfushen/ris-os)
+
+---
+
+## 项目截图
+
+| 客户经理首页（角色化工作台） | 贷后预警监控大盘 |
+|---|---|
+| ![客户经理首页](./docs/screenshots/home-customer-manager.png) | ![预警监控大盘](./docs/screenshots/monitor-dashboard.png) |
+
+| 预警核查工作台 | 决策流编排 |
+|---|---|
+| ![预警核查工作台](./docs/screenshots/risk-workbench.png) | ![决策流编排](./docs/screenshots/strategy-decision-flow.png) |
+
+| 模型工厂 | 预警归因 Agent |
+|---|---|
+| ![模型工厂](./docs/screenshots/strategy-model-factory.png) | ![预警归因 Agent](./docs/screenshots/agent-attribution.png) |
+
+| Agent 运行监控 | 报表中心（监控报告库） |
+|---|---|
+| ![Agent 运行监控](./docs/screenshots/agent-ops-monitor.png) | ![报表中心](./docs/screenshots/monitor-reports.png) |
+
+---
+
+## 快速演示路径（面试 / 走查 5 分钟）
+
+1. 打开首页 → 顶部**角色切换器**切换「客户经理 / 风控建模师 / 策略审批员」，观察首页内容与侧栏菜单联动；
+2. 「预警监控 → 贷后预警监控大盘」看预警态势、模型效果（PSI / KS / 命中率）与待处置队列；
+3. 「处置闭环 → 预警核查工作台」走一条"命中规则 → 风险画像 → 处置操作 → 生成监控报告"的处置链路；
+4. 「策略与模型 → 模型工厂 / 决策流编排」看评分卡实验与决策引擎画布；
+5. 「智能体协同 → 预警归因 Agent / Agent 运行监控」看多 Agent 协同与审计留痕。
+
+未启动后端时前端通过 MSW Mock 仍可完整演示（名单上传、报表中心等少数页面依赖后端）。
+
+---
+
+## 系统架构
+
+```mermaid
+flowchart LR
+    subgraph FE["前端 · React 18 + Vite + AntD 5"]
+        UI["角色化工作台<br/>预警监控 / 处置闭环 / 策略与模型"]
+        MSW["MSW Mock 层<br/>（后端离线可演示）"]
+    end
+    subgraph BE["后端 · FastAPI + SQLite"]
+        TASKS["任务 API /tasks"]
+        PL["贷后场景 REST<br/>/api/scenario/post-loan/*"]
+        ENT["企业数据中心<br/>/api/enterprises/*"]
+        QCC["企查查 MCP 集成<br/>/api/qcc/*"]
+    end
+    UI -->|REST| TASKS & PL & ENT
+    UI -.->|拦截| MSW
+    QCC -->|MCP 协议| QCCLOUD["企查查开放平台<br/>（需 API Key，可选）"]
+```
 
 ---
 
@@ -39,6 +96,7 @@ git switch scenario/post-loan
 | **处置闭环** | 预警核查工作台（含**监控报告**生成/预览/下载/审计留档）、催收作业（M1/M2/M3 分池）、复盘与质检，**与策略模块双向关联**（FP/RC 引用体系） |
 | **策略与模型** | 产品线策略集、规则配置、**模型工厂**（实验管理）、**模型版本库**（Champion/Challenger）、**决策流编排**、**仿真回溯**、发布审批与护栏 |
 | **知识沉淀** | 话术库、规则调优案例、风险模式库，**FP（欺诈模式）/ RC（调优案例）跨模块引用** |
+| **智能体协同** | 预警归因 / 处置建议 / 策略调优 / 话术合规 / 复盘质检 / **企业风险评估（企查查 MCP）** / Agent 运行监控（人工采纳率 + 审计日志） |
 | **特征与数据** | **贷后特征工作室**、**数据源管理**，数据来自 **`GET /api/scenario/post-loan/*`** |
 | **统一 Mock 层** | MSW (Mock Service Worker) 浏览器端拦截，18 个散落 mock 文件统一收敛为单一数据源，后端离线可完整演示 |
 | **任务流（通用）** | `POST /tasks/analysis`、`POST /tasks/review`、`GET /tasks` 等 |
@@ -179,12 +237,14 @@ GET  /api/qcc/health                # 健康检查
 
 ### 配置要求
 
-在 `backend/.env` 文件中配置企查查 API Key：
+在 `backend/.env` 文件中配置企查查 API Key（该文件已被 `.gitignore` 忽略，不会入库）：
 
 ```bash
 QCC_MCP_API_KEY=your_api_key_here
 QCC_MCP_BASE_URL=https://agent.qcc.com/mcp
 ```
+
+> **未配置 Key 时服务仍可正常启动**，仅企查查相关接口在调用时返回明确提示，其余功能不受影响。
 
 ### 设计文档
 
@@ -202,6 +262,7 @@ QCC_MCP_BASE_URL=https://agent.qcc.com/mcp
 2. [线框图原型](./线框图原型)
 3. [首页信息架构改版建议清单](./docs/首页信息架构改版建议清单.md)
 4. [新首页 / 全局导航骨架视觉设计方案](./docs/superpowers/specs/2026-04-17-home-navigation-tailwind-glass-design.md)（若路径存在）
+5. [PRD-小微贷后预警平台](./docs/prd/PRD-小微贷后预警平台.md)（对齐《项目实施计划书》+ 开源项目借鉴）
 
 ---
 
@@ -232,4 +293,4 @@ git push -u origin scenario/post-loan --force
 
 ## License
 
-代码默认由仓库所有者保留权利；如需开源协议请自行补充 `LICENSE` 文件。
+本项目以 [MIT License](./LICENSE) 开源。

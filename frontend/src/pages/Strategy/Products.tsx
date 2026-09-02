@@ -30,9 +30,9 @@ interface ProductLineGroup {
 const PRODUCT_GROUPS: ProductLineGroup[] = [
   {
     key: "biz",
-    title: "经营贷",
+    title: "惠快贷",
     subtitle: "FP-01 资金挪用 · FP-03 税报粉饰 · FP-04 担保链",
-    accent: "#4f6970",
+    accent: "#1d4ed8",
     strategies: [
       { id: "PL-B-01", name: "经营预警包 A（覆盖 FP-01/FP-03）", triggers: 1280, effectivenessPct: 71, falsePositivePct: 22, health: "active", version: "2.4.0", updateTime: "2026-04-17" },
       { id: "PL-B-02", name: "司法与被执行联动（关联 RC-05）", triggers: 420, effectivenessPct: 83, falsePositivePct: 11, health: "active", version: "1.2.1", updateTime: "2026-04-15" },
@@ -40,7 +40,7 @@ const PRODUCT_GROUPS: ProductLineGroup[] = [
   },
   {
     key: "tax",
-    title: "税易贷 / 税金贷",
+    title: "税易贷",
     subtitle: "FP-03 税报粉饰 · RC-01 断档天数调优",
     accent: "#5f9b7a",
     strategies: [
@@ -50,16 +50,16 @@ const PRODUCT_GROUPS: ProductLineGroup[] = [
   },
   {
     key: "mortgage",
-    title: "抵押类",
+    title: "房快贷",
     subtitle: "押品状态 · 还款能力",
-    accent: "#6f8f95",
+    accent: "#2563eb",
     strategies: [
       { id: "PL-M-01", name: "抵押物价值波动", triggers: 210, effectivenessPct: 76, falsePositivePct: 14, health: "active", version: "1.0.4", updateTime: "2026-04-10" },
     ],
   },
   {
     key: "consumer",
-    title: "消费贷",
+    title: "惠微贷",
     subtitle: "多头 · 设备簇 · 行为异常",
     accent: "#c77b78",
     strategies: [
@@ -258,10 +258,10 @@ export default function Products() {
           <Form.Item label="产品线" required>
             <Select
               options={[
-                { value: "biz", label: "经营贷" },
-                { value: "tax", label: "税易贷 / 税金贷" },
-                { value: "mortgage", label: "抵押类" },
-                { value: "consumer", label: "消费贷" },
+                { value: "biz", label: "惠快贷" },
+                { value: "tax", label: "税易贷" },
+                { value: "mortgage", label: "房快贷" },
+                { value: "consumer", label: "惠微贷" },
               ]}
             />
           </Form.Item>

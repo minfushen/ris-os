@@ -4,11 +4,14 @@
  * 对应招标交付：预警处置流程设计方案 — 处置质量评估与回溯机制
  */
 
-import { Typography, Table, Tag, Button, Space, Progress, Row, Col, Statistic, Collapse, Alert } from "antd";
+import { useState } from "react";
+import { Typography, Table, Tag, Button, Space, Progress, Row, Col, Statistic, Collapse, Alert, Drawer, Form, Input, Select, DatePicker, message } from "antd";
 import { PlusOutlined, WarningOutlined } from "@ant-design/icons";
 import ModulePageShell, { ModuleSectionCard } from "@/components/ModulePageShell";
 
 const { Text } = Typography;
+const { Option } = Select;
+const { TextArea } = Input;
 
 /** RM 贷后处置记录抽检（替代授信材料专家抽检） */
 const RM_QA_TASKS = [
@@ -80,6 +83,24 @@ const CLOSED_LOOP_STEPS = [
 ];
 
 export default function Inspection() {
+  const [createOpen, setCreateOpen] = useState(false);
+  const [createLoading, setCreateLoading] = useState(false);
+  const [createForm] = Form.useForm();
+
+  const handleCreateSubmit = async () => {
+    try {
+      const values = await createForm.validateFields();
+      setCreateLoading(true);
+      await new Promise((r) => setTimeout(r, 600));
+      message.success(`抽检任务「${values.name}」已创建`);
+      setCreateOpen(false);
+      createForm.resetFields();
+    } catch {
+      message.error("请完善必填信息");
+    } finally {
+      setCreateLoading(false);
+    }
+  };
   const columns = [
     { title: "任务ID", dataIndex: "id", width: 96, render: (v: string) => <Text code className="text-[13px]">{v}</Text> },
     { title: "抽检名称", dataIndex: "name", width: 220, render: (v: string) => <Text strong className="text-[13px]">{v}</Text> },
@@ -121,7 +142,7 @@ export default function Inspection() {
       subtitle="对象由授信材料改为「RM 预警核查处置记录」：评估处置时效、结论准确性、留痕完整性；不合格样本回流训练/规则调优（演示）。已移除授信侧 PDF 上传与 OCR 流程。"
       breadcrumb={["处置闭环", "复盘与质检"]}
       actions={
-        <Button type="primary" icon={<PlusOutlined />} size="small">
+        <Button type="primary" icon={<PlusOutlined />} size="small" onClick={() => setCreateOpen(true)}>
           创建抽检任务
         </Button>
       }
@@ -145,7 +166,7 @@ export default function Inspection() {
       </ModuleSectionCard>
 
       {/* 质检维度标准 */}
-      <ModuleSectionCard title="质检四维标准" subtitle="各维度权重、规则与最新通过率（面试展示平台治理深度用）">
+      <ModuleSectionCard title="质检四维标准" subtitle="各维度权重、规则与最新通过率（展示平台治理深度）">
         {QC_CRITERIA.map((c) => (
           <div key={c.dimension} className="mb-3 last:mb-0">
             <div className="flex items-center justify-between mb-1">
@@ -212,6 +233,42 @@ export default function Inspection() {
           ]}
         />
       </ModuleSectionCard>
+
+      {/* 创建抽检任务抽屉 */}
+      <Drawer
+        title="创建抽检任务"
+        open={createOpen}
+        onClose={() => setCreateOpen(false)}
+        width={520}
+        footer={
+          <Space>
+            <Button onClick={() => setCreateOpen(false)}>取消</Button>
+            <Button type="primary" loading={createLoading} onClick={handleCreateSubmit}>
+              创建任务
+            </Button>
+          </Space>
+        }
+      >
+        <Form form={createForm} layout="vertical">
+          <Form.Item name="name" label="任务名称" rules={[{ required: true, message: "请输入任务名称" }]}>
+            <Input placeholder="如：华东 RM · 5月第1周处置抽检" />
+          </Form.Item>
+          <Form.Item name="scope" label="抽检范围" rules={[{ required: true, message: "请选择抽检范围" }]}>
+            <Select placeholder="选择抽检范围">
+              <Option value="华东">华东区域</Option>
+              <Option value="华南">华南区域</Option>
+              <Option value="华北">华北区域</Option>
+              <Option value="西南">西南区域</Option>
+            </Select>
+          </Form.Item>
+          <Form.Item name="dateRange" label="时间范围" rules={[{ required: true, message: "请选择时间范围" }]}>
+            <DatePicker.RangePicker style={{ width: "100%" }} />
+          </Form.Item>
+          <Form.Item name="focus" label="抽检重点">
+            <TextArea rows={3} placeholder="如：时效 / 结论准确性 / 留痕完整性" />
+          </Form.Item>
+        </Form>
+      </Drawer>
     </ModulePageShell>
   );
 }

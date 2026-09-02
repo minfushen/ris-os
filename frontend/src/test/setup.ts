@@ -1,5 +1,9 @@
 import "@testing-library/jest-dom";
+import { configure } from "@testing-library/react";
 import { server } from "./mocks/server";
+
+// findBy* 系列默认 1s 超时，全量并发跑时懒加载页面渲染可能超过 1s 造成偶发失败
+configure({ asyncUtilTimeout: 4000 });
 
 // ─── jsdom 兼容性补丁 ─────────────────────────────────────────────────────────
 

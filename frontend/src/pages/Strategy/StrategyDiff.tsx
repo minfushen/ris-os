@@ -36,9 +36,9 @@ const DEFAULT_NEW_LINES: StrategyLine[] = [
 ];
 
 const IMPACT_CHANNELS = [
-  { key: "1", channel: "经营贷", passDelta: "日触发 +12%", exposure: "约 1.8k 客户/周进入预警" },
+  { key: "1", channel: "惠快贷", passDelta: "日触发 +12%", exposure: "约 1.8k 客户/周进入预警" },
   { key: "2", channel: "税易贷", passDelta: "日触发 +22%", exposure: "误报率预估 +4ppt" },
-  { key: "3", channel: "消费贷", passDelta: "日触发 +6%", exposure: "对 M1 池入催影响有限" },
+  { key: "3", channel: "惠微贷", passDelta: "日触发 +6%", exposure: "对 M1 池入催影响有限" },
 ];
 
 function countChanges(lines: StrategyLine[]) {
@@ -198,7 +198,7 @@ export default function StrategyDiff({
           <Descriptions.Item label="预估新增预警（灰度周）">+18% vs 基线，约 +420 单/日</Descriptions.Item>
           <Descriptions.Item label="影响在贷客户（估算）">约 6.2 万在贷户可能新增或升级预警</Descriptions.Item>
           <Descriptions.Item label="涉及在贷敞口">在贷余额区间 ￥118 亿～￥126 亿（按当前账簿）</Descriptions.Item>
-          <Descriptions.Item label="产品线结构">经营贷 / 税易贷 / 消费贷（主增量：税易贷）</Descriptions.Item>
+          <Descriptions.Item label="产品线结构">惠快贷 / 税易贷 / 惠微贷（主增量：税易贷）</Descriptions.Item>
         </Descriptions>
         <Text strong className="text-xs block layout-mb-sm">
           产品线维度敏感度（预估）

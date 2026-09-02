@@ -76,9 +76,9 @@ function KpiCard({ label, value, valueColor, trend, sparkline, footer, stripVari
 /* ── 风控建模师首页 ── */
 
 const RECENT_EXPERIMENTS = [
-  { id: "EXP-PL-2408", model: "贷后经营异常预警模型", sample: "经营贷 · 制造业 · 近18个月", auc: 0.842, ks: 0.413, status: "候选模型", targetFP: "FP-01/FP-03/FP-05" },
+  { id: "EXP-PL-2408", model: "贷后经营异常预警模型", sample: "惠快贷 · 制造业 · 近18个月", auc: 0.842, ks: 0.413, status: "候选模型", targetFP: "FP-01/FP-03/FP-05" },
   { id: "EXP-PL-2411", model: "税报断档风险模型", sample: "税易贷 · 全行业 · 近12个月", auc: 0.811, ks: 0.386, status: "训练中", targetFP: "FP-03" },
-  { id: "EXP-PL-2414", model: "多头共债跳升模型", sample: "消费贷 · 批发零售 · 近24个月", auc: 0.798, ks: 0.361, status: "待复核", targetFP: "FP-02" },
+  { id: "EXP-PL-2414", model: "多头共债跳升模型", sample: "惠微贷 · 批发零售 · 近24个月", auc: 0.798, ks: 0.361, status: "待复核", targetFP: "FP-02" },
 ];
 
 const CHAMPION_VERSIONS = mockModelVersions.filter((v) => v.role === "Champion" && v.stage === "生效中");

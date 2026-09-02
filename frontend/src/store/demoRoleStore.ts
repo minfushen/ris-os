@@ -23,6 +23,8 @@ const LS_ROLE_TITLE = "ris_duty_role_title";
 
 interface DemoRoleState {
   role: DemoRole;
+  /** 用户是否显式选择过角色：未选择时侧栏展示全量面试演示信息架构，选择后按角色过滤 */
+  hasChosenRole: boolean;
   setRole: (role: DemoRole) => void;
 }
 
@@ -30,6 +32,7 @@ export const useDemoRoleStore = create<DemoRoleState>()(
   persist(
     (set) => ({
       role: "relationship_manager",
+      hasChosenRole: false,
       setRole: (role) => {
         const meta = DEMO_ROLES.find((r) => r.key === role);
         if (meta) {
@@ -38,7 +41,7 @@ export const useDemoRoleStore = create<DemoRoleState>()(
             localStorage.setItem(LS_ROLE_TITLE, meta.roleTitle);
           } catch { /* noop */ }
         }
-        set({ role });
+        set({ role, hasChosenRole: true });
       },
     }),
     { name: "fk-demo-role" }

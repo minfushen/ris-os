@@ -25,7 +25,7 @@ const CARDS = [
     title: "规则调优案例库",
     desc: "记录参数调整前后触发量、有效率与误报变化，服务策略效果追踪闭环。",
     to: "/knowledge/rule-cases",
-    icon: <FileTextOutlined className="text-2xl" style={{ color: "#4f6970" }} />,
+    icon: <FileTextOutlined className="text-2xl" style={{ color: "#1d4ed8" }} />,
     stats: { label: "调优案例", value: 5 },
   },
   {

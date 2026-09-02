@@ -11,6 +11,10 @@ backend/.venv/
 backend/__pycache__/
 backend/.pytest_cache/
 
+# 本地密钥配置（企查查 MCP API Key 等），严禁入库
+backend/.env
+backend/.env.*
+
 frontend/dist/
 frontend/.env.local
 frontend/.env.*.local
@@ -19,3 +23,6 @@ frontend/.env.*.local
 # 本地工具 / 规格缓存（不纳入版本库）
 .superpowers/
 .kiro/
+
+# 运行时数据库
+backend/*.db

@@ -259,7 +259,7 @@ export function useMockRealtimePush(intervalMs: number = 5000): UseRealtimePushR
         timestamp: new Date().toISOString(),
         metadata: {
           channel: ["API-01", "API-02", "H5", "APP"][Math.floor(Math.random() * 4)],
-          product: ["经营贷", "消费贷", "信用贷"][Math.floor(Math.random() * 3)],
+          product: ["惠快贷", "惠微贷", "信用贷"][Math.floor(Math.random() * 3)],
         },
       };
 

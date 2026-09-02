@@ -6,9 +6,7 @@
 /* —— 应用壳 —— */
 .page-shell-root {
   min-height: 100vh;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.5) 0%, rgba(244, 247, 248, 0) 220px),
-    var(--color-bg-layout);
+  background: var(--color-bg-layout);
 }
 
 .page-shell-body-row {
@@ -39,15 +37,15 @@
   max-height: 20vh;
   overflow: auto;
   border-radius: var(--radius-panel);
-  border: 0.5px solid var(--color-card-border);
+  border: 1px solid var(--color-card-border);
   padding: var(--spacing-md) var(--spacing-lg);
-  background-color: rgba(255, 255, 255, 0.98);
-  box-shadow: var(--shadow-sm);
+  background-color: #ffffff;
+  box-shadow: none;
 }
 
 .pl-home-kpi-shell {
   border-radius: var(--radius-panel);
-  border: 0.5px solid var(--color-card-border);
+  border: 1px solid var(--color-card-border);
   background-color: var(--color-primary-bg);
   padding: var(--spacing-lg);
 }
@@ -55,7 +53,7 @@
 /* —— 通用卡片 / 图表容器 / 表格外壳 —— */
 .card-surface {
   border-radius: var(--radius-lg);
-  border: 0.5px solid var(--color-card-border);
+  border: 1px solid var(--color-card-border);
   background-color: var(--color-bg-container);
   box-shadow: var(--shadow-card);
   transition:
@@ -71,7 +69,7 @@
 
 .chart-card {
   border-radius: var(--radius-panel);
-  border: 0.5px solid var(--color-card-border);
+  border: 1px solid var(--color-card-border);
   background-color: var(--color-bg-container);
   box-shadow: var(--shadow-surface);
   transition:
@@ -91,7 +89,7 @@
 
 .table-shell {
   border-radius: var(--radius-lg);
-  border: 0.5px solid var(--color-card-border);
+  border: 1px solid var(--color-card-border);
   overflow: hidden;
   background-color: var(--color-bg-container);
   box-shadow: var(--shadow-sm);
@@ -100,7 +98,7 @@
 /* —— KPI 监控页大数卡 —— */
 .kpi-stat-card {
   border-radius: var(--radius-lg);
-  border: 0.5px solid var(--color-card-border);
+  border: 1px solid var(--color-card-border);
   background-color: var(--color-bg-container);
   padding: var(--spacing-lg);
   box-shadow: var(--shadow-sm);
@@ -171,7 +169,7 @@
 
 .workbench-pane {
   border-radius: var(--radius-panel);
-  border: 0.5px solid var(--color-card-border);
+  border: 1px solid var(--color-card-border);
   background-color: var(--color-bg-container);
   box-shadow: var(--shadow-sm);
   overflow: hidden;
@@ -201,7 +199,7 @@
 
 .workbench-pane__head {
   flex-shrink: 0;
-  border-bottom: 0.5px solid var(--color-border-light);
+  border-bottom: 1px solid var(--color-border-light);
   padding: var(--spacing-sm) var(--spacing-md);
 }
 
@@ -216,14 +214,14 @@
 /** 结论区正上方：知识闭环等（设计稿顺序：历史 → 知识提示 → 固定结论） */
 .workbench-pane__prefoot {
   flex-shrink: 0;
-  border-top: 0.5px solid var(--color-border-light);
+  border-top: 1px solid var(--color-border-light);
   background-color: var(--color-bg-layout);
   padding: var(--spacing-md);
 }
 
 .workbench-pane__foot {
   flex-shrink: 0;
-  border-top: 0.5px solid var(--color-card-border);
+  border-top: 1px solid var(--color-card-border);
   background-color: var(--color-bg-layout);
   padding: var(--spacing-md);
 }
@@ -262,7 +260,7 @@
   min-width: 0;
   padding: var(--spacing-sm) var(--spacing-md);
   border-radius: var(--radius-lg);
-  border: 0.5px solid var(--color-border-soft);
+  border: 1px solid var(--color-border-soft);
   background-color: var(--color-bg-container);
   transition:
     border-color var(--transition-fast),
@@ -293,7 +291,7 @@
 .workbench-inset-panel {
   padding: var(--spacing-md);
   border-radius: var(--radius-lg);
-  border: 0.5px solid var(--color-border-soft);
+  border: 1px solid var(--color-border-soft);
   background-color: var(--color-primary-bg);
 }
 
@@ -323,7 +321,7 @@
   margin: 0;
   padding: var(--spacing-sm) var(--spacing-md);
   border-radius: var(--radius-lg);
-  border: 0.5px solid var(--color-border-soft);
+  border: 1px solid var(--color-border-soft);
   border-inline-start-width: 4px;
   border-inline-start-style: solid;
   background-color: var(--color-bg-container);
@@ -495,7 +493,7 @@ button.searchlight-btn-claimed-disabled.ant-btn.ant-btn-default:disabled {
   padding: var(--spacing-lg);
   border-radius: var(--radius-lg);
   background-color: var(--color-bg-layout);
-  border: 0.5px solid var(--color-border-soft);
+  border: 1px solid var(--color-border-soft);
   border-inline-start-width: 4px;
   border-inline-start-style: solid;
   border-inline-start-color: var(--strategy-column-accent, var(--color-primary));
@@ -532,7 +530,7 @@ button.searchlight-btn-claimed-disabled.ant-btn.ant-btn-default:disabled {
   line-height: 1.45;
   color: var(--color-text-secondary);
   background-color: var(--color-primary-bg);
-  border: 0.5px solid var(--color-primary-border);
+  border: 1px solid var(--color-primary-border);
 }
 
 /** 有效率 / 误报率下的 8px 健康度微条（非 Sparkline 曲线，为比例条） */
@@ -569,7 +567,7 @@ button.searchlight-btn-claimed-disabled.ant-btn.ant-btn-default:disabled {
 
 .strategy-mini-card {
   background-color: var(--color-bg-container);
-  border: 0.5px solid var(--color-card-border);
+  border: 1px solid var(--color-card-border);
   border-radius: var(--radius-lg);
   padding: var(--spacing-md);
   transition:

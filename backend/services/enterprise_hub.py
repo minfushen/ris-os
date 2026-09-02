@@ -283,7 +283,7 @@ class EnterpriseDataHub:
                 company_type, major_shareholders, shareholding_ratio,
                 ultimate_beneficiary, email, website, employee_count,
                 tax_credit_level, annual_revenue, is_dishonest, court_cases
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, (
             company_name,
             mapping["credit_code"],

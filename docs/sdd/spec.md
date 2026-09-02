@@ -101,6 +101,7 @@
 | SPEC-RISK-3 | 催收作业（M1/M2/M3 分池） | 数据接口 `GET /api/collection/:pool`；池枚举：M1/M2/M3；每池字段：逾期笔数/金额/处置进度；催收动作记录接口 `POST /api/collection/:pool/actions` |
 | SPEC-RISK-4 | 复盘与质检 | 质检评分接口；抽检规则配置；问题归档（关联 alertId） |
 | SPEC-RISK-5 | 与策略模块双向关联 | FP/RC 编号跨模块引用；引用接口 `GET /api/knowledge/:type/:id` |
+| SPEC-RISK-6 | 预警证据链（Evidence Chain） | 每条风险信号必须携带证据项，证据项字段：`data_source`（数据来源，对齐 8 大变量域）、`update_time`（更新时间）、`credibility`（可信度：高/中/低）、`content`（证据内容）；类型定义统一使用 `EvidenceItem`（禁止 `any`）；证据链在核查工作台以时间线展示，支持按变量域分组与可信度标识；导出接口生成 Markdown/JSON 证据链报告（对齐计划书"字段映射表 + 历史回放 + PSI 监控"可解释性要求） |
 
 ### 3.4 SPEC-STRAT 策略与模型
 

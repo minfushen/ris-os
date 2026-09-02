@@ -1,5 +1,7 @@
 /**
- * 设计令牌 — 对齐贷后风控设计稿（主色 / 语义色 / 文字 5 级 / 8px 间距 / 圆角 / 布局）
+ * 设计令牌 — B2B SaaS 企业级设计系统（主色 / 语义色 / 文字 5 级 / 8px 间距 / 圆角 / 布局）
+ * 色板对齐 b2b-saas-frontend-design 规范：单一主色 #2563eb、语义强调色、Slate 中性面、
+ * 平面优先（默认无阴影）、克制圆角（控件 6-8px / 卡片 8-12px）。
  * 组件与页面应优先使用变量，避免散落硬编码。
  */
 
@@ -8,48 +10,48 @@
    * 原子调色板：hex / 固定 rgba 只写在本节。
    * --color-* 与 tailwind.css 的 @theme 均只引用 var(--palette-*)，避免两套色值漂移。
    */
-  --palette-primary-deep: #4f6970;
-  --palette-primary: #6f8f95;
-  --palette-primary-light: #a8c0c3;
-  --palette-danger: #a32d2d;
-  --palette-danger-light: #e24b4a;
-  --palette-warning: #854f0b;
-  --palette-warning-light: #ef9f27;
-  --palette-success: #3b6d11;
-  --palette-success-light: #639922;
-  --palette-info: #185fa5;
-  --palette-info-light: #2a6fbd;
-  --palette-purple: #3c3489;
-  --palette-text-primary: #1f2a30;
-  --palette-text-secondary: #44525a;
-  --palette-text-tertiary: #6e7c84;
-  --palette-text-quaternary: #95a2a9;
-  --palette-text-placeholder: #c2c0b6;
-  --palette-bg-layout: #f4f7f8;
+  --palette-primary-deep: #1d4ed8;
+  --palette-primary: #2563eb;
+  --palette-primary-light: #60a5fa;
+  --palette-danger: #dc2626;
+  --palette-danger-light: #ef4444;
+  --palette-warning: #d97706;
+  --palette-warning-light: #f59e0b;
+  --palette-success: #16a34a;
+  --palette-success-light: #22c55e;
+  --palette-info: #0891b2;
+  --palette-info-light: #06b6d4;
+  --palette-purple: #6d28d9;
+  --palette-text-primary: #0f172a;
+  --palette-text-secondary: #475569;
+  --palette-text-tertiary: #64748b;
+  --palette-text-quaternary: #94a3b8;
+  --palette-text-placeholder: #cbd5e1;
+  --palette-bg-layout: #f8fafc;
   --palette-bg-container: #ffffff;
-  --palette-card-border: #d0d5d8;
-  /** 探照灯 / 佐证区暖色面（仅此处落 hex，组件用 --color-searchlight-*） */
-  --palette-searchlight-surface: #faf8f4;
-  --palette-searchlight-border: #ebe6dc;
-  --palette-searchlight-border-strong: #e0d8cc;
-  --palette-searchlight-border-tile: #e8e0d4;
+  --palette-card-border: #e2e8f0;
+  /** 探照灯 / 佐证区中性面（B2B 克制：不再使用暖色装饰底） */
+  --palette-searchlight-surface: #f8fafc;
+  --palette-searchlight-border: #e2e8f0;
+  --palette-searchlight-border-strong: #cbd5e1;
+  --palette-searchlight-border-tile: #e2e8f0;
   --palette-progress-trail: #f0f0f0;
   --palette-table-footer-surface: #fafbfc;
   --palette-skeleton-shimmer-a: #f0f0f0;
   --palette-skeleton-shimmer-b: #f8f8f8;
-  --palette-bg-disabled: #f3f5f6;
-  --palette-border-soft: rgba(31, 42, 48, 0.08);
-  --palette-border-glass: rgba(255, 255, 255, 0.8);
-  --palette-glass: rgba(255, 255, 255, 0.88);
-  --palette-shadow-glow: 0 0 0 2px rgba(111, 143, 149, 0.18);
+  --palette-bg-disabled: #f1f5f9;
+  --palette-border-soft: rgba(15, 23, 42, 0.08);
+  --palette-border-glass: #e2e8f0;
+  --palette-glass: #ffffff;
+  --palette-shadow-glow: 0 0 0 2px rgba(37, 99, 235, 0.18);
 
   /* ========== 主色彩系统 ========== */
   --color-primary-deep: var(--palette-primary-deep);
   --color-primary: var(--palette-primary);
   --color-primary-light: var(--palette-primary-light);
-  --color-primary-bg: #eef4f3;
-  --color-primary-bg-hover: rgba(111, 143, 149, 0.1);
-  --color-primary-border: rgba(111, 143, 149, 0.28);
+  --color-primary-bg: #eff6ff;
+  --color-primary-bg-hover: rgba(37, 99, 235, 0.08);
+  --color-primary-border: rgba(37, 99, 235, 0.28);
   --color-primary-dark: var(--color-primary-deep);
 
   /* ========== 风险状态语义色 ========== */
@@ -65,29 +67,29 @@
   /* 兼容旧名（映射到设计语义色） */
   --color-error: var(--color-danger);
   --color-error-light: var(--color-danger-light);
-  --color-error-bg: rgba(163, 45, 45, 0.08);
-  --color-error-bg-strong: rgba(163, 45, 45, 0.14);
-  --color-error-border: rgba(163, 45, 45, 0.28);
+  --color-error-bg: rgba(220, 38, 38, 0.06);
+  --color-error-bg-strong: rgba(220, 38, 38, 0.12);
+  --color-error-border: rgba(220, 38, 38, 0.28);
 
-  --color-warning-bg: rgba(133, 79, 11, 0.08);
-  --color-warning-bg-strong: rgba(133, 79, 11, 0.14);
-  --color-warning-border: rgba(239, 159, 39, 0.35);
+  --color-warning-bg: rgba(217, 119, 6, 0.08);
+  --color-warning-bg-strong: rgba(217, 119, 6, 0.14);
+  --color-warning-border: rgba(245, 158, 11, 0.35);
 
-  --color-success-bg: rgba(59, 109, 17, 0.08);
-  --color-success-bg-strong: rgba(59, 109, 17, 0.14);
-  --color-success-border: rgba(99, 153, 34, 0.35);
+  --color-success-bg: rgba(22, 163, 74, 0.08);
+  --color-success-bg-strong: rgba(22, 163, 74, 0.14);
+  --color-success-border: rgba(34, 197, 94, 0.35);
 
   --color-info-light: var(--palette-info-light);
-  --color-info-bg: rgba(24, 95, 165, 0.08);
-  --color-info-border: rgba(24, 95, 165, 0.24);
+  --color-info-bg: rgba(8, 145, 178, 0.08);
+  --color-info-border: rgba(8, 145, 178, 0.24);
 
   /* ========== 中性面与边框 ========== */
   --color-bg-layout: var(--palette-bg-layout);
-  --color-bg-interactive-hover: rgba(79, 105, 112, 0.055);
-  --color-bg-interactive-active: rgba(79, 105, 112, 0.1);
+  --color-bg-interactive-hover: rgba(15, 23, 42, 0.04);
+  --color-bg-interactive-active: rgba(15, 23, 42, 0.08);
   --color-bg-container: var(--palette-bg-container);
   --color-bg-elevated: var(--palette-bg-container);
-  --color-bg-mask: rgba(0, 0, 0, 0.45);
+  --color-bg-mask: rgba(15, 23, 42, 0.5);
 
   --color-card-border: var(--palette-card-border);
   /** 与历史 Tailwind @theme 对齐的软边框（略偏冷灰，与 --color-border 可并存） */
@@ -104,10 +106,10 @@
   --color-app-bg: var(--palette-bg-layout);
   --color-app-bg-start: var(--palette-bg-layout);
   --color-app-bg-end: var(--palette-bg-layout);
-  --color-border: rgba(31, 42, 48, 0.1);
-  --color-border-light: rgba(31, 42, 48, 0.06);
-  --color-border-dark: rgba(31, 42, 48, 0.14);
-  --color-border-focus: rgba(79, 105, 112, 0.35);
+  --color-border: rgba(15, 23, 42, 0.1);
+  --color-border-light: rgba(15, 23, 42, 0.06);
+  --color-border-dark: rgba(15, 23, 42, 0.14);
+  --color-border-focus: rgba(37, 99, 235, 0.35);
 
   /* ========== 文字色阶（5 级）========== */
   --color-text-primary: var(--palette-text-primary);
@@ -135,8 +137,8 @@
   --spacing-compact: 6px;
 
   /* ========== 字体 ========== */
-  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
-  --font-family-mono: "SF Mono", "Fira Code", Consolas, monospace;
+  --font-family: Inter, "SF Pro Display", "Segoe UI", -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+  --font-family-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
   --font-size-xs: 11px;
   --font-size-sm: 12px;
@@ -175,16 +177,16 @@
   --radius-shell: var(--radius-panel);
   --radius-glass: var(--radius-lg);
 
-  /* ========== 阴影 ========== */
-  --shadow-surface: 0 1px 2px rgba(31, 42, 48, 0.035), 0 2px 6px rgba(31, 42, 48, 0.035);
-  --shadow-sm: 0 1px 2px rgba(31, 42, 48, 0.035);
-  --shadow-md: 0 2px 8px rgba(31, 42, 48, 0.055);
-  --shadow-lg: 0 4px 16px rgba(31, 42, 48, 0.075);
-  --shadow-xl: 0 8px 24px rgba(31, 42, 48, 0.09);
-  --shadow-float: 0 6px 20px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.04);
-  --shadow-card: 0 1px 2px rgba(31, 42, 48, 0.04), 0 2px 8px rgba(31, 42, 48, 0.04);
-  --shadow-card-hover: 0 2px 8px rgba(31, 42, 48, 0.065), 0 0 0 1px rgba(111, 143, 149, 0.14);
-  --shadow-inset: inset 0 1px 2px rgba(0, 0, 0, 0.04);
+  /* ========== 阴影（B2B：默认平面，仅两档 —— 浮层一档、模态一档）========== */
+  --shadow-surface: 0 1px 3px rgba(15, 23, 42, 0.08), 0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.05);
+  --shadow-md: 0 2px 8px rgba(15, 23, 42, 0.055);
+  --shadow-lg: 0 10px 15px -3px rgba(15, 23, 42, 0.08), 0 4px 6px -2px rgba(15, 23, 42, 0.04);
+  --shadow-xl: 0 8px 24px rgba(15, 23, 42, 0.09);
+  --shadow-float: 0 6px 20px rgba(15, 23, 42, 0.08), 0 0 0 1px rgba(15, 23, 42, 0.04);
+  --shadow-card: none;
+  --shadow-card-hover: 0 1px 3px rgba(15, 23, 42, 0.08), 0 0 0 1px rgba(37, 99, 235, 0.14);
+  --shadow-inset: inset 0 1px 2px rgba(15, 23, 42, 0.04);
   /** 顶栏 / 控件焦点外环等 */
   --shadow-glow: var(--palette-shadow-glow);
 
@@ -229,8 +231,8 @@
   --z-popover: 1060;
   --z-tooltip: 1070;
 
-  /* 顶栏为唯一主 blur 层时使用的模糊强度 */
-  --blur-topbar: 12px;
+  /* 顶栏为实色平面（B2B 无玻璃模糊），变量保留为 0 以兜底历史引用 */
+  --blur-topbar: 0px;
 
   /* ========== 贷后 / 工作台业务语义（引用主 token，避免业务写死 hex）========== */
   --color-sla-danger: var(--color-danger-light);

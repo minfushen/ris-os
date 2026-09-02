@@ -1,5 +1,6 @@
-import { Typography, Tabs, Table, Select, DatePicker, Space, Button, Tag, Progress } from "antd";
+import { Typography, Tabs, Table, Select, DatePicker, Space, Button, Tag, Progress, Drawer, Checkbox, message } from "antd";
 import { AuditOutlined, DownloadOutlined, EyeOutlined } from "@ant-design/icons";
+import { useState } from "react";
 import type { ColumnsType } from "antd/es/table";
 import {
   LineChart,
@@ -25,7 +26,7 @@ const VINTAGE_DATA = [
   { month: "2024-04", m0: 0, m1: 1.0, m2: 1.8, m3: 2.4, m4: null, m5: null, m6: null },
 ];
 
-const VINTAGE_COLORS = ["#6f8f95", "#4f6970", "#a8c0c3", "#c77b78"];
+const VINTAGE_COLORS = ["#2563eb", "#1d4ed8", "#60a5fa", "#c77b78"];
 
 /** 迁徙矩阵 */
 const ROLL_MATRIX_LABELS = ["M0", "M1", "M2", "M3", "M4"];
@@ -267,7 +268,7 @@ function RollRateTab() {
               <XAxis type="number" tick={{ fontSize: 12 }} unit="%" />
               <YAxis type="category" dataKey="bucket" tick={{ fontSize: 12 }} width={68} />
               <RTooltip formatter={(v: number) => [`${v}%`, "迁徙率"]} />
-              <Bar dataKey="rate" fill="#6f8f95" radius={[0, 4, 4, 0]} name="迁徙率%" />
+              <Bar dataKey="rate" fill="#2563eb" radius={[0, 4, 4, 0]} name="迁徙率%" />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -303,7 +304,7 @@ function WarningEfficiencyTab() {
               <RTooltip />
               <Legend />
               <Bar dataKey="precision" name="精度%" fill="#5f9b7a" radius={[4, 4, 0, 0]} />
-              <Bar dataKey="recall" name="召回%" fill="#6f8f95" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="recall" name="召回%" fill="#2563eb" radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -412,7 +413,7 @@ function IndustryRiskTab() {
               <RTooltip />
               <Legend />
               <Bar yAxisId="left" dataKey="riskIdx" name="风险指数" fill="#c77b78" radius={[4, 4, 0, 0]} />
-              <Bar yAxisId="right" dataKey="m1plus" name="M1+%" fill="#6f8f95" radius={[4, 4, 0, 0]} />
+              <Bar yAxisId="right" dataKey="m1plus" name="M1+%" fill="#2563eb" radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -433,7 +434,7 @@ function IndustryRiskTab() {
   );
 }
 
-function MonitorReportLibraryTab() {
+function MonitorReportLibraryTab({ onBatchDownload }: { onBatchDownload: () => void }) {
   const columns: ColumnsType<MonitorReportRow> = [
     {
       title: "报告名称",
@@ -489,7 +490,9 @@ function MonitorReportLibraryTab() {
           </div>
           <Space wrap>
             <Button size="small" icon={<AuditOutlined />}>审计导出</Button>
-            <Button type="primary" size="small" icon={<DownloadOutlined />}>批量下载</Button>
+            <Button type="primary" size="small" icon={<DownloadOutlined />} onClick={onBatchDownload}>
+              批量下载
+            </Button>
           </Space>
         </div>
         <div className="mt-3 flex flex-wrap gap-2 text-xs">
@@ -512,8 +515,24 @@ function MonitorReportLibraryTab() {
 }
 
 export default function Reports() {
+  const [downloadOpen, setDownloadOpen] = useState(false);
+  const [downloadLoading, setDownloadLoading] = useState(false);
+  const [selectedReports, setSelectedReports] = useState<string[]>([]);
+
+  const handleBatchDownload = async () => {
+    if (selectedReports.length === 0) {
+      message.warning("请先选择要下载的报告");
+      return;
+    }
+    setDownloadLoading(true);
+    await new Promise((r) => setTimeout(r, 800));
+    message.success(`已打包下载 ${selectedReports.length} 份报告`);
+    setDownloadLoading(false);
+    setDownloadOpen(false);
+    setSelectedReports([]);
+  };
   const items = [
-    { key: "monitor_reports", label: "监控报告库", children: <MonitorReportLibraryTab /> },
+    { key: "monitor_reports", label: "监控报告库", children: <MonitorReportLibraryTab onBatchDownload={() => setDownloadOpen(true)} /> },
     { key: "vintage", label: "Vintage 分析", children: <VintageTab /> },
     { key: "rollrate", label: "迁徙率 / 矩阵", children: <RollRateTab /> },
     { key: "warning_eff", label: "预警有效率", children: <WarningEfficiencyTab /> },
@@ -531,6 +550,42 @@ export default function Reports() {
       <ModuleSectionCard noPadding>
         <Tabs items={items} defaultActiveKey="monitor_reports" className="layout-px-lg layout-pb-md" />
       </ModuleSectionCard>
+
+      {/* 批量下载抽屉 */}
+      <Drawer
+        title="批量下载报告"
+        open={downloadOpen}
+        onClose={() => setDownloadOpen(false)}
+        width={520}
+        footer={
+          <Space>
+            <Button onClick={() => setDownloadOpen(false)}>取消</Button>
+            <Button type="primary" loading={downloadLoading} onClick={handleBatchDownload} disabled={selectedReports.length === 0}>
+              下载 {selectedReports.length > 0 ? `(${selectedReports.length})` : ""}
+            </Button>
+          </Space>
+        }
+      >
+        <div className="space-y-3">
+          <Text type="secondary" className="text-sm">选择要下载的监控报告：</Text>
+          <Checkbox.Group
+            className="w-full"
+            value={selectedReports}
+            onChange={(vals) => setSelectedReports(vals as string[])}
+          >
+            <div className="space-y-2">
+              {MONITOR_REPORT_ROWS.map((r) => (
+                <div key={r.id} className="flex items-center gap-2 p-2 border rounded">
+                  <Checkbox value={r.id}>
+                    <Text className="text-[13px]">{r.title}</Text>
+                    <Text type="secondary" className="text-xs ml-2">{r.generatedAt}</Text>
+                  </Checkbox>
+                </div>
+              ))}
+            </div>
+          </Checkbox.Group>
+        </div>
+      </Drawer>
     </ModulePageShell>
   );
 }

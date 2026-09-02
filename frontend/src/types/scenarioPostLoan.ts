@@ -18,12 +18,38 @@ export interface PostLoanPsiByProductRow {
 
 export type PostLoanDriftStatus = "normal" | "warning";
 
+/** 数据分层（对齐数据仓库层级） */
+export type DataLayer = "ODS" | "DWD" | "DWS" | "ADS";
+
+/** 8 大变量域（对齐《项目实施计划书》数据体系） */
+export type VariableDomain =
+  | "客户"
+  | "贷款"
+  | "还款"
+  | "信用卡"
+  | "资产负债"
+  | "交易"
+  | "征信"
+  | "三方";
+
 export interface PostLoanFeatureRow {
   id: string;
   name: string;
+  /** 变量域分类（对齐计划书 8 大变量域） */
+  domain: VariableDomain;
   category: string;
   value_type: string;
   source: string;
+  /** 数据分层（ODS/DWD/DWS/ADS） */
+  data_layer?: DataLayer;
+  /** 来源表名（字段映射） */
+  source_table?: string;
+  /** 计算逻辑（SQL 伪代码或规则描述） */
+  calculation_logic?: string;
+  /** 更新频率 */
+  refresh_freq?: "实时" | "T+1" | "月更";
+  /** 责任部门 */
+  owner_dept?: string;
   psi_biz_loan: number;
   psi_tax_easy_loan: number;
   drift_status: PostLoanDriftStatus;

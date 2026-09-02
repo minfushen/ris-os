@@ -165,7 +165,7 @@ export const ROUTE_META: Record<string, RouteMeta> = {
 
   "/feature/studio": {
     title: "贷后特征工作室",
-    subtitle: "还款与催收反馈特征；经营贷 / 税易贷分产品线 PSI 与阈值告警",
+    subtitle: "还款与催收反馈特征；惠快贷 / 税易贷分产品线 PSI 与阈值告警",
     breadcrumb: ["数据与特征", "贷后特征工作室"],
     navKey: "feature-studio",
     parentNavKey: "feature-data",
@@ -176,6 +176,14 @@ export const ROUTE_META: Record<string, RouteMeta> = {
     breadcrumb: ["数据与特征", "数据源管理"],
     navKey: "data-dictionary",
     parentNavKey: "feature-data",
+  },
+
+  "/project/plan": {
+    title: "项目实施全景",
+    subtitle: "对照《项目实施计划书》：一页纸总览 / 阶段里程碑 / 交付物清单 / 风险与验收",
+    breadcrumb: ["项目实施", "项目实施全景"],
+    navKey: "project-plan",
+    parentNavKey: "project",
   },
 
   "/agents/attribution": {
@@ -230,7 +238,7 @@ export const ROUTE_META: Record<string, RouteMeta> = {
 
   "/architecture/integration": {
     title: "系统集成与闭环说明",
-    subtitle: "系统集成架构图、数据流向图与面试讲解文案",
+    subtitle: "系统集成架构图、数据流向图与演示讲解文案",
     breadcrumb: ["演示讲解", "系统集成架构"],
     navKey: "architecture-integration",
     parentNavKey: "demo",

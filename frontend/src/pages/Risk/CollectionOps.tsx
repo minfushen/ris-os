@@ -20,8 +20,8 @@ interface AccountRow {
 
 function mockPool(tier: "M1" | "M2" | "M3"): AccountRow[] {
   const base: AccountRow[] = [
-    { id: "C-1001", customer: "赵六商贸", productLine: "经营贷", dpd: tier === "M1" ? 5 : tier === "M2" ? 38 : 72, balanceWan: 56, strategy: tier === "M3" ? "委外 M3+ 包" : "IVR 早触达", lastContact: "2026-04-17 10:20", contactResult: "已承诺", promiseDate: "2026-04-25", promiseSla: "剩 5 天" },
-    { id: "C-1002", customer: "钱七服务", productLine: "消费贷", dpd: tier === "M1" ? 12 : tier === "M2" ? 45 : 95, balanceWan: 3.2, strategy: "人工 T+1", lastContact: "2026-04-16 15:02", contactResult: "协商中" },
+    { id: "C-1001", customer: "赵六商贸", productLine: "惠快贷", dpd: tier === "M1" ? 5 : tier === "M2" ? 38 : 72, balanceWan: 56, strategy: tier === "M3" ? "委外 M3+ 包" : "IVR 早触达", lastContact: "2026-04-17 10:20", contactResult: "已承诺", promiseDate: "2026-04-25", promiseSla: "剩 5 天" },
+    { id: "C-1002", customer: "钱七服务", productLine: "惠微贷", dpd: tier === "M1" ? 12 : tier === "M2" ? 45 : 95, balanceWan: 3.2, strategy: "人工 T+1", lastContact: "2026-04-16 15:02", contactResult: "协商中" },
     { id: "C-1003", customer: "孙八制造", productLine: "税易贷", dpd: tier === "M1" ? 8 : tier === "M2" ? 52 : 110, balanceWan: 120, strategy: tier === "M3" ? "法务函 + 委外" : "IVR 早触达", lastContact: "—", contactResult: "未触达" },
   ];
   return base;

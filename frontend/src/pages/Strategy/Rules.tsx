@@ -1,4 +1,4 @@
-import { Typography, Tree, Button, Space, Form, Input, InputNumber, Table, Alert, Divider, Card, Slider, Tag } from "antd";
+import { Typography, Tree, Button, Space, Form, Input, InputNumber, Table, Alert, Divider, Card, Slider, Tag, Drawer, Select, message } from "antd";
 import { PlusOutlined, ThunderboltOutlined } from "@ant-design/icons";
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
@@ -8,6 +8,7 @@ import { mockAlerts } from "@/mock/data";
 import { RISK_LEVEL_COLORS, RISK_LEVEL_TEXT } from "@/types/qcc";
 
 const { Text } = Typography;
+const { Option } = Select;
 
 const RULE_ALERT_MAP: Record<string, string[]> = {
   "rule-tax-gap": ["税报断档"],
@@ -71,6 +72,9 @@ export default function Rules() {
   const [selectedRule, setSelectedRule] = useState<string>("rule-multi-balance");
   const [matrixBase, setMatrixBase] = useState(35);
   const [simBoost, setSimBoost] = useState(0);
+  const [createOpen, setCreateOpen] = useState(false);
+  const [createLoading, setCreateLoading] = useState(false);
+  const [createForm] = Form.useForm();
 
   const matrixRows = useMemo(() => buildMatrix(matrixBase), [matrixBase]);
 
@@ -106,7 +110,7 @@ export default function Rules() {
           >
             <div className="layout-flex-between layout-mb-sm">
               <Text strong className="text-[13px]">贷后规则目录</Text>
-              <Button type="link" size="small" icon={<PlusOutlined />} className="text-[13px]">
+              <Button type="link" size="small" icon={<PlusOutlined />} className="text-[13px]" onClick={() => setCreateOpen(true)}>
                 新建
               </Button>
             </div>
@@ -236,13 +240,62 @@ export default function Rules() {
                 <Input.TextArea rows={2} placeholder="口径、数据来源、例外场景…" defaultValue="环比统计窗口 T-30~T-0，剔除节假日。" />
               </Form.Item>
               <Space>
-                <Button type="primary" size="small">保存</Button>
+                <Button type="primary" size="small" onClick={() => message.success("规则已保存")}>保存</Button>
                 <Button size="small">取消</Button>
               </Space>
             </Form>
           </div>
         </div>
       </ModuleSectionCard>
+
+      {/* 新建规则抽屉 */}
+      <Drawer
+        title="新建预警规则"
+        open={createOpen}
+        onClose={() => setCreateOpen(false)}
+        width={520}
+        footer={
+          <Space>
+            <Button onClick={() => setCreateOpen(false)}>取消</Button>
+            <Button type="primary" loading={createLoading} onClick={async () => {
+              try {
+                const values = await createForm.validateFields();
+                setCreateLoading(true);
+                await new Promise((r) => setTimeout(r, 600));
+                message.success(`规则「${values.name}」已创建并加入规则树`);
+                setCreateOpen(false);
+                createForm.resetFields();
+              } catch {
+                message.error("请完善必填信息");
+              } finally {
+                setCreateLoading(false);
+              }
+            }}>
+              创建规则
+            </Button>
+          </Space>
+        }
+      >
+        <Form form={createForm} layout="vertical">
+          <Form.Item name="name" label="规则名称" rules={[{ required: true, message: "请输入规则名称" }]}>
+            <Input placeholder="如：多头余额环比跳升阈值" />
+          </Form.Item>
+          <Form.Item name="category" label="规则类别" rules={[{ required: true, message: "请选择规则类别" }]}>
+            <Select placeholder="选择规则类别">
+              <Option value="经营异常">经营异常</Option>
+              <Option value="司法风险">司法风险</Option>
+              <Option value="资金压力">资金压力</Option>
+              <Option value="还款行为">还款行为</Option>
+            </Select>
+          </Form.Item>
+          <Form.Item name="threshold" label="默认阈值（%）" initialValue={35}>
+            <InputNumber min={10} max={80} style={{ width: "100%" }} />
+          </Form.Item>
+          <Form.Item name="description" label="规则说明">
+            <Input.TextArea rows={3} placeholder="规则口径、数据来源、例外场景…" />
+          </Form.Item>
+        </Form>
+      </Drawer>
 
       <DemoFlowNav />
     </ModulePageShell>

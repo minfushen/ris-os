@@ -45,6 +45,8 @@ const ROLE_NAV_KEYS: Record<DemoRole, Set<string>> = {
     "monitor-o2o", "monitor-labeling", "monitor-reports",
     "risk-workbench", "risk-collection", "knowledge-scripts", "risk-inspection",
     "knowledge-fraud-patterns",
+    "agent-attribution", "agent-vendor-risk-assessment", "agent-disposition",
+    "agent-script-compliance", "agent-review-qa", "agent-ops-monitor",
     "demo", "architecture-integration", "architecture-data-flow",
     "architecture-closed-loop", "architecture-p2-boundary",
   ]),
@@ -53,6 +55,8 @@ const ROLE_NAV_KEYS: Record<DemoRole, Set<string>> = {
     "feature-studio", "data-dictionary", "knowledge-home",
     "strategy-model-factory", "strategy-model-registry",
     "strategy-decision-flow", "strategy-backtest",
+    "agent-attribution", "agent-vendor-risk-assessment", "agent-strategy-tuning",
+    "agent-ops-monitor",
     "demo", "architecture-integration", "architecture-data-flow",
     "architecture-closed-loop", "architecture-p2-boundary",
   ]),
@@ -60,6 +64,7 @@ const ROLE_NAV_KEYS: Record<DemoRole, Set<string>> = {
     "home",
     "strategy-backtest", "strategy-publish", "strategy-products",
     "strategy-rules", "knowledge-rule-cases",
+    "agent-strategy-tuning", "agent-review-qa", "agent-ops-monitor",
     "demo", "architecture-integration", "architecture-data-flow",
     "architecture-closed-loop", "architecture-p2-boundary",
   ]),
@@ -89,13 +94,14 @@ export default function AppSider() {
   const [collapsed, setCollapsed] = useState(false);
   const [collapsedGroups, setCollapsedGroups] = useState<string[]>([]);
   const [dynamicBadges, setDynamicBadges] = useState<Record<string, number>>({});
-  const { role } = useDemoRoleStore();
+  const { role, hasChosenRole } = useDemoRoleStore();
 
   const currentPath = location.pathname;
 
+  // 未显式选择角色时展示全量面试演示信息架构；选择角色后按岗位过滤
   const navByRole = useMemo(
-    () => filterNavByRole(PRIMARY_NAV, ROLE_NAV_KEYS[role]),
-    [role],
+    () => (hasChosenRole ? filterNavByRole(PRIMARY_NAV, ROLE_NAV_KEYS[role]) : PRIMARY_NAV),
+    [role, hasChosenRole],
   );
 
   const isLeafActive = (child: NavItem) => {

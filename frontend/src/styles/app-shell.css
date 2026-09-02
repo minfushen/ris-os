@@ -6,23 +6,23 @@
 /* ========== CSS 变量定义 ========== */
 :root {
   /* 品牌色（与 Tailwind @theme 一致） */
-  --color-primary: #6f8f95;
-  --color-primary-light: #a8c0c3;
-  --color-primary-dark: #4f6970;
+  --color-primary: #2563eb;
+  --color-primary-light: #60a5fa;
+  --color-primary-dark: #1d4ed8;
 
   /* 背景色 */
-  --color-bg-layout: #f6f8fb;
-  --color-bg-container: rgba(255, 255, 255, 0.88);
-  --color-bg-elevated: rgba(255, 255, 255, 0.94);
+  --color-bg-layout: #f8fafc;
+  --color-bg-container: #ffffff;
+  --color-bg-elevated: #ffffff;
 
   /* 边框色 */
-  --color-border: rgba(130, 150, 160, 0.22);
-  --color-border-light: rgba(130, 150, 160, 0.12);
+  --color-border: rgba(15, 23, 42, 0.22);
+  --color-border-light: rgba(15, 23, 42, 0.12);
 
   /* 文字色 */
-  --color-text-primary: #1f2a30;
-  --color-text-secondary: #44525a;
-  --color-text-disabled: #95a2a9;
+  --color-text-primary: #0f172a;
+  --color-text-secondary: #475569;
+  --color-text-disabled: #94a3b8;
 
   /* 间距 */
   --spacing-xs: 4px;
@@ -192,7 +192,7 @@
 }
 
 .sider-menu .ant-menu-item-selected {
-  background: rgba(111, 143, 149, 0.14) !important;
+  background: rgba(37, 99, 235, 0.14) !important;
 }
 
 /* ========== 顶部栏 ========== */

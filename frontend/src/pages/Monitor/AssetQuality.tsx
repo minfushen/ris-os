@@ -44,10 +44,10 @@ const RISK_BUCKETS = [
 
 /** 产品结构余额占比 */
 const PRODUCT_MIX = [
-  { name: "经营贷", amt: 48 },
-  { name: "税金贷", amt: 32 },
-  { name: "消费贷", amt: 15 },
-  { name: "小微贷", amt: 5 },
+  { name: "惠快贷", amt: 48 },
+  { name: "税易贷", amt: 32 },
+  { name: "惠微贷", amt: 15 },
+  { name: "支小贷", amt: 5 },
 ];
 
 /** 逾期账龄分布（演示 百万） */

@@ -154,7 +154,7 @@ export default function PostLoanSearchlight({ onClaimVerify, onJoinQueue }: Post
       <div className="section-header">
         <Text className="section-title">今日预警大盘</Text>
         <Text type="secondary" className="section-subtitle ml-2">
-          企查查实时预警数据，点击「认领核查」进入工作台处置
+          贷后预警实时数据，点击「认领核查」进入工作台处置
         </Text>
       </div>
       <div className="section-body">

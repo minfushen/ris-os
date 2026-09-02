@@ -310,13 +310,13 @@ export const mockRiskAssessments: Record<number, RiskAssessment> = {
     assessment_data: {
       company_name: "合川锦宏房地产开发有限公司", overall_risk: "CRITICAL" as const,
       dimensions: {
-        financial_risk: { level: "CRITICAL" as const, score: 85.0, key_findings: ["经营贷款 500 万元中 320 万元转入关联房地产公司账户", "资金转移发生在贷款发放后 T+2 日内"], evidence: ["对公账户流水", "转账凭证"] },
+        financial_risk: { level: "CRITICAL" as const, score: 85.0, key_findings: ["惠快贷款 500 万元中 320 万元转入关联房地产公司账户", "资金转移发生在贷款发放后 T+2 日内"], evidence: ["对公账户流水", "转账凭证"] },
         compliance_risk: { level: "CRITICAL" as const, score: 90.0, key_findings: ["贷款资金用途与合同约定严重不符", "关联房地产公司为法人亲属控股"], evidence: ["贷款合同", "工商登记"] },
         operational_risk: { level: "HIGH" as const, score: 68.0, key_findings: ["原申报经营用途（建材批发）未见对应采购记录", "企业名下无仓库租赁记录"], evidence: ["进销存系统", "租赁合同"] },
         stability_risk: { level: "MEDIUM" as const, score: 55.0, key_findings: ["企业主营业务已事实上转向房地产", "受房地产调控政策影响经营不确定性高"], evidence: ["企业经营范围变更申请", "行业政策文件"] },
       },
       risk_categories: [
-        { category: "资金挪用至房地产", level: "CRITICAL" as const, description: "经营贷资金被转移至关联房地产公司，用途与贷款合同约定严重背离", evidence: "贷款发放后 T+2 日，320 万元从对公账户转入法人亲属控股的房地产公司账户", impact: "贷款资金进入房地产领域违反监管红线，银行面临合规处罚风险，且资金回收存在高度不确定性", suggestion: "立即冻结剩余授信额度，要求企业限期退回挪用资金，上报合规部门", response_time: "4 小时" },
+        { category: "资金挪用至房地产", level: "CRITICAL" as const, description: "惠快贷资金被转移至关联房地产公司，用途与贷款合同约定严重背离", evidence: "贷款发放后 T+2 日，320 万元从对公账户转入法人亲属控股的房地产公司账户", impact: "贷款资金进入房地产领域违反监管红线，银行面临合规处罚风险，且资金回收存在高度不确定性", suggestion: "立即冻结剩余授信额度，要求企业限期退回挪用资金，上报合规部门", response_time: "4 小时" },
         { category: "经营真实性风险", level: "HIGH" as const, description: "企业申报经营用途与实际经营活动不匹配，疑似壳公司", evidence: "申报建材批发经营但无仓库租赁记录、无对应采购流水", impact: "贷款主体可能为融资壳，实际经营活动不存在或已停止", suggestion: "现场核实经营场所与业务真实性，评估是否需提前终止授信", response_time: "24 小时" },
       ],
       evidence_chain: [
@@ -371,39 +371,83 @@ export const mockBatchOnboard: BatchOnboardWatchlistResponse = {
 export const mockFeatureStudio: PostLoanFeatureStudioResponse = {
   scenario: "post_loan",
   overview_cards: [
-    { label: "特征总数", value: 186, subtitle: "含衍生特征 72 个" },
-    { label: "PSI 超标特征", value: 8, subtitle: "阈值 0.25", warn: true },
-    { label: "数据源", value: 12, subtitle: "实时 5 / T+1 4 / 月更 3" },
+    { label: "特征总数", value: 972, subtitle: "8 大变量域 · 含衍生特征 486 个" },
+    { label: "PSI 超标特征", value: 23, subtitle: "阈值 0.25", warn: true },
+    { label: "数据源", value: 8, subtitle: "客户/贷款/还款/信用卡/资产负债/交易/征信/三方" },
     { label: "本月新增", value: 14, subtitle: "司法/图谱类居多" },
   ],
   psi_by_product: [
     { feature: "近3月多头查询次数", biz_psi: 0.08, tax_psi: 0.12, note: "正常" },
-    { feature: "对公账户月均流入", biz_psi: 0.31, tax_psi: 0.18, note: "经营贷 PSI 超标" },
+    { feature: "对公账户月均流入", biz_psi: 0.31, tax_psi: 0.18, note: "惠快贷 PSI 超标" },
     { feature: "社保缴纳人数", biz_psi: 0.22, tax_psi: 0.09, note: "接近阈值" },
     { feature: "被执行/限高标识", biz_psi: 0.05, tax_psi: 0.06, note: "正常" },
     { feature: "纳税申报收入环比", biz_psi: 0.15, tax_psi: 0.42, note: "税易贷 PSI 超标" },
     { feature: "近6月贷款申请次数", biz_psi: 0.11, tax_psi: 0.28, note: "税易贷超标" },
-    { feature: "对公账户月均流出", biz_psi: 0.26, tax_psi: 0.14, note: "经营贷超标" },
+    { feature: "对公账户月均流出", biz_psi: 0.26, tax_psi: 0.14, note: "惠快贷超标" },
     { feature: "法人征信查询次数", biz_psi: 0.09, tax_psi: 0.07, note: "正常" },
     { feature: "水电能耗环比变化", biz_psi: 0.19, tax_psi: 0.11, note: "正常" },
-    { feature: "关联企业担保余额", biz_psi: 0.33, tax_psi: 0.21, note: "经营贷 PSI 超标" },
+    { feature: "关联企业担保余额", biz_psi: 0.33, tax_psi: 0.21, note: "惠快贷 PSI 超标" },
     { feature: "工商变更频率", biz_psi: 0.12, tax_psi: 0.08, note: "正常" },
   ],
   features: [
-    { id: "F-001", name: "近3月多头查询次数", category: "多头借贷", value_type: "int", source: "征信", psi_biz_loan: 0.08, psi_tax_easy_loan: 0.12, drift_status: "normal" },
-    { id: "F-002", name: "对公账户月均流入金额", category: "资金流", value_type: "float", source: "行内核心", psi_biz_loan: 0.31, psi_tax_easy_loan: 0.18, drift_status: "warning" },
-    { id: "F-003", name: "被执行/限高标识", category: "司法", value_type: "bool", source: "外部司法", psi_biz_loan: 0.05, psi_tax_easy_loan: 0.06, drift_status: "normal" },
-    { id: "F-004", name: "纳税申报收入环比变化率", category: "税务", value_type: "float", source: "金税三期", psi_biz_loan: 0.15, psi_tax_easy_loan: 0.42, drift_status: "warning" },
-    { id: "F-005", name: "近6月贷款申请机构数", category: "多头借贷", value_type: "int", source: "征信", psi_biz_loan: 0.11, psi_tax_easy_loan: 0.28, drift_status: "warning" },
-    { id: "F-006", name: "对公账户月均流出金额", category: "资金流", value_type: "float", source: "行内核心", psi_biz_loan: 0.26, psi_tax_easy_loan: 0.14, drift_status: "warning" },
-    { id: "F-007", name: "法人征信近1月查询次数", category: "法定代表人", value_type: "int", source: "征信", psi_biz_loan: 0.09, psi_tax_easy_loan: 0.07, drift_status: "normal" },
-    { id: "F-008", name: "水电能耗环比变化率", category: "经营验证", value_type: "float", source: "电力/水务", psi_biz_loan: 0.19, psi_tax_easy_loan: 0.11, drift_status: "normal" },
-    { id: "F-009", name: "关联企业担保余额合计", category: "担保关系", value_type: "float", source: "行内核心", psi_biz_loan: 0.33, psi_tax_easy_loan: 0.21, drift_status: "warning" },
-    { id: "F-010", name: "工商变更次数（近12月）", category: "经营稳定性", value_type: "int", source: "工商数据", psi_biz_loan: 0.12, psi_tax_easy_loan: 0.08, drift_status: "normal" },
-    { id: "F-011", name: "社保缴纳人数", category: "经营验证", value_type: "int", source: "社保局", psi_biz_loan: 0.22, psi_tax_easy_loan: 0.09, drift_status: "normal" },
-    { id: "F-012", name: "贷款用途一致性评分", category: "资金流", value_type: "float", source: "模型产出", psi_biz_loan: 0.15, psi_tax_easy_loan: 0.19, drift_status: "normal" },
-    { id: "F-013", name: "应收账款周转天数", category: "财务", value_type: "float", source: "财报/税务", psi_biz_loan: 0.24, psi_tax_easy_loan: 0.17, drift_status: "normal" },
-    { id: "F-014", name: "设备指纹关联企业数", category: "图谱", value_type: "int", source: "设备指纹系统", psi_biz_loan: 0.29, psi_tax_easy_loan: 0.22, drift_status: "warning" },
+    // ═══ 客户域 ═══
+    { id: "F-001", name: "企业成立年限", domain: "客户", category: "基础信息", value_type: "int", source: "ECIF 客户主档", data_layer: "DWD", source_table: "dwd_ecif_customer", calculation_logic: "YEAR(CURRENT_DATE) - YEAR(established_date)", refresh_freq: "实时", owner_dept: "大数据部", psi_biz_loan: 0.06, psi_tax_easy_loan: 0.08, drift_status: "normal" },
+    { id: "F-002", name: "注册资本实缴比例", domain: "客户", category: "基础信息", value_type: "float", source: "工商数据", data_layer: "ODS", source_table: "ods_qcc_company_info", calculation_logic: "paid_in_capital / registered_capital", refresh_freq: "月更", owner_dept: "大数据部", psi_biz_loan: 0.09, psi_tax_easy_loan: 0.11, drift_status: "normal" },
+    { id: "F-003", name: "企业行业分类代码", domain: "客户", category: "基础信息", value_type: "string", source: "ECIF 客户主档", data_layer: "DWD", source_table: "dwd_ecif_customer", calculation_logic: "industry_code", refresh_freq: "实时", owner_dept: "大数据部", psi_biz_loan: 0.04, psi_tax_easy_loan: 0.05, drift_status: "normal" },
+    { id: "F-004", name: "企业规模标签", domain: "客户", category: "基础信息", value_type: "string", source: "ECIF 客户主档", data_layer: "DWD", source_table: "dwd_ecif_customer", calculation_logic: "CASE WHEN employee_count < 50 THEN '小微' WHEN employee_count < 200 THEN '中型' ELSE '大型' END", refresh_freq: "实时", owner_dept: "大数据部", psi_biz_loan: 0.03, psi_tax_easy_loan: 0.04, drift_status: "normal" },
+    { id: "F-005", name: "法人性别/年龄", domain: "客户", category: "法定代表人", value_type: "string", source: "ECIF 客户主档", data_layer: "DWD", source_table: "dwd_ecif_customer", calculation_logic: "legal_person_gender, legal_person_age", refresh_freq: "实时", owner_dept: "大数据部", psi_biz_loan: 0.02, psi_tax_easy_loan: 0.03, drift_status: "normal" },
+    // ═══ 贷款域 ═══
+    { id: "F-006", name: "贷款余额", domain: "贷款", category: "贷款状态", value_type: "float", source: "新信贷系统", data_layer: "DWD", source_table: "dwd_loan_account", calculation_logic: "current_balance", refresh_freq: "实时", owner_dept: "信贷管理部", psi_biz_loan: 0.12, psi_tax_easy_loan: 0.15, drift_status: "normal" },
+    { id: "F-007", name: "贷款期限（月）", domain: "贷款", category: "贷款属性", value_type: "int", source: "新信贷系统", data_layer: "DWD", source_table: "dwd_loan_contract", calculation_logic: "loan_term_months", refresh_freq: "实时", owner_dept: "信贷管理部", psi_biz_loan: 0.05, psi_tax_easy_loan: 0.07, drift_status: "normal" },
+    { id: "F-008", name: "贷款利率", domain: "贷款", category: "贷款属性", value_type: "float", source: "新信贷系统", data_layer: "DWD", source_table: "dwd_loan_contract", calculation_logic: "interest_rate", refresh_freq: "实时", owner_dept: "信贷管理部", psi_biz_loan: 0.04, psi_tax_easy_loan: 0.06, drift_status: "normal" },
+    { id: "F-009", name: "担保方式", domain: "贷款", category: "贷款属性", value_type: "string", source: "新信贷系统", data_layer: "DWD", source_table: "dwd_loan_contract", calculation_logic: "guarantee_type", refresh_freq: "实时", owner_dept: "信贷管理部", psi_biz_loan: 0.08, psi_tax_easy_loan: 0.10, drift_status: "normal" },
+    { id: "F-010", name: "贷款产品类型", domain: "贷款", category: "贷款属性", value_type: "string", source: "新信贷系统", data_layer: "DWD", source_table: "dwd_loan_contract", calculation_logic: "product_code", refresh_freq: "实时", owner_dept: "信贷管理部", psi_biz_loan: 0.11, psi_tax_easy_loan: 0.13, drift_status: "normal" },
+    // ═══ 还款域 ═══
+    { id: "F-011", name: "近6月还款覆盖率", domain: "还款", category: "还款行为", value_type: "float", source: "核心还款流水", data_layer: "DWS", source_table: "dws_repayment_summary", calculation_logic: "SUM(repay_amount) / SUM(due_amount) WHERE months <= 6", refresh_freq: "实时", owner_dept: "信贷管理部", psi_biz_loan: 0.18, psi_tax_easy_loan: 0.22, drift_status: "normal" },
+    { id: "F-012", name: "近3月逾期天数", domain: "还款", category: "还款行为", value_type: "int", source: "核心还款流水", data_layer: "DWS", source_table: "dws_repayment_summary", calculation_logic: "MAX(overdue_days) WHERE months <= 3", refresh_freq: "实时", owner_dept: "信贷管理部", psi_biz_loan: 0.24, psi_tax_easy_loan: 0.19, drift_status: "normal" },
+    { id: "F-013", name: "还款方式变更次数", domain: "还款", category: "还款行为", value_type: "int", source: "核心还款流水", data_layer: "DWD", source_table: "dwd_repayment_flow", calculation_logic: "COUNT(DISTINCT repay_method) WHERE months <= 12", refresh_freq: "实时", owner_dept: "信贷管理部", psi_biz_loan: 0.07, psi_tax_easy_loan: 0.09, drift_status: "normal" },
+    { id: "F-014", name: "提前还款率", domain: "还款", category: "还款行为", value_type: "float", source: "核心还款流水", data_layer: "DWS", source_table: "dws_repayment_summary", calculation_logic: "COUNT(prepayment) / COUNT(*) WHERE months <= 6", refresh_freq: "实时", owner_dept: "信贷管理部", psi_biz_loan: 0.15, psi_tax_easy_loan: 0.13, drift_status: "normal" },
+    { id: "F-015", name: "承诺履约率", domain: "还款", category: "还款行为", value_type: "float", source: "核心还款流水", data_layer: "DWS", source_table: "dws_repayment_summary", calculation_logic: "COUNT(promise_fulfilled) / COUNT(promise_made) WHERE months <= 3", refresh_freq: "实时", owner_dept: "信贷管理部", psi_biz_loan: 0.19, psi_tax_easy_loan: 0.16, drift_status: "normal" },
+    // ═══ 信用卡域 ═══
+    { id: "F-016", name: "信用卡额度使用率", domain: "信用卡", category: "额度使用", value_type: "float", source: "信用卡账单", data_layer: "DWD", source_table: "dwd_credit_card_bill", calculation_logic: "used_amount / credit_limit", refresh_freq: "T+1", owner_dept: "信用卡中心", psi_biz_loan: 0.14, psi_tax_easy_loan: 0.17, drift_status: "normal" },
+    { id: "F-017", name: "近6月最低还款额占比", domain: "信用卡", category: "还款习惯", value_type: "float", source: "信用卡账单", data_layer: "DWS", source_table: "dws_credit_card_summary", calculation_logic: "COUNT(repay_amount = min_payment) / COUNT(*) WHERE months <= 6", refresh_freq: "T+1", owner_dept: "信用卡中心", psi_biz_loan: 0.21, psi_tax_easy_loan: 0.25, drift_status: "normal" },
+    { id: "F-018", name: "信用卡账单金额环比", domain: "信用卡", category: "消费行为", value_type: "float", source: "信用卡账单", data_layer: "DWD", source_table: "dwd_credit_card_bill", calculation_logic: "(current_month_bill - last_month_bill) / last_month_bill", refresh_freq: "T+1", owner_dept: "信用卡中心", psi_biz_loan: 0.12, psi_tax_easy_loan: 0.15, drift_status: "normal" },
+    // ═══ 资产负债域 ═══
+    { id: "F-019", name: "对公存款余额", domain: "资产负债", category: "存款", value_type: "float", source: "核心存款系统", data_layer: "DWD", source_table: "dwd_corp_deposit", calculation_logic: "current_balance", refresh_freq: "T+1", owner_dept: "公司金融部", psi_biz_loan: 0.09, psi_tax_easy_loan: 0.12, drift_status: "normal" },
+    { id: "F-020", name: "理财持仓余额", domain: "资产负债", category: "理财", value_type: "float", source: "理财系统", data_layer: "DWD", source_table: "dwd_wealth_management", calculation_logic: "current_balance", refresh_freq: "T+1", owner_dept: "资产管理部", psi_biz_loan: 0.06, psi_tax_easy_loan: 0.08, drift_status: "normal" },
+    { id: "F-021", name: "资产负债比", domain: "资产负债", category: "财务指标", value_type: "float", source: "财报系统", data_layer: "DWS", source_table: "dws_financial_summary", calculation_logic: "total_liabilities / total_assets", refresh_freq: "月更", owner_dept: "风险管理部", psi_biz_loan: 0.16, psi_tax_easy_loan: 0.19, drift_status: "normal" },
+    { id: "F-022", name: "流动比率", domain: "资产负债", category: "财务指标", value_type: "float", source: "财报系统", data_layer: "DWS", source_table: "dws_financial_summary", calculation_logic: "current_assets / current_liabilities", refresh_freq: "月更", owner_dept: "风险管理部", psi_biz_loan: 0.13, psi_tax_easy_loan: 0.16, drift_status: "normal" },
+    // ═══ 交易域 ═══
+    { id: "F-023", name: "对公账户月均流入金额", domain: "交易", category: "资金流", value_type: "float", source: "对公交易流水", data_layer: "DWS", source_table: "dws_corp_transaction_summary", calculation_logic: "AVG(monthly_inflow) WHERE months <= 6", refresh_freq: "实时", owner_dept: "交易银行部", psi_biz_loan: 0.31, psi_tax_easy_loan: 0.18, drift_status: "warning" },
+    { id: "F-024", name: "对公账户月均流出金额", domain: "交易", category: "资金流", value_type: "float", source: "对公交易流水", data_layer: "DWS", source_table: "dws_corp_transaction_summary", calculation_logic: "AVG(monthly_outflow) WHERE months <= 6", refresh_freq: "实时", owner_dept: "交易银行部", psi_biz_loan: 0.26, psi_tax_easy_loan: 0.14, drift_status: "warning" },
+    { id: "F-025", name: "交易对手集中度", domain: "交易", category: "交易行为", value_type: "float", source: "对公交易流水", data_layer: "DWS", source_table: "dws_corp_transaction_summary", calculation_logic: "TOP1_counterparty_amount / total_amount", refresh_freq: "实时", owner_dept: "交易银行部", psi_biz_loan: 0.17, psi_tax_easy_loan: 0.20, drift_status: "normal" },
+    { id: "F-026", name: "交易频率环比变化", domain: "交易", category: "交易行为", value_type: "float", source: "对公交易流水", data_layer: "DWD", source_table: "dwd_corp_transaction", calculation_logic: "(current_month_count - last_month_count) / last_month_count", refresh_freq: "实时", owner_dept: "交易银行部", psi_biz_loan: 0.11, psi_tax_easy_loan: 0.14, drift_status: "normal" },
+    { id: "F-027", name: "资金流向房地产标识", domain: "交易", category: "资金流向", value_type: "bool", source: "对公交易流水", data_layer: "DWD", source_table: "dwd_corp_transaction", calculation_logic: "EXISTS(to_account IN real_estate_accounts)", refresh_freq: "实时", owner_dept: "交易银行部", psi_biz_loan: 0.28, psi_tax_easy_loan: 0.23, drift_status: "warning" },
+    // ═══ 征信域 ═══
+    { id: "F-028", name: "近3月多头查询次数", domain: "征信", category: "多头借贷", value_type: "int", source: "人行征信", data_layer: "ODS", source_table: "ods_pboc_credit", calculation_logic: "COUNT(query_type = 'loan') WHERE months <= 3", refresh_freq: "月更", owner_dept: "风险管理部", psi_biz_loan: 0.08, psi_tax_easy_loan: 0.12, drift_status: "normal" },
+    { id: "F-029", name: "近6月贷款申请机构数", domain: "征信", category: "多头借贷", value_type: "int", source: "人行征信", data_layer: "ODS", source_table: "ods_pboc_credit", calculation_logic: "COUNT(DISTINCT lender) WHERE months <= 6", refresh_freq: "月更", owner_dept: "风险管理部", psi_biz_loan: 0.11, psi_tax_easy_loan: 0.28, drift_status: "warning" },
+    { id: "F-030", name: "对外担保余额", domain: "征信", category: "担保", value_type: "float", source: "人行征信", data_layer: "ODS", source_table: "ods_pboc_credit", calculation_logic: "SUM(guarantee_amount)", refresh_freq: "月更", owner_dept: "风险管理部", psi_biz_loan: 0.15, psi_tax_easy_loan: 0.18, drift_status: "normal" },
+    { id: "F-031", name: "历史逾期次数", domain: "征信", category: "信用历史", value_type: "int", source: "人行征信", data_layer: "ODS", source_table: "ods_pboc_credit", calculation_logic: "COUNT(overdue_record)", refresh_freq: "月更", owner_dept: "风险管理部", psi_biz_loan: 0.19, psi_tax_easy_loan: 0.22, drift_status: "normal" },
+    { id: "F-032", name: "法人征信近1月查询次数", domain: "征信", category: "法定代表人", value_type: "int", source: "人行征信", data_layer: "ODS", source_table: "ods_pboc_credit", calculation_logic: "COUNT(query) WHERE months <= 1", refresh_freq: "月更", owner_dept: "风险管理部", psi_biz_loan: 0.09, psi_tax_easy_loan: 0.07, drift_status: "normal" },
+    // ═══ 三方域 ═══
+    { id: "F-033", name: "被执行/限高标识", domain: "三方", category: "司法", value_type: "bool", source: "外部司法", data_layer: "ODS", source_table: "ods_court_enforcement", calculation_logic: "EXISTS(enforcement_record)", refresh_freq: "T+1", owner_dept: "风险管理部", psi_biz_loan: 0.05, psi_tax_easy_loan: 0.06, drift_status: "normal" },
+    { id: "F-034", name: "纳税申报收入环比变化率", domain: "三方", category: "税务", value_type: "float", source: "金税三期", data_layer: "ODS", source_table: "ods_tax_declaration", calculation_logic: "(current_income - last_income) / last_income", refresh_freq: "月更", owner_dept: "风险管理部", psi_biz_loan: 0.15, psi_tax_easy_loan: 0.42, drift_status: "warning" },
+    { id: "F-035", name: "工商变更次数（近12月）", domain: "三方", category: "工商", value_type: "int", source: "工商数据", data_layer: "ODS", source_table: "ods_qcc_company_change", calculation_logic: "COUNT(change_record) WHERE months <= 12", refresh_freq: "T+1", owner_dept: "大数据部", psi_biz_loan: 0.12, psi_tax_easy_loan: 0.08, drift_status: "normal" },
+    { id: "F-036", name: "社保缴纳人数", domain: "三方", category: "经营验证", value_type: "int", source: "社保局", data_layer: "ODS", source_table: "ods_social_insurance", calculation_logic: "current_insured_count", refresh_freq: "月更", owner_dept: "大数据部", psi_biz_loan: 0.22, psi_tax_easy_loan: 0.09, drift_status: "normal" },
+    { id: "F-037", name: "水电能耗环比变化率", domain: "三方", category: "经营验证", value_type: "float", source: "电力/水务", data_layer: "ODS", source_table: "ods_utility_bill", calculation_logic: "(current_usage - last_usage) / last_usage", refresh_freq: "月更", owner_dept: "大数据部", psi_biz_loan: 0.19, psi_tax_easy_loan: 0.11, drift_status: "normal" },
+    { id: "F-038", name: "关联企业担保余额合计", domain: "三方", category: "担保关系", value_type: "float", source: "行内核心", data_layer: "DWD", source_table: "dwd_related_guarantee", calculation_logic: "SUM(related_party_guarantee)", refresh_freq: "实时", owner_dept: "风险管理部", psi_biz_loan: 0.33, psi_tax_easy_loan: 0.21, drift_status: "warning" },
+    { id: "F-039", name: "设备指纹关联企业数", domain: "三方", category: "图谱", value_type: "int", source: "设备指纹系统", data_layer: "DWD", source_table: "dwd_device_fingerprint", calculation_logic: "COUNT(DISTINCT related_company)", refresh_freq: "实时", owner_dept: "大数据部", psi_biz_loan: 0.29, psi_tax_easy_loan: 0.22, drift_status: "warning" },
+    { id: "F-040", name: "贷款用途一致性评分", domain: "三方", category: "资金流", value_type: "float", source: "模型产出", data_layer: "ADS", source_table: "ads_model_output", calculation_logic: "ml_model_score('loan_purpose_consistency')", refresh_freq: "实时", owner_dept: "风险管理部", psi_biz_loan: 0.15, psi_tax_easy_loan: 0.19, drift_status: "normal" },
+    { id: "F-041", name: "应收账款周转天数", domain: "三方", category: "财务", value_type: "float", source: "财报/税务", data_layer: "DWS", source_table: "dws_financial_summary", calculation_logic: "365 / (revenue / avg_accounts_receivable)", refresh_freq: "月更", owner_dept: "风险管理部", psi_biz_loan: 0.24, psi_tax_easy_loan: 0.17, drift_status: "normal" },
+    { id: "F-042", name: "纳税信用等级", domain: "三方", category: "税务", value_type: "string", source: "金税三期", data_layer: "ODS", source_table: "ods_tax_credit", calculation_logic: "tax_credit_rating", refresh_freq: "月更", owner_dept: "风险管理部", psi_biz_loan: 0.07, psi_tax_easy_loan: 0.09, drift_status: "normal" },
+    { id: "F-043", name: "经营异常名录标识", domain: "三方", category: "工商", value_type: "bool", source: "工商数据", data_layer: "ODS", source_table: "ods_qcc_abnormal", calculation_logic: "EXISTS(abnormal_operation_record)", refresh_freq: "T+1", owner_dept: "大数据部", psi_biz_loan: 0.13, psi_tax_easy_loan: 0.16, drift_status: "normal" },
+    { id: "F-044", name: "环保处罚次数", domain: "三方", category: "合规", value_type: "int", source: "环保数据", data_layer: "ODS", source_table: "ods_environmental_penalty", calculation_logic: "COUNT(penalty_record)", refresh_freq: "月更", owner_dept: "风险管理部", psi_biz_loan: 0.06, psi_tax_easy_loan: 0.08, drift_status: "normal" },
+    { id: "F-045", name: "行政处罚次数", domain: "三方", category: "合规", value_type: "int", source: "工商数据", data_layer: "ODS", source_table: "ods_administrative_penalty", calculation_logic: "COUNT(penalty_record)", refresh_freq: "T+1", owner_dept: "大数据部", psi_biz_loan: 0.10, psi_tax_easy_loan: 0.12, drift_status: "normal" },
+    { id: "F-046", name: "欠税公告标识", domain: "三方", category: "税务", value_type: "bool", source: "金税三期", data_layer: "ODS", source_table: "ods_tax_arrears", calculation_logic: "EXISTS(tax_arrears_record)", refresh_freq: "月更", owner_dept: "风险管理部", psi_biz_loan: 0.14, psi_tax_easy_loan: 0.18, drift_status: "normal" },
+    { id: "F-047", name: "终本案件标识", domain: "三方", category: "司法", value_type: "bool", source: "外部司法", data_layer: "ODS", source_table: "ods_final_case", calculation_logic: "EXISTS(final_case_record)", refresh_freq: "T+1", owner_dept: "风险管理部", psi_biz_loan: 0.16, psi_tax_easy_loan: 0.20, drift_status: "normal" },
+    { id: "F-048", name: "股权冻结标识", domain: "三方", category: "司法", value_type: "bool", source: "外部司法", data_layer: "ODS", source_table: "ods_equity_freeze", calculation_logic: "EXISTS(equity_freeze_record)", refresh_freq: "T+1", owner_dept: "风险管理部", psi_biz_loan: 0.18, psi_tax_easy_loan: 0.21, drift_status: "normal" },
+    { id: "F-049", name: "动产抵押标识", domain: "三方", category: "司法", value_type: "bool", source: "工商数据", data_layer: "ODS", source_table: "ods_chattel_mortgage", calculation_logic: "EXISTS(chattel_mortgage_record)", refresh_freq: "T+1", owner_dept: "大数据部", psi_biz_loan: 0.08, psi_tax_easy_loan: 0.10, drift_status: "normal" },
+    { id: "F-050", name: "司法拍卖标识", domain: "三方", category: "司法", value_type: "bool", source: "外部司法", data_layer: "ODS", source_table: "ods_judicial_auction", calculation_logic: "EXISTS(judicial_auction_record)", refresh_freq: "T+1", owner_dept: "风险管理部", psi_biz_loan: 0.20, psi_tax_easy_loan: 0.24, drift_status: "normal" },
   ],
   psi_alarm_defaults: { enabled: true, threshold: 0.25 },
 };
@@ -445,22 +489,34 @@ export const mockModelVersions: MockModelVersion[] = [
 // Data Dictionary
 // ═══════════════════════════════════════════════════════════════
 
+/**
+ * 变量字典 · 抽样对齐评分卡建模口径（WOE 分箱 / IV 筛选，来自 8 大变量域）
+ */
 export const mockVariables: DataDictionaryVariableRow[] = [
   { id: "V-001", name: "multi_head_query_cnt_3m", cn_name: "近3月多头查询次数", var_type: "raw", source: "征信", source_code: "enterprise_credit", refresh: "月更", status: "active" },
-  { id: "V-002", name: "corp_acct_monthly_inflow", cn_name: "对公账户月均流入金额", var_type: "raw", source: "行内核心", source_code: "core", refresh: "实时", status: "active" },
-  { id: "V-003", name: "executed_limited_high_flag", cn_name: "被执行/限高标识", var_type: "raw", source: "外部司法", source_code: "court", refresh: "T+1", status: "active" },
-  { id: "V-004", name: "tax_income_mom_change", cn_name: "纳税申报收入环比变化率", var_type: "derived", source: "金税三期", source_code: "golden_tax_3", refresh: "月更", status: "active" },
+  { id: "V-002", name: "corp_acct_monthly_inflow", cn_name: "对公账户月均流入金额", var_type: "raw", source: "交易行为域", source_code: "core", refresh: "实时", status: "active" },
+  { id: "V-003", name: "executed_limited_high_flag", cn_name: "被执行/限高标识", var_type: "raw", source: "三方数据域", source_code: "court", refresh: "T+1", status: "active" },
+  { id: "V-004", name: "tax_income_mom_change", cn_name: "纳税申报收入环比变化率", var_type: "derived", source: "三方数据域", source_code: "golden_tax_3", refresh: "月更", status: "active" },
   { id: "V-005", name: "fund_diversion_score", cn_name: "资金挪用评分", var_type: "model", source: "模型产出", source_code: "core", refresh: "实时", status: "active" },
-  { id: "V-006", name: "social_insurance_mom_change", cn_name: "社保人数环比变化率", var_type: "derived", source: "社保局", source_code: "core", refresh: "月更", status: "draft" },
+  { id: "V-006", name: "social_insurance_mom_change", cn_name: "社保人数环比变化率", var_type: "derived", source: "三方数据域", source_code: "core", refresh: "月更", status: "draft" },
+  { id: "V-007", name: "loan_dpd_bucket_woe", cn_name: "贷款逾期期数分箱 WOE 值", var_type: "derived", source: "贷款业务域", source_code: "core", refresh: "实时", status: "active" },
+  { id: "V-008", name: "repay_ratio_6m_woe", cn_name: "近6月还款覆盖率分箱 WOE 值", var_type: "derived", source: "还款流水域", source_code: "core", refresh: "实时", status: "active" },
+  { id: "V-009", name: "cc_utilization_woe", cn_name: "信用卡额度使用率分箱 WOE 值", var_type: "derived", source: "信用卡域", source_code: "core", refresh: "T+1", status: "active" },
+  { id: "V-010", name: "asset_liab_ratio_woe", cn_name: "资产负债比分箱 WOE 值", var_type: "derived", source: "资产负债域", source_code: "core", refresh: "T+1", status: "active" },
 ];
 
+/**
+ * 风险数据集市 · 8 大变量域（对照《项目实施计划书》范围：客户/贷款/还款/信用卡/资产负债/交易/征信/三方）
+ */
 export const mockSources: DataDictionarySourceRow[] = [
-  { id: "DS-001", name: "行内核心系统", category: "内部", refresh: "实时", connection_status: "connected", last_sync_at: "2026-04-29 10:00" },
-  { id: "DS-002", name: "征信系统", category: "监管", refresh: "月更", connection_status: "connected", last_sync_at: "2026-04-25 08:00" },
-  { id: "DS-003", name: "金税三期", category: "外部", refresh: "月更", connection_status: "connected", last_sync_at: "2026-04-15 14:00" },
-  { id: "DS-004", name: "中国执行信息公开网", category: "司法", refresh: "T+1", connection_status: "connected", last_sync_at: "2026-04-29 06:00" },
-  { id: "DS-005", name: "社保局数据", category: "外部", refresh: "月更", connection_status: "error", last_sync_at: "2026-03-31 23:00" },
-  { id: "DS-006", name: "催收系统", category: "内部", refresh: "实时", connection_status: "connected", last_sync_at: "2026-04-29 10:00" },
+  { id: "DS-001", name: "客户信息域 · ECIF 客户主档", category: "客户", refresh: "实时", connection_status: "connected", last_sync_at: "2026-04-29 10:00" },
+  { id: "DS-002", name: "贷款业务域 · 新信贷系统借据", category: "贷款", refresh: "实时", connection_status: "connected", last_sync_at: "2026-04-29 10:00" },
+  { id: "DS-003", name: "还款流水域 · 核心还款流水", category: "还款", refresh: "实时", connection_status: "connected", last_sync_at: "2026-04-29 10:00" },
+  { id: "DS-004", name: "信用卡域 · 信用卡账单与额度", category: "信用卡", refresh: "T+1", connection_status: "connected", last_sync_at: "2026-04-29 06:00" },
+  { id: "DS-005", name: "资产负债域 · 存贷汇与理财余额", category: "资产负债", refresh: "T+1", connection_status: "connected", last_sync_at: "2026-04-29 06:00" },
+  { id: "DS-006", name: "交易行为域 · 对公交易流水（972 行变量清单）", category: "交易", refresh: "实时", connection_status: "connected", last_sync_at: "2026-04-29 10:00" },
+  { id: "DS-007", name: "征信域 · 人行征信与多头借贷", category: "征信", refresh: "月更", connection_status: "connected", last_sync_at: "2026-04-25 08:00" },
+  { id: "DS-008", name: "三方数据域 · 工商/司法/税务/企查查", category: "三方", refresh: "T+1", connection_status: "error", last_sync_at: "2026-03-31 23:00" },
 ];
 
 // ═══════════════════════════════════════════════════════════════
@@ -468,7 +524,7 @@ export const mockSources: DataDictionarySourceRow[] = [
 // ═══════════════════════════════════════════════════════════════
 
 export const mockTaskList: TaskListItem[] = [
-  { task_id: "tsk_001", task_type: "analysis", status: "completed", title: "经营贷资产质量归因分析", scenario_node: "post_loan", created_at: "2026-04-28T10:00:00+08:00", updated_at: "2026-04-28T11:30:00+08:00", priority: "P0", current_handler: "张明", progress_pct: 100 },
+  { task_id: "tsk_001", task_type: "analysis", status: "completed", title: "惠快贷资产质量归因分析", scenario_node: "post_loan", created_at: "2026-04-28T10:00:00+08:00", updated_at: "2026-04-28T11:30:00+08:00", priority: "P0", current_handler: "张明", progress_pct: 100 },
   { task_id: "tsk_002", task_type: "backtest", status: "running", title: "多头共债规则阈值回溯", scenario_node: "post_loan", created_at: "2026-04-29T08:00:00+08:00", updated_at: "2026-04-29T09:00:00+08:00", priority: "P1", current_handler: "李华", progress_pct: 65 },
   { task_id: "tsk_003", task_type: "strategy", status: "pending", title: "制造业预警规则包灰度发布", scenario_node: "post_loan", created_at: "2026-04-29T09:30:00+08:00", updated_at: "2026-04-29T09:30:00+08:00", priority: "P0", current_handler: "王芳", sla_due_at: "2026-04-30T18:00:00+08:00" },
   { task_id: "tsk_004", task_type: "inspection", status: "processing", title: "4月第4周处置记录抽检", scenario_node: "post_loan", created_at: "2026-04-28T14:00:00+08:00", updated_at: "2026-04-29T08:00:00+08:00", priority: "P2", current_handler: "质检组A", progress_pct: 48 },
@@ -479,14 +535,14 @@ export const mockTaskDetail: TaskDetail = {
     task_id: "tsk_001",
     task_type: "analysis",
     status: "completed",
-    title: "经营贷资产质量归因分析",
+    title: "惠快贷资产质量归因分析",
     scenario_node: "post_loan",
     created_at: "2026-04-28T10:00:00+08:00",
     updated_at: "2026-04-28T11:30:00+08:00",
-    description: "分析经营贷产品线近 3 个月 NPL 率上升的驱动因子，按行业/区域/客户经理维度拆解",
+    description: "分析惠快贷产品线近 3 个月 NPL 率上升的驱动因子，按行业/区域/客户经理维度拆解",
   },
   events: [
-    { id: 1, task_id: "tsk_001", event_type: "TASK_CREATED", payload: { title: "经营贷资产质量归因分析" }, created_at: "2026-04-28T10:00:00+08:00" },
+    { id: 1, task_id: "tsk_001", event_type: "TASK_CREATED", payload: { title: "惠快贷资产质量归因分析" }, created_at: "2026-04-28T10:00:00+08:00" },
     { id: 2, task_id: "tsk_001", event_type: "TASK_RUNNING", payload: {}, created_at: "2026-04-28T10:01:00+08:00" },
     { id: 3, task_id: "tsk_001", event_type: "TASK_COMPLETED", payload: {}, created_at: "2026-04-28T11:30:00+08:00" },
   ],

@@ -16,6 +16,10 @@ import type {
   BatchOnboardWatchlistResponse,
   WatchlistPrecheckResponse,
 } from "@/types/enterprise";
+import type {
+  AssessVendorRiskRequest,
+  VendorRiskAssessment,
+} from "@/types/qcc";
 
 /** 后端根地址。注意：若 .env 里把 VITE_API_BASE_URL 设成空字符串，相对路径会打到 Vite 同源并 404，这里按「未配置」处理。 */
 function resolveApiBaseUrl(): string {
@@ -170,6 +174,17 @@ export const api = {
   /** GET /api/enterprises/{id}/assessments/latest — 获取最新评估 */
   getLatestAssessment(enterpriseId: number): Promise<RiskAssessment> {
     return request<RiskAssessment>(`/api/enterprises/${enterpriseId}/assessments/latest`);
+  },
+
+  /** POST /api/qcc/assess-vendor-risk — 企业风险评估 Agent（企查查 MCP 数据源） */
+  assessVendorRisk(payload: AssessVendorRiskRequest): Promise<VendorRiskAssessment> {
+    return request<VendorRiskAssessment>("/api/qcc/assess-vendor-risk", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
   },
 
   // ─── 预警管理：`/api/alerts/*` ─────────────────────────────

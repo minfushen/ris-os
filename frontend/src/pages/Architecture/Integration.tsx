@@ -59,7 +59,7 @@ const TALKING_POINTS = [
   {
     title: "多渠道预警触达",
     tag: "触达分层",
-    desc: "红灯预警实时触达，黄灯预警批量触达。面试版展示站内信、企业微信、短信三种通道的设计边界，避免信息过载并保证高风险及时处理。",
+    desc: "红灯预警实时触达，黄灯预警批量触达。演示版展示站内信、企业微信、短信三种通道的设计边界，避免信息过载并保证高风险及时处理。",
   },
 ];
 
@@ -107,14 +107,14 @@ export default function IntegrationArchitecture() {
   return (
     <ModulePageShell
       title="系统集成与闭环说明"
-      subtitle="面试讲解页：用一页说明系统集成架构、数据流向、业务闭环和暂缓的生产级能力边界"
+      subtitle="演示讲解页：用一页说明系统集成架构、数据流向、业务闭环和暂缓的生产级能力边界"
       breadcrumb={["演示讲解", "系统集成架构"]}
     >
       <Alert
         type="info"
         showIcon
         className="rounded-lg"
-        message="面试讲解建议"
+        message="演示讲解建议"
         description="先讲业务闭环，再讲系统集成，最后主动说明 P2 暂缓能力边界，避免把原型包装成生产系统。"
       />
 
@@ -160,7 +160,7 @@ export default function IntegrationArchitecture() {
       </div>
 
       <div id="closed-loop">
-      <ModuleSectionCard title="面试可讲的亮点文案区" subtitle="三段可直接口述的设计亮点">
+      <ModuleSectionCard title="演示讲解亮点文案区" subtitle="三段可直接口述的设计亮点">
         <Row gutter={[16, 16]}>
           {TALKING_POINTS.map((point) => (
             <Col xs={24} lg={8} key={point.title}>
@@ -182,7 +182,7 @@ export default function IntegrationArchitecture() {
 
       <Row gutter={[16, 16]}>
         <Col xs={24} lg={12}>
-          <ModuleSectionCard title="多渠道预警触达" subtitle="面试版展示设计，不接真实消息服务">
+          <ModuleSectionCard title="多渠道预警触达" subtitle="演示版展示设计，不接真实消息服务">
             <div className="grid gap-3 sm:grid-cols-3">
               {[
                 { channel: "站内信", desc: "所有预警留痕展示" },
@@ -201,7 +201,7 @@ export default function IntegrationArchitecture() {
 
         <Col xs={24} lg={12}>
           <div id="p2-boundary">
-          <ModuleSectionCard title="P2 暂缓能力边界" subtitle="主动说明哪些能力不在面试原型范围内">
+          <ModuleSectionCard title="P2 暂缓能力边界" subtitle="主动说明哪些能力不在演示原型范围内">
             <Space direction="vertical" className="w-full">
               {DEFERRED_CAPABILITIES.map((item) => (
                 <div key={item} className="flex items-center gap-2 rounded-lg border border-black/[0.08] bg-[#fafafa] px-3 py-2">

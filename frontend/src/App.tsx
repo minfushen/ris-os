@@ -41,8 +41,20 @@ const FeatureStudio = lazy(() => import("@/pages/Feature/Studio"));
 // 数据资产模块
 const Dictionary = lazy(() => import("@/pages/Data/Dictionary"));
 
+// 项目实施（对照《项目实施计划书》）
+const ImplementationPlan = lazy(() => import("@/pages/Project/ImplementationPlan"));
+
 // 系统架构说明
 const IntegrationArchitecture = lazy(() => import("@/pages/Architecture/Integration"));
+
+// 智能体协同
+const AgentAttribution = lazy(() => import("@/pages/Agents/Attribution"));
+const AgentVendorRiskAssessment = lazy(() => import("@/pages/Agents/VendorRiskAssessment"));
+const AgentDisposition = lazy(() => import("@/pages/Agents/Disposition"));
+const AgentStrategyTuning = lazy(() => import("@/pages/Agents/StrategyTuning"));
+const AgentScriptCompliance = lazy(() => import("@/pages/Agents/ScriptCompliance"));
+const AgentReviewQa = lazy(() => import("@/pages/Agents/ReviewQa"));
+const AgentOpsMonitor = lazy(() => import("@/pages/Agents/OpsMonitor"));
 
 // 404
 const NotFound = lazy(() => import("@/pages/NotFound"));
@@ -100,7 +112,17 @@ const router = createBrowserRouter([
 
       { path: "data/dictionary", element: withSuspense(<Dictionary />) },
 
+      { path: "project/plan", element: withSuspense(<ImplementationPlan />) },
+
       { path: "architecture/integration", element: withSuspense(<IntegrationArchitecture />) },
+
+      { path: "agents/attribution", element: withSuspense(<AgentAttribution />) },
+      { path: "agents/vendor-risk-assessment", element: withSuspense(<AgentVendorRiskAssessment />) },
+      { path: "agents/disposition", element: withSuspense(<AgentDisposition />) },
+      { path: "agents/strategy-tuning", element: withSuspense(<AgentStrategyTuning />) },
+      { path: "agents/script-compliance", element: withSuspense(<AgentScriptCompliance />) },
+      { path: "agents/review-qa", element: withSuspense(<AgentReviewQa />) },
+      { path: "agents/ops-monitor", element: withSuspense(<AgentOpsMonitor />) },
 
       { path: "*", element: withSuspense(<NotFound />) },
     ],

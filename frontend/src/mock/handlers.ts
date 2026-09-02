@@ -3,9 +3,11 @@
  *
  * 覆盖范围：本文件只覆盖被页面真实调用的端点（11 个页面/组件涉及的 9 个 API 域）。
  * 未覆盖的端点会穿透到真实后端（由 onUnhandledRequest: "bypass" 控制）。
+ *
+ * 演示模式：为模拟真实网络环境，关键接口加了随机延迟（100-800ms）。
  */
 
-import { http, HttpResponse } from "msw";
+import { http, HttpResponse, delay } from "msw";
 import type { TaskListItem } from "@/types";
 import {
   mockDashboardStats,
@@ -23,12 +25,21 @@ import {
 
 const BASE = "http://127.0.0.1:8000";
 
+/** 模拟真实网络延迟（100-800ms 随机） */
+function realisticDelay() {
+  return delay(Math.floor(Math.random() * 700) + 100);
+}
+
 export const handlers = [
   // ─── Dashboard ───────────────────────────────────────────────────────
-  http.get(`${BASE}/api/dashboard/stats`, () => HttpResponse.json(mockDashboardStats)),
+  http.get(`${BASE}/api/dashboard/stats`, async () => {
+    await realisticDelay();
+    return HttpResponse.json(mockDashboardStats);
+  }),
 
   // ─── Alerts ──────────────────────────────────────────────────────────
-  http.get(`${BASE}/api/alerts`, ({ request }) => {
+  http.get(`${BASE}/api/alerts`, async ({ request }) => {
+    await realisticDelay();
     const url = new URL(request.url);
     const status = url.searchParams.get("status");
     const level = url.searchParams.get("level");
@@ -40,7 +51,8 @@ export const handlers = [
     return HttpResponse.json(filtered.slice(0, limit));
   }),
 
-  http.post(`${BASE}/api/alerts/:alertId/resolve`, ({ params }) => {
+  http.post(`${BASE}/api/alerts/:alertId/resolve`, async ({ params }) => {
+    await realisticDelay();
     const id = Number(params.alertId);
     const alert = mockAlerts.find((a) => a.id === id);
     if (!alert) return new HttpResponse(null, { status: 404 });
@@ -49,7 +61,8 @@ export const handlers = [
   }),
 
   // ─── Enterprises / Assessments ───────────────────────────────────────
-  http.get(`${BASE}/api/enterprises/:id/assessments/latest`, ({ params }) => {
+  http.get(`${BASE}/api/enterprises/:id/assessments/latest`, async ({ params }) => {
+    await realisticDelay();
     const id = Number(params.id);
     const assessment = mockRiskAssessments[id] ?? mockRiskAssessmentDefault;
     return HttpResponse.json(assessment);
@@ -57,11 +70,13 @@ export const handlers = [
 
   // ─── Watchlist ───────────────────────────────────────────────────────
   http.post(`${BASE}/api/enterprises/watchlist/precheck`, async ({ request }) => {
+    await realisticDelay();
     const body = (await request.json()) as { planned_count: number };
     return HttpResponse.json({ ...mockPrecheck, planned_count: body.planned_count });
   }),
 
   http.post(`${BASE}/api/enterprises/watchlist/batch-onboard`, async ({ request }) => {
+    await realisticDelay();
     const body = (await request.json()) as { company_names: string[] };
     return HttpResponse.json({
       ...mockBatchOnboard,
@@ -71,12 +86,14 @@ export const handlers = [
   }),
 
   // ─── Feature Studio ──────────────────────────────────────────────────
-  http.get(`${BASE}/api/scenario/post-loan/feature-studio`, () => {
+  http.get(`${BASE}/api/scenario/post-loan/feature-studio`, async () => {
+    await realisticDelay();
     return HttpResponse.json(mockFeatureStudio);
   }),
 
   // ─── Data Dictionary ─────────────────────────────────────────────────
-  http.get(`${BASE}/api/scenario/post-loan/data-dictionary/variables`, ({ request }) => {
+  http.get(`${BASE}/api/scenario/post-loan/data-dictionary/variables`, async ({ request }) => {
+    await realisticDelay();
     const url = new URL(request.url);
     const q = url.searchParams.get("q")?.toLowerCase();
     const sourceCode = url.searchParams.get("source_code");
@@ -86,12 +103,14 @@ export const handlers = [
     return HttpResponse.json(filtered);
   }),
 
-  http.get(`${BASE}/api/scenario/post-loan/data-dictionary/sources`, () => {
+  http.get(`${BASE}/api/scenario/post-loan/data-dictionary/sources`, async () => {
+    await realisticDelay();
     return HttpResponse.json(mockSources);
   }),
 
   // ─── Tasks ───────────────────────────────────────────────────────────
-  http.get(`${BASE}/tasks`, ({ request }) => {
+  http.get(`${BASE}/tasks`, async ({ request }) => {
+    await realisticDelay();
     const url = new URL(request.url);
     const taskType = url.searchParams.get("task_type");
     const status = url.searchParams.get("status");
@@ -101,7 +120,8 @@ export const handlers = [
     return HttpResponse.json(filtered);
   }),
 
-  http.get(`${BASE}/tasks/:taskId`, ({ params }) => {
+  http.get(`${BASE}/tasks/:taskId`, async ({ params }) => {
+    await realisticDelay();
     const id = params.taskId as string;
     if (id === mockTaskDetail.task.task_id) return HttpResponse.json(mockTaskDetail);
     // Return generic detail for other task IDs that might appear in mockTaskList
@@ -114,6 +134,7 @@ export const handlers = [
   }),
 
   http.post(`${BASE}/tasks`, async ({ request }) => {
+    await realisticDelay();
     const body = (await request.json()) as Record<string, string>;
     const taskId = `tsk_${Date.now()}`;
     const taskType = (body.task_type as TaskListItem["task_type"]) ?? "analysis";
@@ -121,10 +142,12 @@ export const handlers = [
   }),
 
   http.post(`${BASE}/tasks/review`, async () => {
+    await realisticDelay();
     return HttpResponse.json({ task_id: `tsk_rev_${Date.now()}`, task_type: "review", status: "pending" });
   }),
 
   http.post(`${BASE}/tasks/analysis`, async () => {
+    await realisticDelay();
     return HttpResponse.json({ task_id: `tsk_ana_${Date.now()}`, task_type: "analysis", status: "pending" });
   }),
 ];

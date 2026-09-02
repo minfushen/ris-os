@@ -130,7 +130,7 @@ export default function PublishPage() {
           <div className="bg-[#fafafa] layout-p-md layout-mb-md">
             <Space direction="vertical" size={4}>
               <Text style={{ fontSize: 12 }}>
-                • 预警规则包: 经营贷预警包 V2.4.0 → V2.5.0（覆盖 FP-01/FP-03）
+                • 预警规则包: 惠快贷预警包 V2.4.0 → V2.5.0（覆盖 FP-01/FP-03）
               </Text>
               <Text style={{ fontSize: 12 }}>
                 • 变更内容: 制造业多头阈值 35%→38%（RC-02）；税报断档天数 45→30（RC-01）

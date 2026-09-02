@@ -76,7 +76,7 @@ export default function MyDisposalQueue({ onOpenItem }: MyDisposalQueueProps) {
       <div className="section-header">
         <Text className="section-title">我的处置队列</Text>
         <Text type="secondary" className="section-subtitle ml-2">
-          企查查实时预警数据，右侧汇总本周完成与结果分布
+          贷后预警实时数据，右侧汇总本周完成与结果分布
         </Text>
       </div>
       <div className="section-body">

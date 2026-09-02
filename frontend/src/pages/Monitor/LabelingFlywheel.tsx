@@ -55,7 +55,7 @@ const LABELING_CASES: LabelingCase[] = [
   {
     id: "AL-901",
     hitRule: "司法立案",
-    productLine: "经营贷",
+    productLine: "惠快贷",
     industry: "制造业",
     applicant: "张*明",
     amount: 500000,
@@ -64,7 +64,7 @@ const LABELING_CASES: LabelingCase[] = [
   {
     id: "AL-902",
     hitRule: "多头共债跳升",
-    productLine: "税金贷",
+    productLine: "税易贷",
     industry: "批发零售",
     applicant: "李*华",
     amount: 120000,
@@ -73,7 +73,7 @@ const LABELING_CASES: LabelingCase[] = [
   {
     id: "AL-903",
     hitRule: "税报连续断档",
-    productLine: "小微贷",
+    productLine: "支小贷",
     industry: "道路运输",
     inspectionConclusion: "effective",
     delinquent30d: true,
@@ -86,7 +86,7 @@ const LABELING_CASES: LabelingCase[] = [
   {
     id: "AL-904",
     hitRule: "设备指纹簇",
-    productLine: "消费贷",
+    productLine: "惠微贷",
     industry: "软件信息",
     inspectionConclusion: "false_alarm",
     delinquent30d: false,
@@ -124,11 +124,11 @@ const TRAINING_HISTORY = [
 
 /** 按产品线 × 行业/场景的样本池（含税易贷冷启动） */
 const SAMPLE_POOL_ROWS = [
-  { key: "p1", productLine: "经营贷", industry: "制造业", scene: "司法被执行", current: 820, target: 1200, pct: 68 },
-  { key: "p2", productLine: "经营贷", industry: "批发零售", scene: "资金流异常", current: 410, target: 900, pct: 46 },
+  { key: "p1", productLine: "惠快贷", industry: "制造业", scene: "司法被执行", current: 820, target: 1200, pct: 68 },
+  { key: "p2", productLine: "惠快贷", industry: "批发零售", scene: "资金流异常", current: 410, target: 900, pct: 46 },
   { key: "p3", productLine: "税易贷", industry: "全行业", scene: "税报核验 / 申报连续性", current: 128, target: 600, pct: 21 },
   { key: "p4", productLine: "税易贷", industry: "道路运输", scene: "税负率偏离", current: 34, target: 280, pct: 12 },
-  { key: "p5", productLine: "消费贷", industry: "年轻客群", scene: "行为设备", current: 1100, target: 1500, pct: 73 },
+  { key: "p5", productLine: "惠微贷", industry: "年轻客群", scene: "行为设备", current: 1100, target: 1500, pct: 73 },
 ];
 
 const EXTERNAL_MODELS = [
@@ -347,7 +347,7 @@ export default function LabelingFlywheel({ onLabel }: LabelingFlywheelProps) {
                 showIcon
                 className="rounded-md"
                 message="其他提示"
-                description="税金贷 · 税报类（非税易贷子品牌）进度 42%，仍建议在一周内补数至 50% 以上。"
+                description="税易贷 · 税报类进度 42%，仍建议在一周内补数至 50% 以上。"
               />
             </div>
           </Col>
@@ -373,7 +373,7 @@ export default function LabelingFlywheel({ onLabel }: LabelingFlywheelProps) {
                     width: 160,
                     render: (pct: number, r: (typeof SAMPLE_POOL_ROWS)[0]) => (
                       <Space direction="vertical" className="w-full" size={0}>
-                        <Progress percent={pct} size="small" strokeColor={pct < 25 ? "#faad14" : "#4f6970"} />
+                        <Progress percent={pct} size="small" strokeColor={pct < 25 ? "#faad14" : "#1d4ed8"} />
                         {r.productLine === "税易贷" && pct < 25 ? (
                           <Tag color="warning" className="!m-0 text-[11px]">冷启动</Tag>
                         ) : null}

@@ -1,9 +1,12 @@
-import { Typography, Table, Tag, Button, Space, Progress, Select, DatePicker, Tabs, Row, Col, App } from "antd";
+import { Typography, Table, Tag, Button, Space, Progress, Select, DatePicker, Tabs, Row, Col, App, Drawer, Form, Input, message as antdMessage } from "antd";
 import { PlusOutlined, EyeOutlined, DownloadOutlined, ThunderboltOutlined } from "@ant-design/icons";
+import { useState } from "react";
 import ModulePageShell, { ModuleSectionCard } from "@/components/ModulePageShell";
 import DemoFlowNav from "@/components/DemoFlowNav";
 
 const { Text } = Typography;
+const { Option } = Select;
+const { TextArea } = Input;
 
 const BACKTEST_TASKS = [
   {
@@ -132,6 +135,25 @@ export default function Backtest() {
     },
   ];
 
+  const [createOpen, setCreateOpen] = useState(false);
+  const [createLoading, setCreateLoading] = useState(false);
+  const [createForm] = Form.useForm();
+
+  const handleCreateSubmit = async () => {
+    try {
+      const values = await createForm.validateFields();
+      setCreateLoading(true);
+      await new Promise((r) => setTimeout(r, 800));
+      antdMessage.success(`回测任务「${values.name}」已创建，进入执行队列`);
+      setCreateOpen(false);
+      createForm.resetFields();
+    } catch {
+      antdMessage.error("请完善必填信息");
+    } finally {
+      setCreateLoading(false);
+    }
+  };
+
   return (
     <ModulePageShell
       title="仿真回溯"
@@ -139,9 +161,9 @@ export default function Backtest() {
       breadcrumb={["策略与模型", "仿真回溯"]}
       actions={
         <Space wrap>
-          <Select size="small" defaultValue="all" style={{ width: 120 }} options={[{ value: "all", label: "全产品线" }, { value: "biz", label: "经营贷" }, { value: "tax", label: "税易贷" }]} />
+          <Select size="small" defaultValue="all" style={{ width: 120 }} options={[{ value: "all", label: "全产品线" }, { value: "biz", label: "惠快贷" }, { value: "tax", label: "税易贷" }]} />
           <DatePicker.RangePicker size="small" />
-          <Button type="primary" icon={<PlusOutlined />} size="small">
+          <Button type="primary" icon={<PlusOutlined />} size="small" onClick={() => setCreateOpen(true)}>
             发起回测
           </Button>
         </Space>
@@ -223,6 +245,41 @@ export default function Backtest() {
           ]}
         />
       </ModuleSectionCard>
+
+      {/* 发起回测抽屉 */}
+      <Drawer
+        title="发起回测任务"
+        open={createOpen}
+        onClose={() => setCreateOpen(false)}
+        width={520}
+        footer={
+          <Space>
+            <Button onClick={() => setCreateOpen(false)}>取消</Button>
+            <Button type="primary" loading={createLoading} onClick={handleCreateSubmit}>
+              发起回测
+            </Button>
+          </Space>
+        }
+      >
+        <Form form={createForm} layout="vertical">
+          <Form.Item name="name" label="任务名称" rules={[{ required: true, message: "请输入任务名称" }]}>
+            <Input placeholder="如：惠快贷多头阈值回测" />
+          </Form.Item>
+          <Form.Item name="target" label="回测目标" rules={[{ required: true, message: "请选择回测目标" }]}>
+            <Select placeholder="选择回测目标">
+              <Option value="rule">单规则</Option>
+              <Option value="package">策略包</Option>
+              <Option value="flow">决策流</Option>
+            </Select>
+          </Form.Item>
+          <Form.Item name="dateRange" label="回测时间范围" rules={[{ required: true, message: "请选择时间范围" }]}>
+            <DatePicker.RangePicker style={{ width: "100%" }} />
+          </Form.Item>
+          <Form.Item name="description" label="回测说明">
+            <TextArea rows={3} placeholder="描述回测目的、对比基准..." />
+          </Form.Item>
+        </Form>
+      </Drawer>
 
       <DemoFlowNav />
     </ModulePageShell>

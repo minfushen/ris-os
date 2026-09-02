@@ -61,7 +61,7 @@ const FALSE_POSITIVE_RANK = [
 ];
 
 /** 产品线 × 规则效果矩阵：有效率 %（演示） */
-const PRODUCT_LINES = ["经营贷", "税金贷", "消费贷", "小微贷"];
+const PRODUCT_LINES = ["惠快贷", "税易贷", "惠微贷", "支小贷"];
 const RULE_COLS = ["司法", "多头", "税报", "设备"];
 const EFFECT_MATRIX: number[][] = [
   [82, 68, 71, 55],
@@ -121,7 +121,7 @@ export default function O2OMonitor() {
           <Col xs={24} md={8}>
             <div className="text-center py-2">
               <Text type="secondary" className="text-[12px] block mb-1">综合评分</Text>
-              <Text strong className="text-[40px] leading-none text-[#4f6970]">{compositeScore}</Text>
+              <Text strong className="text-[40px] leading-none text-[#1d4ed8]">{compositeScore}</Text>
               <Text type="secondary" className="text-[12px] block mt-2">较上周 +3</Text>
             </div>
           </Col>
@@ -139,7 +139,7 @@ export default function O2OMonitor() {
                   <Text>提前量（&gt;15 天占比加权）</Text>
                   <Text type="secondary">{scoreParts.advance}</Text>
                 </div>
-                <Progress percent={scoreParts.advance} size="small" strokeColor="#6f8f95" showInfo={false} />
+                <Progress percent={scoreParts.advance} size="small" strokeColor="#2563eb" showInfo={false} />
               </div>
               <div>
                 <div className="flex justify-between text-[12px] mb-1">
@@ -168,7 +168,7 @@ export default function O2OMonitor() {
                   <Progress
                     percent={s.pct}
                     size="small"
-                    strokeColor={i === FUNNEL_STAGES.length - 1 ? "#c77b78" : "#4f6970"}
+                    strokeColor={i === FUNNEL_STAGES.length - 1 ? "#c77b78" : "#1d4ed8"}
                     showInfo={false}
                   />
                 </div>

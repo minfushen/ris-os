@@ -94,7 +94,7 @@ export const theme: ThemeConfig = {
     Input: {
       borderRadius: 6,
       activeShadow: `0 0 0 2px ${P.primaryAlpha14}`,
-      hoverBorderColor: "rgba(111, 143, 149, 0.35)",
+      hoverBorderColor: "rgba(37, 99, 235, 0.35)",
     },
     InputNumber: {
       borderRadius: 6,
@@ -166,9 +166,9 @@ export const theme: ThemeConfig = {
     Alert: {
       borderRadiusLG: 8,
       colorInfoBorder: P.primaryAlpha22,
-      colorSuccessBorder: "rgba(99, 153, 34, 0.28)",
-      colorWarningBorder: "rgba(239, 159, 39, 0.28)",
-      colorErrorBorder: "rgba(226, 75, 74, 0.28)",
+      colorSuccessBorder: "rgba(34, 197, 94, 0.28)",
+      colorWarningBorder: "rgba(245, 158, 11, 0.28)",
+      colorErrorBorder: "rgba(220, 38, 38, 0.28)",
     },
     Breadcrumb: {
       itemColor: P.textTertiary,

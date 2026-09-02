@@ -26,6 +26,8 @@ import {
   RetweetOutlined,
   HistoryOutlined,
   UploadOutlined,
+  FileDoneOutlined,
+  RobotOutlined,
 } from "@ant-design/icons";
 import { PLATFORM_SUBTITLE } from "@/config/brand";
 
@@ -35,7 +37,7 @@ export interface NavItem {
   icon?: ReactNode;
   path?: string;
   children?: NavItem[];
-  /** 收进「更多」下的二级项；当前面试导航不使用，保留兼容侧栏渲染能力 */
+  /** 收进「更多」下的二级项；当前主导航不使用，保留兼容侧栏渲染能力 */
   moreChildren?: NavItem[];
   badge?: number | string;
   description?: string;
@@ -51,6 +53,21 @@ export const PRIMARY_NAV: NavItem[] = [
     description: PLATFORM_SUBTITLE,
   },
   {
+    key: "project",
+    label: "项目实施",
+    icon: <FileDoneOutlined />,
+    description: "对照《项目实施计划书》：阶段里程碑、交付物、风险与验收",
+    children: [
+      {
+        key: "project-plan",
+        label: "项目实施全景",
+        icon: <FileDoneOutlined />,
+        path: "/project/plan",
+        description: "一页纸总览 / 阶段里程碑 / 交付物清单 / 风险与验收",
+      },
+    ],
+  },
+  {
     key: "monitor",
     label: "预警监控",
     icon: <DashboardOutlined />,
@@ -62,7 +79,7 @@ export const PRIMARY_NAV: NavItem[] = [
         icon: <AlertOutlined />,
         path: "/monitor/dashboard",
         badge: 23,
-        description: "面试主看板：预警态势、模型效果与待处置队列",
+        description: "贷后预警主看板：预警态势、模型效果与待处置队列",
       },
       {
         key: "monitor-watchlist-upload",
@@ -239,10 +256,67 @@ export const PRIMARY_NAV: NavItem[] = [
     ],
   },
   {
+    key: "agents",
+    label: "智能体协同",
+    icon: <RobotOutlined />,
+    description: "预警归因、处置建议、策略调优、话术合规、复盘质检与运行监控",
+    children: [
+      {
+        key: "agent-attribution",
+        label: "预警归因 Agent",
+        icon: <AlertOutlined />,
+        path: "/agents/attribution",
+        description: "聚合多源信号，生成预警原因、证据链和核查方向",
+      },
+      {
+        key: "agent-vendor-risk-assessment",
+        label: "企业风险评估 Agent",
+        icon: <SafetyOutlined />,
+        path: "/agents/vendor-risk-assessment",
+        description: "基于企查查 MCP 的 9 维度风险评估与处置建议",
+      },
+      {
+        key: "agent-disposition",
+        label: "处置建议 Agent",
+        icon: <CustomerServiceOutlined />,
+        path: "/agents/disposition",
+        description: "基于客户画像、预警等级与 SOP 推荐下一步处置动作",
+      },
+      {
+        key: "agent-strategy-tuning",
+        label: "策略调优 Agent",
+        icon: <ControlOutlined />,
+        path: "/agents/strategy-tuning",
+        description: "发现误报、漏报和阈值优化机会，推动仿真与发布流程",
+      },
+      {
+        key: "agent-script-compliance",
+        label: "话术合规 Agent",
+        icon: <BookOutlined />,
+        path: "/agents/script-compliance",
+        description: "推荐场景化话术并检查威胁、诱导、隐私泄露等合规风险",
+      },
+      {
+        key: "agent-review-qa",
+        label: "复盘质检 Agent",
+        icon: <AuditOutlined />,
+        path: "/agents/review-qa",
+        description: "批量预筛处置记录质量，推动样本回流与规则优化",
+      },
+      {
+        key: "agent-ops-monitor",
+        label: "Agent 运行监控",
+        icon: <DashboardOutlined />,
+        path: "/agents/ops-monitor",
+        description: "监控任务成功率、工具调用、人工采纳与审计留痕",
+      },
+    ],
+  },
+  {
     key: "demo",
     label: "演示讲解",
     icon: <ApartmentOutlined />,
-    description: "面试讲解用的系统集成、数据流向与闭环设计",
+    description: "项目演示用的系统集成、数据流向与闭环设计",
     children: [
       {
         key: "architecture-integration",

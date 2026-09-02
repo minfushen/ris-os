@@ -89,7 +89,7 @@ const PENDING_APPROVALS: PendingApproval[] = [
   {
     id: "CHG-20260429-452",
     type: "版本变更",
-    name: "经营贷预警包",
+    name: "惠快贷预警包",
     versionFrom: "V2.4.0",
     versionTo: "V2.5.0",
     fpCoverage: "FP-01 / FP-03",
@@ -109,9 +109,9 @@ const PENDING_APPROVALS: PendingApproval[] = [
 ];
 
 const RECENT_CHANGES = [
-  { version: "V2.5.0", name: "经营贷预警包", date: "2026-04-29", change: "制造业多头阈值 35%→38%（RC-02）；税报断档天数 45→30（RC-01）", approver: "王五", status: "已生效" },
-  { version: "V2.4.0", name: "经营贷预警包", date: "2026-04-15", change: "新增司法被执行信号权重 0.15→0.22（RC-05）", approver: "王五", status: "已生效" },
-  { version: "V1.5.0", name: "多头共债预警规则", date: "2026-04-25", change: "消费贷多头阈值 30%→35%，匹配 RC-02 调优结论", approver: "王五", status: "已生效" },
+  { version: "V2.5.0", name: "惠快贷预警包", date: "2026-04-29", change: "制造业多头阈值 35%→38%（RC-02）；税报断档天数 45→30（RC-01）", approver: "王五", status: "已生效" },
+  { version: "V2.4.0", name: "惠快贷预警包", date: "2026-04-15", change: "新增司法被执行信号权重 0.15→0.22（RC-05）", approver: "王五", status: "已生效" },
+  { version: "V1.5.0", name: "多头共债预警规则", date: "2026-04-25", change: "惠微贷多头阈值 30%→35%，匹配 RC-02 调优结论", approver: "王五", status: "已生效" },
   { version: "V1.7.4", name: "税报断档风险模型", date: "2026-04-20", change: "断档天数阈值 45→30 天，触发量 +18%", approver: "王五", status: "已生效" },
 ];
 

@@ -43,6 +43,7 @@ TASK-<MILESTONE>-<编号>
 
 | ID | 任务 | 关联 | 类型 | 预估 | 验收 | 状态 |
 |----|------|------|------|------|------|------|
+| TASK-M1-17 | 预警证据链组件化（核查工作台） | [spec-RISK-6] | feat | M | 提取 `EvidenceChain` 组件复用 `EvidenceItem` 类型（消除 `any`）；证据按 8 大变量域分组展示 + 可信度标识；导出证据链按钮生成 Markdown 报告下载；`npm run build` 绿 | ⬜ 待开始 |
 | TASK-M1-05 | 抽 `utils/logger.ts` | [plan-§1.2][const-§2.2] | feat | S | dev 环境 console，prod 收口；内置脱敏函数（mask 企业名称/法人/证件号中间字符）；替换裸 console.log | ⬜ 待开始 |
 | TASK-M1-06 | 添加全局 `<ErrorBoundary>` | [plan-§1.2] | feat | S | 顶层 + 6 大模块各一层；错误页有"刷新/返回首页" | ✅ 已完成 |
 | TASK-M1-07 | 增加 PR 模板 `.github/PULL_REQUEST_TEMPLATE.md` | [const-§4.2] | docs | S | 必填 spec/plan 编号 | ⬜ 待开始 |

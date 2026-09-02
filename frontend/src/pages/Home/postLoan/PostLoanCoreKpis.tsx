@@ -196,7 +196,7 @@ export default function PostLoanCoreKpis({ onDrill }: PostLoanCoreKpisProps) {
         data: [2, 3, 4, 5, stats?.high_risk_enterprises || 0],
         color: "var(--color-danger-light)"
       },
-      footer: "企查查实时数据 · 点击查看资产详情",
+      footer: "多源数据实时监测 · 点击查看资产详情",
       stripVariant: KPI_STRIP.m1,
       onClick: () => onDrill?.("m1"),
     },
@@ -229,16 +229,16 @@ export default function PostLoanCoreKpis({ onDrill }: PostLoanCoreKpisProps) {
       onClick: () => onDrill?.("timeout"),
     },
     {
-      label: "风险覆盖率",
-      value: "18类",
-      valueColor: "var(--color-success-light)",
-      trend: { text: "企查查全量数据", semantic: "good" },
+      label: "预警时效",
+      value: "5–7 天",
+      valueColor: "var(--color-primary)",
+      trend: { text: "原人工抽检 15 天", semantic: "good" },
       sparkline: {
-        data: [12, 14, 16, 18, 18],
-        color: "var(--color-success-light)"
+        data: [15, 12, 9, 7, 6],
+        color: "var(--color-primary)"
       },
-      progress: { value: 18, max: 18 },
-      footer: "司法/经营/财务/合规全覆盖",
+      progress: { value: 7, max: 15 },
+      footer: "事中量化预警 · 点击进入策略效果追踪",
       stripVariant: KPI_STRIP.effectiveness,
       onClick: () => onDrill?.("effectiveness"),
     },
@@ -249,7 +249,7 @@ export default function PostLoanCoreKpis({ onDrill }: PostLoanCoreKpisProps) {
       <div className="section-header">
         <Text className="section-title">核心资产指标</Text>
         <Text type="secondary" className="section-subtitle ml-2">
-          企查查实时数据：企业风险分布、预警态势与处置时效
+          头部农商行小微贷后预警项目 · 预警态势、处置时效与项目效果
         </Text>
       </div>
       <div className="section-body">

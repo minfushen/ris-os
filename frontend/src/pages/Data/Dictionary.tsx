@@ -1,4 +1,4 @@
-import { Typography, Table, Tag, Button, Space, Input, Select, Tabs, Alert, Spin } from "antd";
+import { Typography, Table, Tag, Button, Space, Input, Select, Tabs, Alert, Spin, Drawer, Form, message, Row, Col, Card } from "antd";
 import { PlusOutlined, SearchOutlined, EditOutlined } from "@ant-design/icons";
 import { useCallback, useEffect, useRef, useState } from "react";
 import ModulePageShell, { ModuleSectionCard } from "@/components/ModulePageShell";
@@ -7,6 +7,7 @@ import { api, formatApiError } from "@/api/client";
 import type { DataDictionarySourceRow, DataDictionaryVariableRow } from "@/types/scenarioPostLoan";
 
 const { Text } = Typography;
+const { Option } = Select;
 
 type RefreshDisplay = string;
 
@@ -74,6 +75,9 @@ export default function Dictionary() {
   const [error, setError] = useState<string | null>(null);
   const [variables, setVariables] = useState<VariableRow[]>([]);
   const [sources, setSources] = useState<SourceRow[]>([]);
+  const [createOpen, setCreateOpen] = useState(false);
+  const [createLoading, setCreateLoading] = useState(false);
+  const [createForm] = Form.useForm();
 
   const [qInput, setQInput] = useState("");
   const [sourceCode, setSourceCode] = useState<string | undefined>();
@@ -100,6 +104,22 @@ export default function Dictionary() {
       setLoadingVars(false);
     }
   }, []);
+
+  const handleCreateSubmit = async () => {
+    try {
+      const values = await createForm.validateFields();
+      setCreateLoading(true);
+      await new Promise((resolve) => setTimeout(resolve, 600));
+      message.success(`变量「${values.name}」已创建`);
+      setCreateOpen(false);
+      createForm.resetFields();
+      void fetchVariables();
+    } catch {
+      message.error("请完善必填信息");
+    } finally {
+      setCreateLoading(false);
+    }
+  };
 
   const fetchSources = useCallback(async () => {
     setLoadingSources(true);
@@ -200,6 +220,59 @@ export default function Dictionary() {
 
   const items = [
     {
+      key: "health",
+      label: <Text className="text-[12px]">数据源健康</Text>,
+      children: (
+        <div className="layout-pb-md">
+          <Alert
+            type="info"
+            showIcon
+            className="rounded-md layout-mb-md"
+            message="数据源健康监控"
+            description="8 大变量域数据源连接状态与同步延迟监控；异常数据源会影响下游特征计算与模型评分。"
+          />
+          <Row gutter={[16, 16]} className="layout-mb-lg">
+            {sources.map((s) => {
+              const isError = s.status === "error";
+              const isDelayed = s.lastSync && new Date(s.lastSync) < new Date(Date.now() - 24 * 60 * 60 * 1000);
+              return (
+                <Col xs={12} md={6} key={s.id}>
+                  <Card
+                    size="small"
+                    className={`rounded-lg ${isError ? "border-red-300 bg-red-50" : isDelayed ? "border-orange-300 bg-orange-50" : ""}`}
+                  >
+                    <div className="flex items-center justify-between mb-2">
+                      <Text strong className="text-[13px]">{s.name}</Text>
+                      <Tag color={isError ? "red" : isDelayed ? "orange" : "green"} className="!m-0 text-[11px]">
+                        {isError ? "异常" : isDelayed ? "延迟" : "正常"}
+                      </Tag>
+                    </div>
+                    <Text type="secondary" className="text-[11px] block">
+                      {s.type} · {s.refresh}
+                    </Text>
+                    <Text type="secondary" className="text-[11px] block mt-1">
+                      最后同步：{s.lastSync || "-"}
+                    </Text>
+                  </Card>
+                </Col>
+              );
+            })}
+          </Row>
+          <Spin spinning={loadingSources}>
+            <Table
+              dataSource={sources}
+              columns={sourceColumns}
+              rowKey="id"
+              size="small"
+              pagination={false}
+              scroll={{ x: 900 }}
+              locale={{ emptyText: "暂无数据源" }}
+            />
+          </Spin>
+        </div>
+      ),
+    },
+    {
       key: "variables",
       label: <Text className="text-[12px]">变量字典</Text>,
       children: (
@@ -238,7 +311,9 @@ export default function Dictionary() {
             <Button type="primary" icon={<SearchOutlined />} size="small" loading={loadingVars} onClick={() => void fetchVariables()}>
               搜索
             </Button>
-            <Button icon={<PlusOutlined />} size="small">新建变量</Button>
+            <Button icon={<PlusOutlined />} size="small" onClick={() => setCreateOpen(true)}>
+              新建变量
+            </Button>
           </Space>
           <Spin spinning={loadingVars}>
             <Table
@@ -301,6 +376,52 @@ export default function Dictionary() {
       </ModuleSectionCard>
 
       <DemoFlowNav />
+
+      {/* 新建变量抽屉 */}
+      <Drawer
+        title="新建变量"
+        open={createOpen}
+        onClose={() => setCreateOpen(false)}
+        width={480}
+        footer={
+          <Space>
+            <Button onClick={() => setCreateOpen(false)}>取消</Button>
+            <Button type="primary" loading={createLoading} onClick={handleCreateSubmit}>
+              创建变量
+            </Button>
+          </Space>
+        }
+      >
+        <Form form={createForm} layout="vertical">
+          <Form.Item name="name" label="变量名（英文）" rules={[{ required: true, message: "请输入变量名" }]}>
+            <Input placeholder="如：loan_dpd_bucket_woe" />
+          </Form.Item>
+          <Form.Item name="cnName" label="变量中文名" rules={[{ required: true, message: "请输入中文名" }]}>
+            <Input placeholder="如：贷款逾期期数分箱 WOE 值" />
+          </Form.Item>
+          <Form.Item name="type" label="变量类型" initialValue="derived">
+            <Select>
+              <Option value="raw">原始变量（raw）</Option>
+              <Option value="derived">衍生变量（derived）</Option>
+              <Option value="model">模型产出（model）</Option>
+            </Select>
+          </Form.Item>
+          <Form.Item name="source" label="所属数据源" rules={[{ required: true, message: "请选择数据源" }]}>
+            <Select placeholder="选择数据源">
+              {SOURCE_OPTIONS.map((s) => (
+                <Option key={s.value} value={s.value}>{s.label}</Option>
+              ))}
+            </Select>
+          </Form.Item>
+          <Form.Item name="refresh" label="刷新频率" initialValue="实时">
+            <Select>
+              <Option value="实时">实时</Option>
+              <Option value="T+1">T+1</Option>
+              <Option value="月更">月更</Option>
+            </Select>
+          </Form.Item>
+        </Form>
+      </Drawer>
     </ModulePageShell>
   );
 }

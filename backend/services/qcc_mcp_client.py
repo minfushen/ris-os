@@ -57,9 +57,9 @@ class QccMcpClient:
     def __init__(self):
         self.base_url = os.getenv("QCC_MCP_BASE_URL", "https://agent.qcc.com/mcp")
         self.api_key = os.getenv("QCC_MCP_API_KEY", "")
-
-        if not self.api_key:
-            raise ValueError("QCC_MCP_API_KEY 环境变量未设置")
+        # 未配置 Key 时允许服务正常启动，调用时再给出明确错误，
+        # 避免 demo 环境因缺少企查查凭证而无法运行其他接口
+        self.configured = bool(self.api_key)
 
         self.headers = {
             "Authorization": f"Bearer {self.api_key}",
@@ -83,6 +83,10 @@ class QccMcpClient:
         Returns:
             工具调用结果
         """
+        if not self.configured:
+            raise Exception(
+                "QCC_MCP_API_KEY 未配置：请在 backend/.env 中设置企查查 API Key 后重启后端"
+            )
         url = f"{self.base_url}/{server}/stream"
         payload = {
             "jsonrpc": "2.0",

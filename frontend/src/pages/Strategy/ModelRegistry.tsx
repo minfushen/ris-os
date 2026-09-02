@@ -1,11 +1,13 @@
 import { useState } from "react";
-import { Button, Space, Table, Tag, Timeline, Typography, Select, Row, Col, Card, Statistic, Collapse } from "antd";
+import { Button, Space, Table, Tag, Timeline, Typography, Select, Row, Col, Card, Statistic, Collapse, Drawer, Form, Input, message } from "antd";
 import { RollbackOutlined, SafetyCertificateOutlined, SwapOutlined, RiseOutlined, FallOutlined } from "@ant-design/icons";
 import ModulePageShell, { ModuleSectionCard } from "@/components/ModulePageShell";
 import DemoFlowNav from "@/components/DemoFlowNav";
 import { mockModelVersions, type MockModelVersion } from "@/mock/data";
 
 const { Text } = Typography;
+const { Option } = Select;
+const { TextArea } = Input;
 
 function deltaTag(current: number, previous: number, suffix = "") {
   const delta = current - previous;
@@ -22,11 +24,29 @@ function deltaTag(current: number, previous: number, suffix = "") {
 
 export default function ModelRegistry() {
   const [compareModel, setCompareModel] = useState<string>("MDL-BIZ-002");
+  const [reviewOpen, setReviewOpen] = useState(false);
+  const [reviewLoading, setReviewLoading] = useState(false);
+  const [reviewForm] = Form.useForm();
 
   const modelNames = [...new Set(mockModelVersions.map((m) => m.name))];
   const compareVersions = mockModelVersions.filter((m) => m.name === mockModelVersions.find((x) => x.id === compareModel)?.name);
   const champion = compareVersions.find((v) => v.role === "Champion" && v.stage === "生效中");
   const challenger = compareVersions.find((v) => v.role === "Challenger" || v.stage === "灰度中" || v.stage === "候选");
+
+  const handleReviewSubmit = async () => {
+    try {
+      const values = await reviewForm.validateFields();
+      setReviewLoading(true);
+      await new Promise((r) => setTimeout(r, 800));
+      message.success(`准入评审「${values.name}」已发起，等待审批`);
+      setReviewOpen(false);
+      reviewForm.resetFields();
+    } catch {
+      message.error("请完善必填信息");
+    } finally {
+      setReviewLoading(false);
+    }
+  };
 
   return (
     <ModulePageShell
@@ -36,7 +56,7 @@ export default function ModelRegistry() {
       actions={
         <Space wrap>
           <Button size="small">注册模型</Button>
-          <Button type="primary" size="small" icon={<SafetyCertificateOutlined />}>
+          <Button type="primary" size="small" icon={<SafetyCertificateOutlined />} onClick={() => setReviewOpen(true)}>
             发起准入评审
           </Button>
         </Space>
@@ -187,6 +207,45 @@ export default function ModelRegistry() {
       </ModuleSectionCard>
 
       <DemoFlowNav />
+
+      {/* 发起准入评审抽屉 */}
+      <Drawer
+        title="发起模型准入评审"
+        open={reviewOpen}
+        onClose={() => setReviewOpen(false)}
+        width={560}
+        footer={
+          <Space>
+            <Button onClick={() => setReviewOpen(false)}>取消</Button>
+            <Button type="primary" loading={reviewLoading} onClick={handleReviewSubmit}>
+              提交评审
+            </Button>
+          </Space>
+        }
+      >
+        <Form form={reviewForm} layout="vertical">
+          <Form.Item name="name" label="评审标题" rules={[{ required: true, message: "请输入评审标题" }]}>
+            <Input placeholder="如：惠快贷评分卡 V2.1 准入评审" />
+          </Form.Item>
+          <Form.Item name="model" label="评审模型" rules={[{ required: true, message: "请选择模型" }]}>
+            <Select placeholder="选择模型">
+              {modelNames.map((name) => (
+                <Option key={name} value={name}>{name}</Option>
+              ))}
+            </Select>
+          </Form.Item>
+          <Form.Item name="type" label="评审类型" initialValue="准入">
+            <Select>
+              <Option value="准入">新模型准入</Option>
+              <Option value="变更">版本变更</Option>
+              <Option value="回滚">回滚评审</Option>
+            </Select>
+          </Form.Item>
+          <Form.Item name="reason" label="评审理由">
+            <TextArea rows={3} placeholder="说明评审原因、预期改进..." />
+          </Form.Item>
+        </Form>
+      </Drawer>
     </ModulePageShell>
   );
 }

@@ -82,36 +82,35 @@ body {
   background-color: rgba(0, 0, 0, 0.25);
 }
 
-/* ========== 玻璃材质组件 ========== */
+/* ========== 面板与控件（B2B：实色表面 + 细边框，默认无阴影）========== */
 
 /* 面板：实色表面 + 精致阴影 */
 .glass-panel {
   background-color: #ffffff;
-  border: 0.5px solid var(--color-card-border);
+  border: 1px solid var(--color-card-border);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-surface);
+  box-shadow: none;
 }
 
-/* 侧栏：纯白、无 blur（设计稿：顶栏唯一 backdrop-filter） */
+/* 侧栏：纯白实色 */
 .glass-panel-strong {
   background-color: #ffffff;
-  border-right: 0.5px solid var(--color-card-border);
+  border-right: 1px solid var(--color-border-light);
   border-radius: 0;
   box-shadow: none;
 }
 
-/* 玻璃卡片（标准 8px 卡片）- 增强交互反馈 */
+/* 卡片（标准 8px 卡片）- 交互以边框反馈为主 */
 .glass-card {
   background-color: #ffffff;
-  border: 0.5px solid var(--color-card-border);
+  border: 1px solid var(--color-card-border);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-card);
+  box-shadow: none;
   padding: var(--spacing-md, 12px);
-  transition: 
-    box-shadow var(--transition-base),
+  transition:
     border-color var(--transition-base),
     background-color var(--transition-base),
-    transform var(--transition-base);
+    box-shadow var(--transition-base);
 }
 
 .glass-card:hover {
@@ -121,18 +120,18 @@ body {
   transform: none;
 }
 
-/* 玻璃工具栏 */
+/* 工具栏 */
 .glass-toolbar {
   background-color: #ffffff;
   border-bottom: 1px solid var(--color-border-soft);
   padding: 0.875rem 1.25rem;
-  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.02);
+  box-shadow: none;
 }
 
-/* 玻璃胶囊（导航选中态）*/
+/* 胶囊（导航选中态）*/
 .glass-pill {
-  background-color: rgba(59, 107, 125, 0.08);
-  color: var(--color-primary-deep);
+  background-color: rgba(15, 23, 42, 0.04);
+  color: var(--color-text-secondary);
   padding: 0.375rem 0.875rem;
   border-radius: var(--radius-pill);
   font-size: 0.8125rem;
@@ -141,12 +140,12 @@ body {
 }
 
 .glass-pill:hover {
-  background-color: rgba(59, 107, 125, 0.12);
+  background-color: rgba(15, 23, 42, 0.07);
 }
 
 .glass-pill-active {
-  background-color: rgba(59, 107, 125, 0.12);
-  color: var(--color-primary-deep);
+  background-color: var(--color-primary-bg);
+  color: var(--color-primary);
   padding: 0.375rem 0.875rem;
   border-radius: var(--radius-pill);
   font-size: 0.8125rem;
@@ -154,14 +153,14 @@ body {
   border-left: 3px solid var(--color-primary);
 }
 
-/* 玻璃输入框 */
+/* 输入框 */
 .glass-input {
   background-color: #ffffff;
-  border: 1px solid var(--color-border-soft);
-  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-card-border);
+  border-radius: var(--radius-sm);
   padding: 0.5rem 0.875rem;
   color: var(--color-text-primary);
-  transition: 
+  transition:
     border-color var(--transition-fast),
     box-shadow var(--transition-fast);
 }
@@ -171,13 +170,13 @@ body {
 }
 
 .glass-input:hover {
-  border-color: rgba(0, 0, 0, 0.12);
+  border-color: rgba(15, 23, 42, 0.16);
 }
 
 .glass-input:focus {
   outline: none;
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 2px rgba(111, 143, 149, 0.12);
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.14);
 }
 
 .glass-input:focus-visible {
@@ -186,18 +185,18 @@ body {
 }
 
 .glass-input:disabled {
-  background-color: #f5f5f5;
+  background-color: #f1f5f9;
   color: var(--color-text-disabled);
   cursor: not-allowed;
   opacity: 1;
 }
 
-/* 玻璃按钮 - 主按钮 */
+/* 主按钮 */
 .glass-btn-primary {
   background-color: var(--color-primary);
   color: white;
   padding: 0.5rem 1.125rem;
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-md);
   font-weight: 500;
   transition: all var(--transition-fast);
   border: none;
@@ -206,34 +205,34 @@ body {
 
 .glass-btn-primary:hover {
   background-color: var(--color-primary-deep);
-  box-shadow: 0 2px 8px rgba(59, 107, 125, 0.25);
-  transform: translateY(-1px);
+  box-shadow: none;
+  transform: none;
 }
 
 .glass-btn-primary:active {
-  transform: translateY(0);
+  transform: none;
   box-shadow: none;
 }
 
-/* 玻璃按钮 - 次按钮 */
+/* 次按钮 */
 .glass-btn-secondary {
   background-color: #ffffff;
-  border: 1px solid var(--color-border-soft);
+  border: 1px solid var(--color-card-border);
   color: var(--color-text-primary);
   padding: 0.5rem 1.125rem;
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-md);
   font-weight: 500;
   transition: all var(--transition-fast);
   cursor: pointer;
 }
 
 .glass-btn-secondary:hover {
-  background-color: #fafafa;
-  border-color: rgba(0, 0, 0, 0.12);
-  box-shadow: var(--shadow-sm);
+  background-color: var(--color-bg-interactive-hover);
+  border-color: var(--color-border-dark);
+  box-shadow: none;
 }
 
-/* 玻璃按钮 - 文字按钮 */
+/* 文字按钮 */
 .glass-btn-text {
   color: var(--color-primary);
   padding: 0.25rem 0.5rem;
@@ -246,15 +245,15 @@ body {
 
 .glass-btn-text:hover {
   color: var(--color-primary-deep);
-  background-color: rgba(59, 107, 125, 0.06);
+  background-color: var(--color-primary-bg);
 }
 
-/* 玻璃标签 */
+/* 标签 */
 .glass-tag {
   display: inline-flex;
   align-items: center;
-  background-color: #f5f5f5;
-  border: 1px solid rgba(0, 0, 0, 0.06);
+  background-color: #f1f5f9;
+  border: 1px solid var(--color-border-soft);
   padding: 0.125rem 0.625rem;
   border-radius: var(--radius-tag);
   font-size: 0.6875rem;
@@ -263,8 +262,8 @@ body {
 }
 
 .glass-tag:hover:not([aria-disabled="true"]) {
-  background-color: #eeeeee;
-  border-color: rgba(0, 0, 0, 0.1);
+  background-color: #e2e8f0;
+  border-color: rgba(15, 23, 42, 0.1);
 }
 
 .glass-tag-success {
@@ -291,28 +290,27 @@ body {
 .hero-section {
   background: #ffffff;
   border: 1px solid var(--color-border-soft);
-  border-radius: var(--radius-2xl);
-  box-shadow: var(--shadow-surface);
+  border-radius: var(--radius-xl);
+  box-shadow: none;
   padding: var(--spacing-xl, 24px);
   margin-bottom: var(--spacing-lg, 16px);
 }
 
-/* 指标卡片 - 增强视觉层次 */
+/* 指标卡片 */
 .metric-card {
   background-color: #ffffff;
   border: 1px solid var(--color-border-soft);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-card);
+  box-shadow: none;
   padding: var(--spacing-md, 12px);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
-  transition: 
-    box-shadow var(--transition-base),
+  transition:
     border-color var(--transition-base),
-    transform var(--transition-base);
+    box-shadow var(--transition-base);
   position: relative;
   overflow: hidden;
 }
@@ -323,8 +321,8 @@ body {
   top: 0;
   left: 0;
   right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
+  height: 2px;
+  background: var(--color-primary);
   opacity: 0;
   transition: opacity var(--transition-base);
 }
@@ -332,8 +330,7 @@ body {
 .metric-card:hover {
   background-color: #ffffff;
   box-shadow: var(--shadow-card-hover);
-  border-color: rgba(59, 107, 125, 0.15);
-  transform: translateY(-2px);
+  border-color: var(--color-primary-border);
 }
 
 .metric-card:hover::before {
@@ -345,7 +342,7 @@ body {
   background-color: #ffffff;
   border: 1px solid var(--color-border-soft);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-card);
+  box-shadow: none;
   padding: var(--spacing-md, 12px);
   cursor: pointer;
   transition: all var(--transition-base);
@@ -357,25 +354,23 @@ body {
 .quick-entry-card:hover {
   background-color: #ffffff;
   box-shadow: var(--shadow-card-hover);
-  border-color: rgba(59, 107, 125, 0.2);
-  transform: translateY(-2px);
+  border-color: var(--color-primary-border);
 }
 
 .quick-entry-icon {
   width: 2.75rem;
   height: 2.75rem;
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 1.25rem;
-  transition: all var(--transition-base);
-  background: linear-gradient(135deg, rgba(59, 107, 125, 0.08) 0%, rgba(59, 107, 125, 0.04) 100%);
+  transition: background-color var(--transition-base);
+  background: var(--color-primary-bg);
 }
 
 .quick-entry-card:hover .quick-entry-icon {
-  transform: scale(1.08);
-  background: linear-gradient(135deg, rgba(59, 107, 125, 0.12) 0%, rgba(59, 107, 125, 0.06) 100%);
+  background: rgba(37, 99, 235, 0.14);
 }
 
 /* 探照灯卡片 */
@@ -392,7 +387,6 @@ body {
 .searchlight-card:hover {
   background-color: #ffffff;
   box-shadow: var(--shadow-card-hover);
-  transform: translateY(-1px);
 }
 
 .searchlight-card-critical {
@@ -406,7 +400,7 @@ body {
 /* 侧栏 Brand（标准页面：方标 + 平台名 + UAT·姓名/角色；侧栏纯白无 blur） */
 .sider-brand {
   flex-shrink: 0;
-  border-bottom: 0.5px solid var(--color-card-border);
+  border-bottom: 1px solid var(--color-card-border);
   padding: var(--spacing-sm) var(--spacing-md);
   background: #ffffff;
 }
@@ -436,7 +430,7 @@ body {
   width: var(--sider-brand-icon-size);
   height: var(--sider-brand-icon-size);
   border-radius: var(--radius-sm);
-  border: 0.5px solid var(--color-card-border);
+  border: 1px solid var(--color-card-border);
   background: var(--color-primary-bg);
   box-shadow: none;
   color: var(--color-primary-deep);
@@ -528,7 +522,7 @@ body {
   min-height: var(--sider-nav-l1-height);
   align-items: center;
   justify-content: center;
-  border-top: 0.5px solid var(--color-card-border);
+  border-top: 1px solid var(--color-card-border);
   cursor: pointer;
   color: var(--color-text-secondary);
   transition: background-color var(--transition-fast);
@@ -683,12 +677,10 @@ body {
   box-shadow: none;
 }
 
-/* 顶栏：白 88% 透明度 + 全局唯一主 blur */
+/* 顶栏：实色白平面（B2B 无玻璃模糊） */
 .topbar {
-  background-color: rgba(255, 255, 255, 0.88);
-  backdrop-filter: blur(var(--blur-topbar));
-  -webkit-backdrop-filter: blur(var(--blur-topbar));
-  border-bottom: 0.5px solid var(--color-card-border);
+  background-color: #ffffff;
+  border-bottom: 1px solid var(--color-border-light);
   min-height: var(--header-height);
   height: var(--header-height);
   padding: 0 var(--header-padding-x);
@@ -696,13 +688,13 @@ body {
   position: sticky;
   top: 0;
   z-index: 50;
-  box-shadow: 0 1px 2px rgba(31, 42, 48, 0.035);
+  box-shadow: none;
 }
 
 /* 模块页头部 */
 .module-header {
   background: #ffffff;
-  border: 0.5px solid var(--color-card-border);
+  border: 1px solid var(--color-card-border);
   border-radius: var(--radius-panel);
   box-shadow: var(--shadow-surface);
   padding: var(--spacing-md) var(--spacing-lg);
@@ -754,7 +746,7 @@ body {
 /* 区块容器 */
 .section-shell {
   background-color: #ffffff;
-  border: 0.5px solid var(--color-card-border);
+  border: 1px solid var(--color-card-border);
   border-radius: var(--radius-panel);
   box-shadow: var(--shadow-surface);
   margin-bottom: var(--spacing-md);
@@ -766,7 +758,7 @@ body {
   align-items: center;
   justify-content: space-between;
   padding: var(--spacing-sm, 8px) var(--spacing-md, 12px);
-  border-bottom: 0.5px solid var(--color-border-light);
+  border-bottom: 1px solid var(--color-border-light);
   background: var(--color-table-footer-surface);
 }
 
@@ -811,8 +803,8 @@ body {
 
 /* 背景颜色 */
 .bg-primary { background-color: var(--color-primary); }
-.bg-primary\/10 { background-color: rgba(111, 143, 149, 0.1); }
-.bg-primary\/15 { background-color: rgba(111, 143, 149, 0.15); }
+.bg-primary\/10 { background-color: rgba(37, 99, 235, 0.1); }
+.bg-primary\/15 { background-color: rgba(37, 99, 235, 0.15); }
 .bg-glass { background-color: var(--color-glass); }
 .bg-glass\/40 { background-color: rgba(255, 255, 255, 0.4); }
 .bg-glass\/60 { background-color: rgba(255, 255, 255, 0.6); }

@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { Button, Col, Input, Row, Space, Tag, Typography, Timeline, Card, Divider } from "antd";
+import { Button, Col, Input, Row, Space, Tag, Typography, Timeline, Card, Divider, Drawer, Form, Select, message } from "antd";
 import { ApiOutlined, BranchesOutlined, DatabaseOutlined, ThunderboltOutlined, UserSwitchOutlined, PlayCircleOutlined } from "@ant-design/icons";
 import ModulePageShell, { ModuleSectionCard } from "@/components/ModulePageShell";
 import DemoFlowNav from "@/components/DemoFlowNav";
 
 const { Text } = Typography;
+const { Option } = Select;
 
 const FLOW_NODES = [
   { key: "data_check", title: "数据准入节点", icon: <DatabaseOutlined />, desc: "校验司法、工商、还款、征信与行内流水特征是否齐备", output: "特征快照", color: "default" as const },
@@ -50,11 +51,29 @@ function simulate(name: string): SimResult[] {
 export default function DecisionFlow() {
   const [simInput, setSimInput] = useState("");
   const [simResult, setSimResult] = useState<SimResult[] | null>(null);
+  const [createOpen, setCreateOpen] = useState(false);
+  const [createLoading, setCreateLoading] = useState(false);
+  const [createForm] = Form.useForm();
 
   const handleSimulate = () => {
     const name = simInput.trim();
     if (!name) return;
     setSimResult(simulate(name));
+  };
+
+  const handleCreateSubmit = async () => {
+    try {
+      const values = await createForm.validateFields();
+      setCreateLoading(true);
+      await new Promise((r) => setTimeout(r, 800));
+      message.success(`决策流「${values.name}」已创建`);
+      setCreateOpen(false);
+      createForm.resetFields();
+    } catch {
+      message.error("请完善必填信息");
+    } finally {
+      setCreateLoading(false);
+    }
   };
 
   return (
@@ -65,11 +84,11 @@ export default function DecisionFlow() {
       actions={
         <Space wrap>
           <Button size="small">导入模板</Button>
-          <Button type="primary" size="small">新建决策流</Button>
+          <Button type="primary" size="small" onClick={() => setCreateOpen(true)}>新建决策流</Button>
         </Space>
       }
     >
-      <ModuleSectionCard title="决策流画布" subtitle="面试版用节点卡模拟引擎画布能力">
+      <ModuleSectionCard title="决策流画布" subtitle="演示版用节点卡模拟引擎画布能力">
         <div className="grid grid-cols-1 xl:grid-cols-5 gap-3">
           {FLOW_NODES.map((node, index) => (
             <div key={node.key} className="card-surface layout-p-md h-full relative">
@@ -147,6 +166,39 @@ export default function DecisionFlow() {
       </ModuleSectionCard>
 
       <DemoFlowNav />
+
+      {/* 新建决策流抽屉 */}
+      <Drawer
+        title="新建决策流"
+        open={createOpen}
+        onClose={() => setCreateOpen(false)}
+        width={560}
+        footer={
+          <Space>
+            <Button onClick={() => setCreateOpen(false)}>取消</Button>
+            <Button type="primary" loading={createLoading} onClick={handleCreateSubmit}>
+              创建决策流
+            </Button>
+          </Space>
+        }
+      >
+        <Form form={createForm} layout="vertical">
+          <Form.Item name="name" label="决策流名称" rules={[{ required: true, message: "请输入名称" }]}>
+            <Input placeholder="如：惠快贷贷后预警决策流 V2" />
+          </Form.Item>
+          <Form.Item name="product" label="适用产品线" rules={[{ required: true, message: "请选择产品线" }]}>
+            <Select placeholder="选择产品线">
+              <Option value="惠快贷">惠快贷</Option>
+              <Option value="税易贷">税易贷</Option>
+              <Option value="惠微贷">惠微贷</Option>
+              <Option value="支小贷">支小贷</Option>
+            </Select>
+          </Form.Item>
+          <Form.Item name="description" label="决策流说明">
+            <Input.TextArea rows={3} placeholder="描述决策流目标、节点编排逻辑..." />
+          </Form.Item>
+        </Form>
+      </Drawer>
     </ModulePageShell>
   );
 }

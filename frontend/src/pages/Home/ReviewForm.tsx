@@ -32,8 +32,8 @@ export interface ReviewFormValues {
 
 const PRODUCT_OPTIONS = [
   { value: "xingan_loan", label: "兴安贷" },
-  { value: "business_loan", label: "经营贷" },
-  { value: "consumer_loan", label: "消费贷" },
+  { value: "business_loan", label: "惠快贷" },
+  { value: "consumer_loan", label: "惠微贷" },
   { value: "credit_card", label: "信用卡" },
 ];
 

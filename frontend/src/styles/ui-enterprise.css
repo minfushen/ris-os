@@ -3,14 +3,9 @@
  * 依赖 tokens.css 变量；与 antd-tailwind.css 分工：此处偏交互与层级。
  */
 
-/* —— 主内容区画布（层级：背景 → 画布 → 模块壳） —— */
+/* —— 主内容区画布（B2B：平面中性底，无装饰渐变） —— */
 .app-main-canvas {
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.38) 0%,
-    rgba(246, 248, 251, 0.22) 40%,
-    transparent 72%
-  );
+  background: transparent;
 }
 
 /* —— 模块页纵向节奏 —— */
@@ -26,12 +21,12 @@
 .ant-segmented-item:focus-visible,
 .ant-picker:focus-visible,
 .ant-select-focused .ant-select-selector:focus-visible {
-  outline: 2px solid rgba(111, 143, 149, 0.35) !important;
+  outline: 2px solid rgba(37, 99, 235, 0.35) !important;
   outline-offset: 2px;
 }
 
 a:focus-visible {
-  outline: 2px solid rgba(111, 143, 149, 0.3);
+  outline: 2px solid rgba(37, 99, 235, 0.3);
   outline-offset: 2px;
   border-radius: var(--radius-sm);
 }
@@ -69,7 +64,7 @@ a:focus-visible {
 
 .ant-dropdown-menu-item-active,
 .ant-dropdown-menu-submenu-title-active {
-  background-color: rgba(111, 143, 149, 0.08) !important;
+  background-color: rgba(37, 99, 235, 0.08) !important;
 }
 
 /* —— 表单：错误 / 帮助 / 禁用 —— */
@@ -91,7 +86,7 @@ a:focus-visible {
 .ant-picker-disabled {
   color: var(--color-text-secondary) !important;
   background-color: var(--color-bg-disabled) !important;
-  border-color: rgba(130, 150, 160, 0.16) !important;
+  border-color: rgba(15, 23, 42, 0.16) !important;
   opacity: 1 !important;
 }
 
@@ -125,7 +120,7 @@ a:focus-visible {
 
 .ant-tabs-tab:hover {
   color: var(--color-text-primary);
-  background-color: rgba(111, 143, 149, 0.04);
+  background-color: rgba(37, 99, 235, 0.04);
   border-radius: var(--radius-lg);
 }
 
